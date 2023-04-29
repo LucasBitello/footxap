@@ -1,0 +1,15 @@
+--pip install django #Instala o Framwork Django -AVA TEU
+--djando-admin startproject {nome do projeto} #{Instancia o projeto}
+--python manage.py createsuperuser #{cria um super usuario no meu caso a senha é aquela fodastica}
+--python manage.py startapp {nome da URL/Seja lá oque for não lembro o nome seria tipo o /login ou /home}
+--python manage.py runserver #{para instanciar o servidor}
+
+--Dependencias:
+--pip install django
+--pip install mysqlclient
+--python manage.py migrate
+
+
+--pip install keras
+--pip install tensorflow
+--pip install django-cors-headers

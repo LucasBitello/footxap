@@ -1,0 +1,66 @@
+{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/main.scss' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/home.scss' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/fontawesome/css/all.css' %}" />
+        <script src="{% static 'js/main.js' %}" type="text/javascript" ></script>
+        <script src="{% static 'js/uteis.js' %}" type="text/javascript" ></script>
+        <script src="{% static 'js/api.js' %}" type="text/javascript" ></script>
+        <script src="{% static 'js/home.js' %}" type="text/javascript" ></script>
+    </head>
+    <body>
+        <div class="menu-left">
+            <div class="heigth-25vh display-flex-column-space-around">
+                <label class="label-select">
+                    Countries:
+                    <select class="select" id="select-country">
+                        <option selected>Selecione um país...</option>
+                    </select>
+                </label>
+                <label class="label-select">
+                    Leagues:
+                    <select class="select" id="select-league">
+                        <option selected>Selecione um país primeiro...</option>
+                    </select>
+                </label>
+                <label class="label-select">
+                    Seasons:
+                    <select class="select" id="select-season">
+                        <option selected>Selecione uma liga primeiro...</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <div class="team-x-team display-flex-row-space-around">
+            <div class="team-x display-flex-column">
+                <img id="img-team-home" src="https://" class="img-team-selected">
+                <div class="display-flex-column-center">
+                    <label class="display-flex-column-center width-100 label-search">
+                        Time da casa
+                        <input id="input-search-team-home" class="outline-none input-search"
+                               placeholder="Selecione o time da casa..." data-id-team-selected="">
+                    </label>
+                    <div id="div-results-team-home" class="div-search-team display-flex-column hidden"></div>
+                </div>
+            </div>
+            <div class="team-x display-flex-column">
+                <img id="img-team-away" src="https://" class="img-team-selected">
+                <div class="display-flex-column-center">
+                    <label class="display-flex-column-center width-100 label-search">
+                        Time de fora
+                        <input id="input-search-team-away" class="outline-none input-search"
+                               placeholder="Selecione o time de fora..." data-id-team-selected="">
+                    </label>
+                    <div id="div-results-team-away" class="div-search-team display-flex-column hidden"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+

@@ -1,0 +1,218 @@
+CREATE TABLE `table_settings` (
+  `id_table` INT NOT NULL,
+  `id_data` INT NULL,
+  `name_table` VARCHAR(255) NULL,
+  `last_update_from_api` DATETIME NULL,
+  `rate_refresh_in_ms` INT NOT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id_table`),
+  UNIQUE(`id_table`, `id_data`));
+
+CREATE TABLE `country` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(45) NOT NULL,
+  `code` VARCHAR(45) NULL,
+  `flag` LONGTEXT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE (`name`));
+
+
+CREATE TABLE `league` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_api` INT NOT NULL,
+  `id_country` INT NOT NULL,
+  `name` VARCHAR(255) NOT NULL,
+  `type` VARCHAR(255) NOT NULL,
+  `logo` LONGTEXT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `id_country`
+    FOREIGN KEY (`id_country`)
+    REFERENCES `country` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  UNIQUE (`id_api`));
+
+
+CREATE TABLE `season` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_league` INT NOT NULL,
+  `year` INT NOT NULL,
+  `start` DATE NULL,
+  `end` DATE NULL,
+  `current` INT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `id_league`
+    FOREIGN KEY (`id_league`)
+    REFERENCES `league` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  UNIQUE (`id_league`, `year`));
+
+
+CREATE TABLE `team` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_api` INT NOT NULL,
+  `id_country` INT NOT NULL,
+  `name` VARCHAR(45) NOT NULL,
+  `code` VARCHAR(45) NULL,
+  `founded` INT NULL,
+  `national` INT NOT NULL,
+  `logo` MEDIUMTEXT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `id_country_tea_cou`
+    FOREIGN KEY (`id_country`)
+    REFERENCES `country` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  UNIQUE (`id_api`));
+
+
+CREATE TABLE `team_venue` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_api` INT NOT NULL,
+  `id_team` INT NOT NULL,
+  `name` VARCHAR(255) NULL,
+  `address` MEDIUMTEXT NULL,
+  `city` VARCHAR(255) NULL,
+  `capacity` INT NULL,
+  `surface` VARCHAR(45) NULL,
+  `image` MEDIUMTEXT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  CONSTRAINT `id_team_vte_tea`
+    FOREIGN KEY (`id_team`)
+    REFERENCES `team` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  UNIQUE (`id_api`));
+
+
+CREATE TABLE `team_seasons` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_team` INT NOT NULL,
+  `id_season` INT NOT NULL,
+  `last_modification` DATETIME NOT NULL,
+  PRIMARY KEY (`id`),
+  INDEX `id_team_tls_tea_idx` (`id_team` ASC) VISIBLE,
+  INDEX `id_team_tls_sle_idx` (`id_season` ASC) VISIBLE,
+  CONSTRAINT `id_team_tls_tea`
+    FOREIGN KEY (`id_team`)
+    REFERENCES `team` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_team_tsl_sea`
+    FOREIGN KEY (`id_season`)
+    REFERENCES `season` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  UNIQUE (`id_team`, `id_season`));
+
+
+CREATE TABLE `fixture` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `id_api` INT NOT NULL,
+  `id_season` INT NOT NULL,
+  `date` DATETIME NULL,
+  `round` VARCHAR(255) NOT NULL,
+  `status` VARCHAR(255) NOT NULL,
+  `time_elapsed` VARCHAR(255) NULL,
+  PRIMARY KEY (`id`),
+  INDEX `id_season_fls_sea_idx` (`id_season` ASC) VISIBLE,
+  CONSTRAINT `id_season_fls_sea`
+    FOREIGN KEY (`id_season`)
+    REFERENCES `season` (`id`)
+    ON DELETE RESTRICT
+    ON UPDATE RESTRICT,
+  UNIQUE (`id_api`));
+
+
+CREATE TABLE `fixture_teams` (
+  `id_fixture` INT NOT NULL,
+  `id_team` INT NOT NULL,
+  `is_winner` TINYINT(1) NULL,
+  `is_home` TINYINT(1) DEFAULT 0,
+  `goals` INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_fixture`, `id_team`),
+  INDEX `id_team_fte_fix_idx` (`id_team` ASC) VISIBLE,
+  CONSTRAINT `id_fixture_fte_fix`
+    FOREIGN KEY (`id_fixture`)
+    REFERENCES `fixture` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_team_fte_fix`
+    FOREIGN KEY (`id_team`)
+    REFERENCES `team` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  UNIQUE (`id_fixture`, `id_team`));
+
+
+CREATE TABLE `type_fixture_team_statistic` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+  `name_statistic` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE  (`id`));
+
+
+CREATE TABLE `fixture_team_statistics` (
+  `id_fixture` INT NOT NULL,
+  `id_team` INT NOT NULL,
+  `id_type_statistic` INT NOT NULL,
+  `value` INT NULL,
+  INDEX `id_fixture_fts_fix_idx` (`id_fixture` ASC) VISIBLE,
+  INDEX `id_team_fts_tea_idx` (`id_team` ASC) VISIBLE,
+  INDEX `id_type_statistic_fts_tfts_idx` (`id_type_statistic` ASC) VISIBLE,
+  CONSTRAINT `id_fixture_fts_fix`
+    FOREIGN KEY (`id_fixture`)
+    REFERENCES `fixture` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `id_team_fts_tea`
+    FOREIGN KEY (`id_team`)
+    REFERENCES `team` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `id_type_statistic_fts_tfts`
+    FOREIGN KEY (`id_type_statistic`)
+    REFERENCES `type_fixture_team_statistic` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+UNIQUE(`id_fixture`, `id_team`, `id_type_statistic`));
+
+
+CREATE TABLE `type_fixture_team_lineup` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name_lineup` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`id`));
+
+
+CREATE TABLE `fixture_team_lineups` (
+  `id_fixture` INT NOT NULL,
+  `id_team` INT NOT NULL,
+  `id_type_lineup` INT NOT NULL,
+  INDEX `id_fixture_ftl_fix_idx` (`id_fixture` ASC) VISIBLE,
+  INDEX `id_team_ftl_fix_idx` (`id_team` ASC) VISIBLE,
+  INDEX `id_type_lineup_idx` (`id_type_lineup` ASC) VISIBLE,
+  CONSTRAINT `id_fixture_ftl_fix`
+    FOREIGN KEY (`id_fixture`)
+    REFERENCES `fixture` (`id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `id_team_ftl_fix`
+    FOREIGN KEY (`id_team`)
+    REFERENCES `team` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_type_lineup`
+    FOREIGN KEY (`id_type_lineup`)
+    REFERENCES `type_fixture_team_lineup` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  UNIQUE(`id_fixture`, `id_team`, `id_type_lineup`));
+
+
+
