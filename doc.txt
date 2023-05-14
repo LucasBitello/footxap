@@ -29,3 +29,7 @@ pip3 install gunicorn psycopg2-binary
 --pip install django-cors-headers
 
 nano /etc/nginx/sites-available/footxap
+
+source env/bin/activate
+sudo systemctl restart nginx
+gunicorn --bind 127.0.0.1:8000 footxap.wsgi:application --timeout 900

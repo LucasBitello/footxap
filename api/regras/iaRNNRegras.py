@@ -265,7 +265,7 @@ class RNN:
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
         qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida
-        qtdeNeuroniosPrimeiraCamada = 150
+        qtdeNeuroniosPrimeiraCamada = 200
         taxaAprendizado = 0.001
 
         print("N neuronios entrada:", qtdeNeuroniosEntrada)
