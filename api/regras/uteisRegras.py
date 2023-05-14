@@ -1,3 +1,6 @@
+import datetime
+
+
 class ParamsNotNone:
     def __init__(self):
         self.nameColumns: list[str] = []
@@ -19,7 +22,10 @@ class UteisRegras():
 
         for dado in arrDados:
             if (type(dado) != int and type(dado) != float and type(dado) != str and type(dado) != list and dado is not None):
-                arrDadosJson.append(dado.__dict__)
+                if type(dado) != dict:
+                    arrDadosJson.append(dado.__dict__)
+                else:
+                    arrDadosJson.append(dado)
             else:
                 arrDadosNormalizados.append(dado)
 
@@ -27,6 +33,14 @@ class UteisRegras():
             for key in dado.keys():
                 if type(dado[key]) == list:
                     dado[key] = self.normalizarDadosForView(dado[key])
+                elif (type(dado[key]) != int and type(dado[key]) != float and type(dado[key]) != str and
+                      type(dado[key]) != list and dado[key] is not None and type(dado[key]) != datetime.datetime and
+                      type(dado[key]) != datetime.date):
+                    dado[key] = dado[key].__dict__
+                    for key2 in dado[key]:
+                        if type(dado[key][key2]) == list and len(dado[key][key2]) >= 1:
+                            dado[key][key2] = self.normalizarDadosForView(dado[key][key2])
+
             arrDadosNormalizados.append(dado)
 
         return arrDadosNormalizados

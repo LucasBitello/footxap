@@ -9,7 +9,7 @@ class RegraAPIFootBall:
         conexao = http.client.HTTPSConnection(url)
         headers = {
             'x-rapidapi-host': url,
-            'x-rapidapi-key': "{sua key api-sports aki}"
+            'x-rapidapi-key': "01d14b089686c4521d534e66b70e1a40"
         }
         urlParams = "/%s" % (params)
         newURLParams = quote(urlParams, safe=':/?&=')

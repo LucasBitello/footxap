@@ -162,18 +162,18 @@ class TeamsModel(Model):
             self.atualizarTabela(model=self, functionAtualizacao=functionAttTeams, isForçarAtualização=True)
 
 
-    def atualizarTeamsByLeagueSeason(self, id_season: int):
+    def atualizarTeamsByLeagueSeason(self, id_season: int, isAtualizarLastModification: bool = True):
         season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
         league: League = self.leaguesModel.obterByColumnsID(arrDados=[season.id_league])[0]
         season.last_modification: datetime = season.last_modification
 
-        print(season.last_modification)
         if season.last_modification.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
             functionAttTeams = lambda: self.atualizarDBTeam(id_league_api=league.id_api, year_season=season.year)
             self.atualizarTabela(model=self, functionAtualizacao=functionAttTeams, isForçarAtualização=True)
 
-            season.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.seasonsModel.salvar(data=[season])
+            if isAtualizarLastModification:
+                season.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                self.seasonsModel.salvar(data=[season])
 
     def obterTeamsByName(self, name_team: str) -> list[Team]:
         query = "SELECT * FROM " + self.name_table + " where name like %s limit 15"

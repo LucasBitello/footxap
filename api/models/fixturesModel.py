@@ -143,27 +143,6 @@ class FixturesModel(Model):
             functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
             self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
 
-            """if len(arrFixtures) == 0:
-                self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
-            else:
-                isAllSeasonConcluida = True
-
-                for fixture in arrFixtures:
-                    if (fixture.status != "FT" and fixture.status != "AET" and fixture.status != "PEN"):
-                        isAllSeasonConcluida = False
-
-                    if (fixture.date.strftime("%Y-%m-%d %H:%M") <= datetime.now().strftime("%Y-%m-%d  %H:%M")) \
-                            and (fixture.status != "FT" and fixture.status != "AET" and fixture.status != "PEN" and fixture.status != "CANC" ):
-
-                        print(f"######### atualizando dados pois faltava informaçoes id_fixture: {fixture.id} ########")
-                        isAllSeasonConcluida = False
-
-                        self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures,
-                                             isForçarAtualização=True)
-
-                if isAllSeasonConcluida and season.current == 1:
-                    self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)"""
-
         if id_team is not None:
             arrSeasons = self.obterSeasonsComFixtures(id_season=id_season, id_team=id_team)
 
@@ -174,20 +153,10 @@ class FixturesModel(Model):
                 functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
                 self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
 
-                """for fixture in arrFixtures:
-                    functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
-                    if (fixture.date.strftime("%Y-%m-%d %H:%M") < datetime.now().strftime("%Y-%m-%d %H:%M")) \
-                            and (fixture.status != "FT" and fixture.status != "AET" and fixture.status != "PEN" and fixture.status != "CANC")\
-                            and fixture.last_modification.strftime("%Y-%m-%d %H:%M") <= datetime.now().strftime("%Y-%m-%d %H:%M"):
-
-                        print(f"##### atualizando dados pois faltava informaçoes time id_fixture: {fixture.id} #####")
-                        self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures,
-                                             isForçarAtualização=True)
-                        break
-                    else:
-                        self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures,
-                                             isForçarAtualização=True)
-                        break"""
+        if id_season is not None and id_team is None:
+            season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
+            functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
+            self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
 
 
     def obterSeasonsComTeamsSemFixtures(self, id_season: int = None, id_team: int = None) -> list[Season]:
@@ -257,7 +226,7 @@ class FixturesModel(Model):
         query = f"SELECT fix.* from {self.name_table} as fix" \
                 f" JOIN fixture_teams as fte on fte.id_fixture = fix.id" \
                 f" WHERE (fix.status <> 'FT' AND fix.status <> 'AET' AND fix.status <> 'PEN' AND fix.status <> 'CANC' " \
-                f" AND fix.status <> 'PST')" \
+                f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD')" \
                 f" AND fix.id_season not in(222, 223, 224) and fte.id_team = {id_team}" \
                 f" ORDER BY fix.date ASC LIMIT 1"
 
@@ -305,6 +274,16 @@ class FixturesModel(Model):
 
             team.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             self.teamsModel.salvar(data=[team])
+
+    def atualizarFixturesByIdSeason(self, id_season: int, isAtualizarLastModification: bool = True):
+        season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
+
+        if season.last_modification.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
+            self.atualizarDados(id_season=season.id)
+
+            if isAtualizarLastModification:
+                season.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                self.seasonsModel.salvar(data=[season])
 
 
 class Fixture(ClassModel):

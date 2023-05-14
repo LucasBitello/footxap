@@ -35,10 +35,23 @@
                     </select>
                 </label>
             </div>
+            <div class="">
+                <label>
+                        <select class="label-google" id="select-tabela-jogos">
+                            <option value="1" class="backgroud-color-white color-black">Tabela</option>
+                            <option value="2" class="backgroud-color-white color-black">Jogos</option>
+                        </select>
+                    </label>
+                <div class="div-info-teams" id="div-tabela-jogos">
+                    <table class="tabela-teams" id="tabela-teams"></table>
+                    <table class="jogos-teams" id="jogos-teams"></table>
+                </div>
+            </div>
+
         </div>
         <div class="team-x-team display-flex-row-space-around">
             <div class="team-x display-flex-column">
-                <img id="img-team-home" src="https://" class="img-team-selected">
+                <img id="img-team-home" src="https://" class="img-team-selected" alt="imagem-time">
                 <div class="display-flex-column-center">
                     <label class="display-flex-column-center width-100 label-search">
                         Time da casa
@@ -49,7 +62,7 @@
                 </div>
             </div>
             <div class="team-x display-flex-column">
-                <img id="img-team-away" src="https://" class="img-team-selected">
+                <img id="img-team-away" src="https://" class="img-team-selected" alt="imagem-time">
                 <div class="display-flex-column-center">
                     <label class="display-flex-column-center width-100 label-search">
                         Time de fora

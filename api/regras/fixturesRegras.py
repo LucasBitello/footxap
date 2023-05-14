@@ -1,14 +1,16 @@
 from __future__ import annotations
 from api.models.fixturesModel import FixturesModel, Fixture
+from api.models.fixturesTeamsModel import FixtureTeams
 from api.models.teamsModel import TeamsModel, Team
 from api.models.teamsSeasonsModel import TeamSeason
+from api.models.seasonsModel import Season
 
 class FixturesRegras:
     def __init__(self):
         self.teamsModel = TeamsModel()
         self.fixturesModel = FixturesModel(teamsModel=self.teamsModel)
 
-    def obter(self, id_season: int = None, id_team: int = None) -> list[Fixture]:
+    def obter(self, id_season: int = None, id_team: int = None, ) -> list[Fixture]:
         arrFixtures: list[Fixture] = self.fixturesModel.obterFixturesOrderDataBy(id_season=id_season, id_team=id_team)
 
         for fixture in arrFixtures:
@@ -37,19 +39,16 @@ class FixturesRegras:
         arrFixtures = self.fixturesModel.obterAllFixturesByIdsSeasons(arrIds=arrIdsSeason)
 
         for fixture in arrFixtures:
-            fixture.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
+            fixture.teams: list[FixtureTeams] = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
                                                                                  arrDados=[fixture.id])
+
+            fixture.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
 
         if id_season is not None:
             nextFixtureTeamHome = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=id_season, id_team=idTeamHome)[0]
             nextFixtureTeamHome.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
                                                                                              arrDados=[nextFixtureTeamHome.id])
+            nextFixtureTeamHome.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeamHome.id_season])[0]
             arrFixtures.append(nextFixtureTeamHome)
-
-            """if idTeamAway is not None:
-                nextFixtureTeamAway = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=id_season, id_team=idTeamAway)[0]
-                nextFixtureTeamAway.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
-                                                                                                 arrDados=[nextFixtureTeamAway.id])
-                arrFixtures.append(nextFixtureTeamAway)"""
 
         return arrFixtures

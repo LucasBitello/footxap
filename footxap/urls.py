@@ -17,15 +17,14 @@ from django.contrib import admin
 from django.urls import path
 from web.views.home import index
 #from api.views.tests import urlTesteMetodos
-from api.views.api import obterCountries, obterLeagues, obterSeasons, atualizarSeasonsTeams, searchTeams, \
-    obterStatistics, obterStatistcsTeamsPlay
+from api.views.api import obterCountries, obterLeagues, obterSeasons, atualizarSeasonsTeamsFixtures, searchTeams, \
+    obterStatistcsTeamsPlay, obterTabelaPontuacao, obterTabelaJogos
 
 nivelAPIatual = "api/v1"
 
 urlpatterns = [
     #Somente para testes
     #path('test/', urlTesteMetodos),
-
 
     path('admin/', admin.site.urls),
     path('home/', index),
@@ -34,9 +33,9 @@ urlpatterns = [
     path(nivelAPIatual + '/countries', obterCountries),
     path(nivelAPIatual + '/leagues', obterLeagues),
     path(nivelAPIatual + '/seasons', obterSeasons),
-    path(nivelAPIatual + '/seasons/teams', atualizarSeasonsTeams),
+    path(nivelAPIatual + '/seasons/atualizar', atualizarSeasonsTeamsFixtures),
     path(nivelAPIatual + '/teams/search', searchTeams),
-    #path(nivelAPIatual + '/statistics', obterStatistics),
-    path(nivelAPIatual + '/statistics', obterStatistcsTeamsPlay)
-
+    path(nivelAPIatual + '/statistics', obterStatistcsTeamsPlay),
+    path(nivelAPIatual + '/tabela', obterTabelaPontuacao),
+    path(nivelAPIatual + '/jogos', obterTabelaJogos)
 ]

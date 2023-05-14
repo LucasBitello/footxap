@@ -13,6 +13,9 @@ from api.regras.statisticsRegras import StatisticsRegras
 from api.regras.iaRNNRegras import RNN
 from api.regras.iaDBNRegras import DBN
 from api.regras.iaRegras import IARegras
+from api.regras.tabelaJogosRegras import TabelaJogosRegras
+from api.regras.tabelaPontuacaoRegras import TabelaPontuacaoRegras
+from api.regras.fixturesRegras import FixturesRegras
 # Create your views here.
 
 from api.models.countriesModel import Country
@@ -57,14 +60,18 @@ def obterSeasons(request):
     return JsonResponse({"response": arrSeasons}, safe=False)
 
 
-def atualizarSeasonsTeams(request):
+def atualizarSeasonsTeamsFixtures(request):
     teamsRegras = TeamsRegras()
+    fixturesRegras = FixturesRegras()
+    seasonsRegras = SeasonsRegras()
     idSeason = request.GET.get("id_season")
 
     if idSeason is None:
         raise "É necessário passar o prametro id_season"
 
-    teamsRegras.teamsModel.atualizarTeamsByLeagueSeason(id_season=int(idSeason))
+
+    teamsRegras.teamsModel.atualizarTeamsByLeagueSeason(id_season=int(idSeason), isAtualizarLastModification=False)
+    fixturesRegras.fixturesModel.atualizarFixturesByIdSeason(id_season=int(idSeason))
     return JsonResponse({"response": "Team da Season atualizados"}, safe=False)
 
 
@@ -82,58 +89,12 @@ def searchTeams(request):
     arrTeams = uteisRegras.normalizarDadosForView(arrDados=arrTeams)
     return JsonResponse({"response": arrTeams}, safe=False)
 
-
-def obterStatistics(request):
-    iaRegras = IARegras()
-    rnn = RNN(1, [1], 1)
-    uteisRegras = UteisRegras()
-    statisticsRegras = StatisticsRegras()
-    idSeason = request.GET.get("id_season")
-    idTeamHome = request.GET.get("id_team_home")
-    idTeamAway = request.GET.get("id_team_away")
-
-    if idSeason is None and idTeamHome is None:
-        raise "É necessário passar o prametro id_season ou id_team"
-
-    print("############## new Request #######################")
-    idSeason = int(idSeason)
-    idTeamHome = int(idTeamHome)
-    idTeamAway = int(idTeamAway) if idTeamAway is not None else None
-
-    statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeamHome);
-
-    if idTeamAway is not None:
-        statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeamAway);
-
-    arrTemsInfo = statisticsRegras.obterDadosTodasSeasonLeaguesByTeam(idTeamHome=idTeamHome, idTeamAway=idTeamAway,
-                                                                      id_season=idSeason)
-
-    arrTeamsPlay = statisticsRegras.obterAllFixturesByIdTeams(idTeamHome=idTeamHome, idTeamAway=idTeamAway,
-                                                              id_season=idSeason)
-    ultimass = []
-    for teamPlay in arrTeamsPlay:
-        if teamPlay.id_season == 157 and (teamPlay.id_team_home == 1006 or teamPlay.id_team_away == 1006):
-            ultimass.append(teamPlay)
-
-    statisticsTeamHome = statisticsRegras.obterStatisticsByTeam(arrTeamsInfoDataset=arrTemsInfo, idTeam=idTeamHome)
-    statisticsTeamAway = None
-    if idTeamAway is not None:
-        statisticsTeamAway = statisticsRegras.obterStatisticsByTeam(arrTeamsInfoDataset=arrTemsInfo, idTeam=idTeamAway)
-
-    arrIdsPrever = [int(idTeamHome)]
-    if idTeamAway is not None:
-        arrIdsPrever.append(int(idTeamAway))
-
-    datasetTeamInfo = iaRegras.normalizarDadosTeamInfoDataset(arrTeamsInfo=arrTemsInfo, arrIdsTeamPrever=arrIdsPrever)
-    rnn.treinarRNN(datasetRNN=datasetTeamInfo)
-    arrTeamInfoNormalizada = [arrTeam.__dict__ for arrTeam in arrTemsInfo]
-
-    return JsonResponse({"response": arrTeamInfoNormalizada, "TeamHome": statisticsTeamHome.__dict__,
-                         "TeamAway": [] if statisticsTeamAway is None else statisticsTeamAway.__dict__}, safe=False)
-
 def obterStatistcsTeamsPlay(request):
     iaRegras = IARegras()
-    rnn = RNN(1, [1], 1)
+    rnnHome = RNN(1, [1], 1)
+    rnnAway = RNN(1, [1], 1)
+    rnnPartida = RNN(1, [1], 1)
+
     rbm = DBN(25, 25, 0.01)
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
@@ -144,6 +105,8 @@ def obterStatistcsTeamsPlay(request):
     if idSeason is None and idTeamHome is None:
         raise "É necessário passar o prametro id_season ou id_team"
 
+    isTreinarPartidas = True
+
     print("############## new Request #######################")
     idSeason = int(idSeason)
     idTeamHome = int(idTeamHome)
@@ -154,15 +117,57 @@ def obterStatistcsTeamsPlay(request):
     if idTeamAway is not None:
         statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeamAway);
 
-    arrTeamsPlay = statisticsRegras.obterAllFixturesByIdTeams(idTeamHome=idTeamHome, idTeamAway=idTeamAway,
-                                                              id_season=idSeason)
+    print("######### Treinando Partida ##########")
+    arrTeamsPlayPartida = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeamHome,
+                                                                     idTeamAdversario=idTeamAway,
+                                                                     id_season=idSeason)
 
-    arrIdsPrever = [int(idTeamHome)]
-    if idTeamAway is not None:
-        arrIdsPrever.append(int(idTeamAway))
+    datasetTeamsPlayPartida = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
+                                                                       arrIdsTeamPrever=[idTeamHome, idTeamAway],
+                                                                       qtdeDados=25, isFiltrarTeams=True)
+    arrPrevTreino = []
+    arrPrevPartida = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida)
 
-    datasetTeamsPlay = iaRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlay, arrIdsTeamPrever=arrIdsPrever)
-    #datasetTeamsPlay = rbm.treinarDBN(dataset=datasetTeamsPlay)
-    rnn.treinarRNN(datasetRNN=datasetTeamsPlay)
+    dictPrevPartida = {}
 
-    return JsonResponse({"response": "OK"}, safe=False)
+    for i in range(len(datasetTeamsPlayPartida.arr_name_values_saida)):
+        dictPrevPartida[datasetTeamsPlayPartida.arr_name_values_saida[i]] = arrPrevPartida[0][i]
+
+    arrPrevTreino.append(datasetTeamsPlayPartida.arr_name_values_saida)
+    arrPrevTreino.append(str("Previsoes Partida: \n" + ",".join(list(map(str, arrPrevPartida)))))
+
+
+    print("######### Previsões ##########")
+    name_team_home = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0].name
+    name_team_away = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0].name
+    print("Team home: ", name_team_home, "Team away: ", name_team_away)
+    for prev in arrPrevTreino:
+        print(prev)
+
+    return JsonResponse({"response": dictPrevPartida}, safe=False)
+
+def obterTabelaPontuacao(request):
+    tabelaPontucaoRegras = TabelaPontuacaoRegras()
+    uteisRegras = UteisRegras()
+
+    idSeason = request.GET.get("id_season")
+
+    if idSeason is None:
+        raise "Sem id_season como parametro para obter tabela pontuacao"
+
+    tabelaPontuacao = tabelaPontucaoRegras.obterTabelaPontucao(id_season=idSeason)
+    tabelaPontuacaoNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelaPontuacao])[0]
+    return JsonResponse({"response": tabelaPontuacaoNormalizada}, safe=True)
+
+def obterTabelaJogos(request):
+    tabelaJogosRegras = TabelaJogosRegras()
+    uteisRegras = UteisRegras()
+
+    idSeason = request.GET.get("id_season")
+
+    if idSeason is None:
+        raise "Sem id_season como parametro para obter tabela pontuacao"
+
+    tabelajogos = tabelaJogosRegras.obterTabelaJogos(id_season=idSeason)
+    tabelaJogosNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelajogos])[0]
+    return JsonResponse({"response": tabelaJogosNormalizada}, safe=True)

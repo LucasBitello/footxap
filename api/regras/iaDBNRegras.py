@@ -4,7 +4,7 @@ import math
 import numpy
 
 from matplotlib import pyplot
-from api.regras.iaRegras import DatasetRNN
+from api.regras.iaRNNRegras import DatasetRNN
 
 class DBN:
     def __init__(self, nCamadaVisivel: int, nCamadaOculta: int, txAprendizado: float):

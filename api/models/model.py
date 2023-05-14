@@ -7,33 +7,43 @@ from api.regras.apiFootball import RegraAPIFootBall
 import mysql.connector as connection
 
 class Database:
-    def __init__(self):
-        self.conexao = None
+    #Garante que apenas uma instancia do database seja aberta;
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        try:
+            if cls._instance is None:
+                cls._instance = super().__new__(cls)
+                cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1")
+                newCursonMaxTime = cls._instance.conexao.cursor()
+                newCursonMaxTime.execute("SET max_execution_time = 30")
+            return cls._instance
+        except connection.Error as cExc:
+            print("abrir conexao falhou tentando novamente.")
+            print("Ocorreu a exceção", cExc)
 
     def openConnection(self):
         isConectou = False
         while not isConectou:
             try:
-                if not self.conexao:
-                    self.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1")
+                #self.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1")
                 isConectou = True
             except connection.Error as cExc:
-                time.sleep(2)
                 print("abrir conexao falhou tentando novamente.")
                 print("Ocorreu a exceção", cExc)
                 isConectou = False
 
     def closeConnection(self):
         isFechou = False
+        return
         while not isFechou:
             try:
                 #self.conexao.close()
                 isFechou = True
             except connection.Error as cExc:
-                time.sleep(2)
                 print("fechar conexao falhou tentando novamente.")
                 print("Ocorreu a exceção", cExc)
                 isFechou = False
+
 
 
     def commit(self):

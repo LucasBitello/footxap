@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os.path
 from pathlib import Path
+import mysql.connector.pooling as connection_pooling
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,6 +89,15 @@ DATABASES = {
         'PORT': '3306',
     }
 }
+
+"""DATABASE_MANUAL = {
+    "database":"footxap",
+    "user":"root",
+    "password":"pudinzinho",
+    "host":"127.0.0.1"
+}
+
+connection_pool = connection_pooling.MySQLConnectionPool(pool_size=5, pool_name="pool", **DATABASE_MANUAL)"""
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

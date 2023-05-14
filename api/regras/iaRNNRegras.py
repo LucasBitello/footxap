@@ -5,7 +5,31 @@ import numpy
 
 from matplotlib import pyplot
 
-from api.regras.iaRegras import IARegras, DatasetRNN
+from api.regras.iaRegras import IARegras
+
+class DatasetRNN:
+    def __init__(self):
+        self.arr_entradas_treino: list = []
+        self.arr_saidas_esperadas: list = []
+        self.arr_prevevisao: list = []
+
+        self.max_value_entradas: list = []
+        self.min_value_entradas: list = []
+
+        self.max_value_esperados: list = []
+        self.min_value_esperados: list = []
+
+        self.arr_name_values_entrada: list[str] = []
+        self.arr_name_values_saida: list[str] = []
+
+        self.dado_exemplo: any = None
+        self.quantia_dados: int = None
+        self.quantia_neuronios_entrada: int = None
+        self.quantia_neuronios_saida: int = None
+
+
+        if len(self.arr_entradas_treino) != len(self.arr_saidas_esperadas):
+            raise "Datasets incompletos"
 
 class RNN:
     def __init__(self, nNeuroniosEntrada: int, nNeuroniosCamadaOculta: list[int], nNeuroniosSaida: int, txAprendizado: float = None):
@@ -82,12 +106,21 @@ class RNN:
         return dsig
 
     def softmax(self, x):
-        exp_puntuacao = numpy.exp(x, dtype=numpy.float64)
-        return exp_puntuacao / numpy.sum(exp_puntuacao, axis=0, dtype=numpy.float64)
+        exp_puntuacao = numpy.exp(x - numpy.max(x))
+        soft = exp_puntuacao / numpy.sum(exp_puntuacao)
+        return soft
 
     def derivada_softmax(self, x):
-        s = self.softmax(x)
-        return numpy.diagflat(s) - numpy.dot(s.T, s)
+        s = x #self.softmax(x)
+        deriv = numpy.diag(s) - numpy.outer(s, s.T)
+        return deriv
+
+    def derivada_softmax_matriz(self, x):
+        m, n = x.shape
+        dydx = numpy.zeros((m, n))
+        for j in range(n):
+            dydx[:, j] = numpy.diagonal(self.derivada_softmax(x[:, j]))
+        return dydx
 
     def relu(self, x):
         saida = numpy.maximum(0, x)
@@ -129,13 +162,13 @@ class RNN:
                 estado_oculto_t = numpy.tanh(sum_dot_U_W)
 
                 arrEstadosOcultos[indexEntrada][indexCamadaOculta] = estado_oculto_t
-            saida_t = self.sigmoid(numpy.dot(self.matriz_V, arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B[-1])
+            saida_t = self.softmax(numpy.dot(self.matriz_V, arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B[-1])
             arrSaidas.append(saida_t)
 
         return arrEstadosOcultos, arrSaidas
 
     def backward(self, entradas: list, esperado: list, saidas: list, estadosOcultos: list):
-        lambda_reg = 0.005
+        lambda_reg = 0.01
         delta_U = [numpy.zeros((len(u), len(u[0]))) for u in self.matriz_U]
         delta_W = [numpy.zeros((nOculta, nOculta)) for nOculta in self.nNeuroniosCamadaOculta]
         delta_V = numpy.zeros((self.nNeuroniosSaida, self.nNeuroniosCamadaOculta[-1]))
@@ -143,15 +176,17 @@ class RNN:
 
         for index_entrada_t in range(len(entradas) - 1, -1, -1):
             erro_t = saidas[index_entrada_t] - esperado[index_entrada_t]
+
             #atualiza o bias da saida
-            delta_B[-1] += erro_t
+            derivda = self.softmax(saidas[index_entrada_t])
+            delta_B[-1] += numpy.dot(erro_t.T, derivda)
             self.matriz_adagrad_B[-1] += delta_B[-1] ** 2
             self.matriz_B[-1] -= (self.txAprendizado * delta_B[-1]) / \
                                                   (numpy.sqrt(self.matriz_adagrad_B[-1]) + 1e-9)
 
             #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_relu(saidas[index_entrada_t])
-            delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t])
-            #delta_V += numpy.dot(self.derivada_softmax(saidas[index_entrada_t]), erro_t) * estadosOcultos[index_entrada_t][-1].T
+            #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t])
+            delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t])
             delta_oculto = numpy.dot(self.matriz_V.T, erro_t) * self.derivada_tanh(estadosOcultos[index_entrada_t][-1])
 
             for index_camada_oculta in range(len(self.nNeuroniosCamadaOculta) - 1, -1, -1):
@@ -171,7 +206,7 @@ class RNN:
 
                 delta_W_regularized = delta_W[index_camada_oculta] + lambda_reg * self.matriz_W[index_camada_oculta]
                 self.matriz_adagrad_W[index_camada_oculta] += self.matriz_W[index_camada_oculta] ** 2
-                self.matriz_W[index_camada_oculta] -= (self.txAprendizado * self.matriz_W[index_camada_oculta]) / \
+                self.matriz_W[index_camada_oculta] -= (self.txAprendizado * delta_W_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_W[index_camada_oculta]) + 1e-9)
 
                 delta_U_regularized = delta_U[index_camada_oculta] + lambda_reg * self.matriz_U[index_camada_oculta]
@@ -181,7 +216,7 @@ class RNN:
 
                 delta_B_regularized = delta_B[index_camada_oculta] + lambda_reg * self.matriz_B[index_camada_oculta]
                 self.matriz_adagrad_B[index_camada_oculta] += self.matriz_B[index_camada_oculta] ** 2
-                self.matriz_B[index_camada_oculta] -= (self.txAprendizado * self.matriz_B[index_camada_oculta]) / \
+                self.matriz_B[index_camada_oculta] -= (self.txAprendizado * delta_B_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_B[index_camada_oculta]) + 1e-9)
 
             self.matriz_adagrad_V += delta_V ** 2
@@ -190,106 +225,69 @@ class RNN:
 
 
 
-    def treinar(self, entradas_treino: list[numpy.ndarray], saidas_treino: list[numpy.ndarray], n_epocas: int,
-                tx_aprendizado: float, kFolds: int):
+    def treinar(self, entradas_treino: list[list[list]], saidas_treino: list[list[list]], n_epocas: int,
+                tx_aprendizado: float):
         self.txAprendizado = tx_aprendizado
-        nKFolds =  kFolds
-        saidas_treino = [numpy.asarray(rotulo).reshape(-1, 1) for rotulo in saidas_treino]
-        arrLoss = numpy.zeros(25).tolist()
-
         epoch = 0
-        indexLoss = 0
-        isChegouPerto = False
         isBrekarWhile = False
+
         while not isBrekarWhile:
             epoch += 1
-            entrada_in_k_folds = self.iaRegras.obter_k_folds_temporal(entradas_treino, nKFolds)
-            saidas_in_k_folds = self.iaRegras.obter_k_folds_temporal(saidas_treino, nKFolds)
-            #entrada_in_k_folds = [entradas_treino[:(len(entradas_treino) - 4)], entradas_treino[-4:]]
-            #saidas_in_k_folds = [saidas_treino[:(len(saidas_treino) - 4)], saidas_treino[-4:]]
-            if epoch == 0:
-                """print(nKFolds, len(entrada_in_k_folds))
-                print([len(k) for k in entrada_in_k_folds])
-                print(sum([len(k) for k in entrada_in_k_folds]), len(entradas_treino))"""
 
-            index_k_validation = len(entrada_in_k_folds) - 1
+            for index in range(len(entradas_treino)):
+                estados_ocultos, saidas = self.forward(entradas=entradas_treino[index])
 
-            for index_K_entrada in range(len(entrada_in_k_folds)):
+                if epoch % 2 == 0:
+                    isBrekarWhile, mensagem = self.iaRegras.obterErroSaida(rotulos_saidas=saidas_treino[index],
+                                                                           saidas_previstas=saidas, epoca_atual=epoch,
+                                                                           taxa_aprendizado=self.txAprendizado)
 
-                if index_K_entrada != index_k_validation:
-                    estados_ocultos, saidas = self.forward(entradas=entrada_in_k_folds[index_K_entrada])
-                    self.backward(entrada_in_k_folds[index_K_entrada], saidas_in_k_folds[index_K_entrada], saidas,
-                                  estados_ocultos)
-                else:
-                    estados_ocultos, saidas = self.forward(entradas=entrada_in_k_folds[index_K_entrada])
-                    self.backward(entrada_in_k_folds[index_K_entrada], saidas_in_k_folds[index_K_entrada], saidas,
-                                  estados_ocultos)
-                    estados_ocultos, saidas = self.forward(entradas=entrada_in_k_folds[index_K_entrada])
-                    #mean absolute error" (MAE) ou "erro médio absoluto"
-                    #loss = -numpy.mean(numpy.abs(numpy.asarray(saidas) - numpy.asarray(saidas_treino)))
+                if epoch == n_epocas:
+                    isBrekarWhile = True
 
-                    #entropia cruzada (cross-entropy)
-                    #loss = -numpy.mean(numpy.sum(saidas_treino * numpy.log(saidas), axis=0))
+                self.backward(entradas_treino[index], saidas_treino[index], saidas,
+                              estados_ocultos)
 
-                    #(MSE - Mean Squared Error)
-                    loss = numpy.mean((numpy.asarray(saidas_in_k_folds[index_K_entrada]) - numpy.asarray(saidas)) ** 2)
-                    arrLoss[indexLoss] = loss
-                    indexLoss += 1
-
-                    if indexLoss >= len(arrLoss):
-                        indexLoss = 0
-                    else:
-                        if arrLoss[-1] > 0.0:
-                            if loss <= 0.04:
-                                print("isChegou media")
-                                isBrekarWhile = True
-                            elif epoch >= n_epocas:
-                                print("Brekou por epocas")
-                                isBrekarWhile = True
-                            #elif mediaLoss - arrLoss[0] <= 0.0001:
-                                #self.txAprendizado = self.txAprendizado - (self.txAprendizado * 0.4)
-                                #print("taxa de aprendizado alterada para: ", self.txAprendizado)
-
-                    if (epoch + 1) % 5 == 0:
-                        print("Epoch: ", epoch, ", erro: ", loss, "TxAprendizado: ", self.txAprendizado)
-                        #self.txAprendizado = self.txAprendizado - (self.txAprendizado * 0.001)
-                    else:
-                        if n_epocas <= 25:
-                            print("Epoch: ", epoch, ", erro: ", loss, "TxAprendizado: ", self.txAprendizado)
-
-    def prever(self, entrada, isSaida = False):
+    def prever(self, entrada, isSaida = False, isNormalizarSaida = True):
         estados_ocultos, saida = self.forward(entrada)
         saida = [numpy.asarray(saida).reshape(-1)]
-        saida_formatada = [f"{x:.7f}" for x in numpy.asarray(saida).reshape(-1)]
-        print(saida_formatada)
-        return estados_ocultos, saida
+        if isNormalizarSaida:
+            saida_formatada = [f"{x*100:.4f}%" for x in numpy.asarray(saida).reshape(-1)]
+        else:
+            saida_formatada = [x for x in numpy.asarray(saida).reshape(-1)]
+        return estados_ocultos, saida_formatada
 
-    def treinarRNN(self, datasetRNN: DatasetRNN):
-        qtdeDados = len(datasetRNN.arr_entradas_treino)
-        qtdeNeuroniosPrimeiraCamada = (int((qtdeDados * 2) + int(qtdeDados * 0.3)))
-        taxaAprendizado = 0.002 if qtdeDados <= 115 else 0.01 if qtdeDados <= 196 else 0.008
-        nKfolds = int(qtdeDados / 10) if (qtdeDados / 10) < int(qtdeDados / 10) + 0.5 else math.ceil(qtdeDados / 10)
+    def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True) -> list[list]:
+        if not isTreinar:
+            return [[]]
 
-        print("N neuronios entrada:", len(datasetRNN.arr_entradas_treino[0]))
-        print("N neuronios primeira camada: ", qtdeNeuroniosPrimeiraCamada)
-        print("Qtde dados:", qtdeDados, ", TTxAprendizado: ", taxaAprendizado, ", k-Folds:", nKfolds)
+        nEpocas = 100
+        qtdeDados = datasetRNN.quantia_dados
+        qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
+        qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida
+        qtdeNeuroniosPrimeiraCamada = 150
+        taxaAprendizado = 0.001
 
-        self.__init__(nNeuroniosEntrada=len(datasetRNN.arr_entradas_treino[0]),
-                      nNeuroniosCamadaOculta=[qtdeNeuroniosPrimeiraCamada,
-                                              int(qtdeNeuroniosPrimeiraCamada * 0.7)],
-                      nNeuroniosSaida=len(datasetRNN.arr_saidas_esperadas[0]))
+        print("N neuronios entrada:", qtdeNeuroniosEntrada)
+        print("N neuronios primeira camada oculta: ", qtdeNeuroniosPrimeiraCamada)
+        print("Qtde dados:", qtdeDados, ", TxAprendizado: ", taxaAprendizado)
 
-        print(len(datasetRNN.arr_entradas_treino), len(datasetRNN.arr_saidas_esperadas))
+
+        self.__init__(nNeuroniosEntrada=qtdeNeuroniosEntrada,
+                      nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0),
+                                              int(qtdeNeuroniosPrimeiraCamada * 0.7),
+                                              int(qtdeNeuroniosPrimeiraCamada * 0.3)],
+                      nNeuroniosSaida=qtdeneuroniosSaida)
 
         self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_saidas_esperadas,
-                     n_epocas=500, tx_aprendizado=taxaAprendizado, kFolds=nKfolds)
+                     n_epocas=nEpocas, tx_aprendizado=taxaAprendizado)
 
         print(datasetRNN.dado_exemplo)
-        print(datasetRNN.max_value_entradas, datasetRNN.min_value_entradas)
         print(datasetRNN.max_value_esperados, datasetRNN.min_value_esperados)
 
-        for dadosPrever in datasetRNN.arr_prevevisao:
-            print("Prever: ", dadosPrever)
-            self.prever(entrada=[dadosPrever])
+        arrPrevisoes = []
 
-        return
+        for dadosPrever in datasetRNN.arr_prevevisao:
+            arrPrevisoes.append(self.prever(entrada=[dadosPrever])[1])
+
+        return arrPrevisoes

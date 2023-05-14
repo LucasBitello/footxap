@@ -6,6 +6,22 @@
   width: 100%;
 }
 
+.width-25 {
+  width: 25%;
+}
+
+.max-width-25 {
+  max-width: 25%;
+}
+
+.width-10 {
+  width: 10%;
+}
+
+.max-width-10 {
+  max-width: 10%;
+}
+
 .heigth-25vh {
   height: 25vh;
 }
@@ -46,6 +62,10 @@
   display: none;
 }
 
+.positon-absolute {
+  position: sticky;
+}
+
 .loader {
   position: absolute;
   top: 0;
@@ -75,4 +95,52 @@
   100% {
       transform: rotate(360deg);
   }
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.color-vitoria {
+  color: #2bc72b;
+}
+
+.color-derrota {
+  color: #fa3f3f;
+}
+
+.color-empate {
+  color: #a4a4a4;
+}
+
+.color-black {
+  color: black;
+}
+
+.backgroud-color-black{
+  background-color: black;
+}
+
+.font-size-0-8-em{
+  font-size: 0.8em;
+}
+
+.backgroud-color-white {
+  background-color: white;
+}
+
+.paddaing-vertical-5px {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.margin-vertical-5px {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+
+.paddaing-vertical-3px {
+  padding-top: 3px;
+  padding-bottom: 3px;
 }

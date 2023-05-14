@@ -8,10 +8,12 @@ body {
 .menu-left {
   height: 100vh;
   width: 25vw;
-  background-color: cadetblue;
+  background-color: #3a3a3d;
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
   align-content: center;
+  display: flex;
+  flex-direction: column;
 }
 
 .label-select {
@@ -19,7 +21,8 @@ body {
   flex-direction: column;
   align-items: center;
   font-size: 18px;
-  color: #000000;
+  font-weight: bold;
+  color: #ffffff;
   font-family: "Helvetica Neue", sans-serif;
 }
 .select {
@@ -28,6 +31,8 @@ body {
   border-color: darkgray;
   border-radius: 5px;
   outline: none;
+  font-weight: bold;
+  color: black;
 }
 
 .team-x-team{
@@ -62,6 +67,7 @@ body {
   align-self: center;
   top: 50%;
   transform: translate(0, -50%);
+  z-index: -1;
 }
 
 .label-search {
@@ -83,6 +89,20 @@ body {
   overflow-y: auto;
 }
 
+.div-search-team::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 15px;
+}
+
+.div-search-team::-webkit-scrollbar-track {
+  background-color: #ececec;
+  border-radius: 5px;
+}
+
+.div-search-team::-webkit-scrollbar-thumb {
+  background-color: #757575;
+}
+
 .div-search-team a {
   outline: none;
   font-size: 18px;
@@ -96,3 +116,92 @@ body {
   margin-left: 5px;
   width: 15px;
 }
+
+.tabela-teams {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #444448;
+}
+
+.jogos-teams {
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #444448;
+}
+
+.tr-team-tabela {
+  color: white;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid white;
+  align-items: center;
+  font-family: sans-serif;
+}
+
+.tr-team-tabela a {
+  outline: none;
+  text-decoration: none;
+  color: white;
+}
+
+.td-team {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.label-google {
+  background-color: #444448;
+  color: white;
+  width: 25%;
+  height: 3vh;
+  border: none;
+  font-size: 18px;
+  font-family: sans-serif;
+  align-items: center;
+  margin-left: 10px;
+  outline: none;
+  border-bottom: 3px solid white;
+  text-align: center;
+}
+
+.div-tabela-jogos {
+  max-height: 60vh;
+}
+
+.div-info-teams{
+  overflow-y: auto;
+  max-height: 60vh;
+  width: 100%;
+}
+
+.div-info-teams::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 15px;
+}
+
+.div-info-teams::-webkit-scrollbar-track {
+  background-color: #333333;
+  border-radius: 5px;
+}
+
+.div-info-teams::-webkit-scrollbar-thumb {
+  background-color: #a8a8a8;
+}
+
+
+
+thead {
+  position: sticky;
+  top: 0;
+  background-color: #444448;
+}
+
+.tbody-teams{
+  position: absolute;
+  width: 98%;
+}
+
