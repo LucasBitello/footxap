@@ -27,3 +27,5 @@ pip3 install gunicorn psycopg2-binary
 --pip install keras
 --pip install tensorflow
 --pip install django-cors-headers
+
+nano /etc/nginx/sites-available/footxap
