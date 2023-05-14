@@ -29,12 +29,13 @@ async function callGETAPI(params, isShowLoader = true) {
     console.log("Requisição para: " + url )
 
     try{
-       let response = await fetch(url, {
+        let response = await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
                 "X-CSRFToken": csrfmiddlewaretoken
             },
+            timeout: 900
         })
 
         let responseJson = await response.json()

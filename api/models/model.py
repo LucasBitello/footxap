@@ -68,7 +68,6 @@ class Database:
 
 
     def executeModifyQuery(self, query: str, params: list = [], isCommit: bool = True) -> list[int, int]:
-        print("veio query", query)
         with self.conexao.cursor() as cursor:
             cursor.execute(query, params)
 
@@ -285,7 +284,6 @@ class Model(AtualizarDatabase):
         pass
 
     def executarQuery(self, query: str, params: list):
-        print(query)
         self.database.executeModifyQuery(query=query, params=params)
 
     def salvar(self, data: list[dict], isNormalizarDados: bool = True, isForcarInsert: bool = False,
