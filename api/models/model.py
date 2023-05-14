@@ -57,7 +57,7 @@ class Database:
 
     def executeSelectQuery(self, query: str, classModelDB: any, params: list = []) -> list[classModelDB]:
         self.openConnection()
-        with self.conexao.cursor() as cursor:
+        with self._instance.conexao.cursor() as cursor:
             cursor.execute(query, params)
             nameColumns = [col[0] for col in cursor.description]
             rowsData = cursor.fetchall()
