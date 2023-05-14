@@ -35,7 +35,7 @@ async function callGETAPI(params, isShowLoader = true) {
                 'Content-Type': 'application/json',
                 "X-CSRFToken": csrfmiddlewaretoken
             },
-            timeout: 900
+            timeout: 900000
         })
 
         let responseJson = await response.json()
