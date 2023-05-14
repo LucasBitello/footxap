@@ -261,7 +261,7 @@ class RNN:
         if not isTreinar:
             return [[]]
 
-        nEpocas = 100
+        nEpocas = 1500
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
         qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida

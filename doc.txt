@@ -1,13 +1,27 @@
 --pip install django #Instala o Framwork Django -AVA TEU
---djando-admin startproject {nome do projeto} #{Instancia o projeto}
+--django-admin startproject {nome do projeto} #{Instancia o projeto}
 --python manage.py createsuperuser #{cria um super usuario no meu caso a senha é aquela fodastica}
 --python manage.py startapp {nome da URL/Seja lá oque for não lembro o nome seria tipo o /login ou /home}
 --python manage.py runserver #{para instanciar o servidor}
 
 --Dependencias:
 --pip install django
+--sudo apt-get install libmysqlclient-dev
 --pip install mysqlclient
+pip install mysql-python
+apt-get install python-mysqldb
+pip3 install mysql-connector-python-rf
+pip3 install mysql-connector-python
+--sudo apt install --reinstall python3-django
 --python manage.py migrate
+
+python3.9 -m venv env
+source env/bin/activate
+
+--para liberar publica mente:
+
+pip3 install gunicorn psycopg2-binary
+
 
 
 --pip install keras
