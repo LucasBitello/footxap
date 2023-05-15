@@ -14,7 +14,7 @@
         <script src="{% static 'js/home.js' %}" type="text/javascript" ></script>
     </head>
     <body>
-        <div class="menu-left">
+        <div class="menu-left" id="div-menu-left">
             <div class="heigth-25vh display-flex-column-space-around">
                 <label class="label-select">
                     Countries:
@@ -49,8 +49,8 @@
             </div>
 
         </div>
-        <div class="team-x-team display-flex-row-space-around">
-            <div class="team-x display-flex-column">
+        <div class="team-x-team" id="div-team-x-team">
+            <div class="team-x display-flex-column" id="div-team-x-home">
                 <img id="img-team-home" src="https://" class="img-team-selected" alt="imagem-time">
                 <div class="display-flex-column-center">
                     <label class="display-flex-column-center width-100 label-search">
@@ -61,7 +61,7 @@
                     <div id="div-results-team-home" class="div-search-team display-flex-column hidden"></div>
                 </div>
             </div>
-            <div class="team-x display-flex-column">
+            <div class="team-x display-flex-column" id="div-team-x-away">
                 <img id="img-team-away" src="https://" class="img-team-selected" alt="imagem-time">
                 <div class="display-flex-column-center">
                     <label class="display-flex-column-center width-100 label-search">

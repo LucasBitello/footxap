@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    ajustarLayout()
     document.getElementById("select-country").addEventListener("change", async () => {
         await ajustarSelectLeague("select-league")
 
@@ -286,4 +287,25 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
     }
 
     alert(msg)
+}
+
+function ajustarLayout(){
+    if (/Mobi/.test(navigator.userAgent) || document.documentElement.clientWidth <= 600){
+        let div_menu_left = document.getElementById("div-menu-left")
+        let div_team_x_team = document.getElementById("div-team-x-team")
+        let div_team_x_home = document.getElementById("div-team-x-home")
+        let div_team_x_away = document.getElementById("div-team-x-away")
+
+
+        div_menu_left.style.width = "40vw"
+
+        div_team_x_team.classList.remove("team-x-team")
+        div_team_x_team.classList.add("team-x-team-mobile")
+
+        div_team_x_home.classList.remove("team-x")
+        div_team_x_home.classList.add("team-x-mobile")
+
+        div_team_x_away.classList.remove("team-x")
+        div_team_x_away.classList.add("team-x-mobile")
+    }
 }
