@@ -40,6 +40,11 @@ class UteisRegras():
                     for key2 in dado[key]:
                         if type(dado[key][key2]) == list and len(dado[key][key2]) >= 1:
                             dado[key][key2] = self.normalizarDadosForView(dado[key][key2])
+                        elif (type(dado[key][key2]) != int and type(dado[key][key2]) != float and
+                              type(dado[key][key2]) != str and type(dado[key][key2]) != list and
+                              dado[key][key2] is not None and type(dado[key][key2]) != datetime.datetime and
+                              type(dado[key][key2]) != datetime.date and type(dado[key][key2]) != dict):
+                            dado[key][key2] = dado[key][key2].__dict__
 
             arrDadosNormalizados.append(dado)
 

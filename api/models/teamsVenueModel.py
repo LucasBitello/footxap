@@ -1,4 +1,6 @@
 from __future__ import annotations
+# -*- coding: utf-8 -*-
+import json
 from api.models.model import Model, ReferenciaDatabaseToAPI, ReferenciaTabelasFilhas, IdTabelas, ClassModel, ReferenciaTabelasPai
 
 class TeamsVenueModel(Model):
@@ -54,7 +56,7 @@ class TeamsVenueModel(Model):
         newTeamVenue.capacity = teamVenue["capacity"]
         newTeamVenue.surface = teamVenue["surface"]
         newTeamVenue.image = teamVenue["image"]
-        print(newTeamVenue.__dict__)
+        print(json.dumps(newTeamVenue.__dict__, ensure_ascii=False).encode('utf-8'))
         self.salvar(data=[newTeamVenue])
 
 class TeamVenue(ClassModel):

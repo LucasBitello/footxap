@@ -32,38 +32,43 @@ class DatasetRNN:
             raise "Datasets incompletos"
 
 class RNN:
-    def __init__(self, nNeuroniosEntrada: int, nNeuroniosCamadaOculta: list[int], nNeuroniosSaida: int, txAprendizado: float = None):
+    def __init__(self, nNeuroniosEntrada: int, nNeuroniosCamadaOculta: list[int],
+                 arrCamadasNeuroniosSaida: list[int], txAprendizado: float = None):
         self.iaRegras = IARegras()
         self.nNeuroniosEntrada = nNeuroniosEntrada
         self.nNeuroniosCamadaOculta = nNeuroniosCamadaOculta
-        self.nNeuroniosSaida = nNeuroniosSaida
+        self.arrCamadasNeuroniosSaida = arrCamadasNeuroniosSaida
         self.txAprendizado = txAprendizado
+
+        self.qtdeNeuroniosSaida = sum([camadaNeuronioSaida for camadaNeuronioSaida in arrCamadasNeuroniosSaida])
 
         self.matriz_U: list[numpy.ndarray] = []
         self.matriz_W: list[numpy.ndarray] = []
         self.matriz_V: list[numpy.ndarray] = []
         self.matriz_B: list[numpy.ndarray] = []
+        self.matriz_B_saida: list[numpy.ndarray] = []
 
 
         self.matriz_adagrad_U: list[numpy.ndarray] = []
         self.matriz_adagrad_W: list[numpy.ndarray] = []
         self.matriz_adagrad_V: list[numpy.ndarray] = []
         self.matriz_adagrad_B: list[numpy.ndarray] = []
+        self.matriz_adagrad_B_saida: list[numpy.ndarray] = []
 
 
         for indexnNeuroniosOcultos in range(len(nNeuroniosCamadaOculta)):
-            W = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                     numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
+            W = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
+                                     numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
                                      (nNeuroniosCamadaOculta[indexnNeuroniosOcultos],
                                       nNeuroniosCamadaOculta[indexnNeuroniosOcultos]))
 
             if indexnNeuroniosOcultos == 0:
-                U = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
+                U = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
+                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
                                          (nNeuroniosCamadaOculta[0], nNeuroniosEntrada))
             else:
-                U = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
+                U = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
+                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
                                          (nNeuroniosCamadaOculta[indexnNeuroniosOcultos],
                                           nNeuroniosCamadaOculta[indexnNeuroniosOcultos - 1]))
 
@@ -72,9 +77,9 @@ class RNN:
 
             #B = numpy.zeros((nNeuroniosCamadaOculta[indexnNeuroniosOcultos], 1))
 
-            B = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                 numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                 (nNeuroniosCamadaOculta[indexnNeuroniosOcultos], 1))
+            B = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
+                                     numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
+                                     (nNeuroniosCamadaOculta[indexnNeuroniosOcultos], 1))
 
             self.matriz_adagrad_B.append(numpy.zeros_like(B))
 
@@ -83,19 +88,22 @@ class RNN:
             self.matriz_W.append(W)
 
             if indexnNeuroniosOcultos == len(nNeuroniosCamadaOculta) - 1:
-                V = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                         (nNeuroniosSaida, nNeuroniosCamadaOculta[indexnNeuroniosOcultos]))
+                arr_matriz_B_saida = []
+                arr_matriz_adagrad_B_saida = []
+                for nNeuroniosCamadaSaida in arrCamadasNeuroniosSaida:
+                    V = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + nNeuroniosCamadaSaida)),
+                                             numpy.sqrt(2 / (self.nNeuroniosEntrada + nNeuroniosCamadaSaida)),
+                                             (nNeuroniosCamadaSaida, nNeuroniosCamadaOculta[indexnNeuroniosOcultos]))
 
-                self.matriz_V = V
-                self.matriz_adagrad_V = numpy.zeros_like(V)
+                    self.matriz_V.append(V)
+                    self.matriz_adagrad_V.append(numpy.zeros_like(V))
 
-                B = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.nNeuroniosSaida)),
-                                         (nNeuroniosSaida, 1))
+                    B_saida = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + nNeuroniosCamadaSaida)),
+                                             numpy.sqrt(2 / (self.nNeuroniosEntrada + nNeuroniosCamadaSaida)),
+                                             (nNeuroniosCamadaSaida, 1))
 
-                self.matriz_B.append(B)
-                self.matriz_adagrad_B.append(numpy.zeros_like(B))
+                    self.matriz_B_saida.append(B_saida)
+                    self.matriz_adagrad_B_saida.append(numpy.zeros_like(B_saida))
 
     def sigmoid(self, x):
         sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64))
@@ -162,8 +170,14 @@ class RNN:
                 estado_oculto_t = numpy.tanh(sum_dot_U_W)
 
                 arrEstadosOcultos[indexEntrada][indexCamadaOculta] = estado_oculto_t
-            saida_t = self.sigmoid(numpy.dot(self.matriz_V, arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B[-1])
-            arrSaidas.append(saida_t)
+
+            arrCamadasSaidas_t = []
+
+            for indexCamadaSaida in range(len(self.arrCamadasNeuroniosSaida)):
+                saida_camada_t = self.sigmoid(numpy.dot(self.matriz_V[indexCamadaSaida], arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B_saida[indexCamadaSaida])
+                arrCamadasSaidas_t.append(saida_camada_t)
+
+            arrSaidas.append(arrCamadasSaidas_t)
 
         return arrEstadosOcultos, arrSaidas
 
@@ -171,23 +185,35 @@ class RNN:
         lambda_reg = 0.01
         delta_U = [numpy.zeros((len(u), len(u[0]))) for u in self.matriz_U]
         delta_W = [numpy.zeros((nOculta, nOculta)) for nOculta in self.nNeuroniosCamadaOculta]
-        delta_V = numpy.zeros((self.nNeuroniosSaida, self.nNeuroniosCamadaOculta[-1]))
+        delta_V = [numpy.zeros((nNeuroSaida, self.nNeuroniosCamadaOculta[-1])) for nNeuroSaida in self.arrCamadasNeuroniosSaida]
         delta_B = [numpy.zeros((len(nBias), len(nBias[0]))) for nBias in self.matriz_B]
+        delta_B_saida = [numpy.zeros((len(nBias_saida), len(nBias_saida[0]))) for nBias_saida in self.matriz_B_saida]
 
         for index_entrada_t in range(len(entradas) - 1, -1, -1):
-            erro_t = saidas[index_entrada_t] - esperado[index_entrada_t]
+            arr_erros_t = []
+            arr_deltas_ocultos = []
+            delta_oculto = numpy.zeros((len(estadosOcultos[index_entrada_t][-1]), 1))
 
-            #atualiza o bias da saida
-            derivda = self.softmax(saidas[index_entrada_t])
-            delta_B[-1] += numpy.dot(erro_t.T, derivda)
-            self.matriz_adagrad_B[-1] += delta_B[-1] ** 2
-            self.matriz_B[-1] -= (self.txAprendizado * delta_B[-1]) / \
-                                                  (numpy.sqrt(self.matriz_adagrad_B[-1]) + 1e-9)
+            for index_camada_saida in range(len(self.arrCamadasNeuroniosSaida)):
+                erro_t = saidas[index_entrada_t][index_camada_saida] - esperado[index_entrada_t][index_camada_saida]
+                arr_erros_t.append(erro_t)
 
-            #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_relu(saidas[index_entrada_t])
-            delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t])
-            #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t])
-            delta_oculto = numpy.dot(self.matriz_V.T, erro_t) * self.derivada_tanh(estadosOcultos[index_entrada_t][-1])
+                #atualiza o bias da saida
+                derivda = self.sigmoid(saidas[index_entrada_t][index_camada_saida])
+                delta_B_saida[index_camada_saida] += numpy.dot(erro_t.T, derivda)
+                self.matriz_adagrad_B_saida[index_camada_saida] += delta_B_saida[index_camada_saida] ** 2
+                self.matriz_B_saida[index_camada_saida] -= (self.txAprendizado * delta_B_saida[index_camada_saida]) / \
+                                                      (numpy.sqrt(self.matriz_adagrad_B_saida[index_camada_saida]) + 1e-9)
+
+                # delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_relu(saidas[index_entrada_t])
+                delta_V[index_camada_saida] += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t][index_camada_saida])
+                # delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t])
+
+                self.matriz_adagrad_V[index_camada_saida] += delta_V[index_camada_saida] ** 2
+                self.matriz_V[index_camada_saida] -= (self.txAprendizado * delta_V[index_camada_saida]) / \
+                                 (numpy.sqrt(self.matriz_adagrad_V[index_camada_saida]) + 1e-9)
+
+                delta_oculto += numpy.dot(self.matriz_V[index_camada_saida].T, erro_t) * self.derivada_tanh(estadosOcultos[index_entrada_t][-1])
 
             for index_camada_oculta in range(len(self.nNeuroniosCamadaOculta) - 1, -1, -1):
                 # atualiza o bias da ultima camada oculta.
@@ -219,12 +245,6 @@ class RNN:
                 self.matriz_B[index_camada_oculta] -= (self.txAprendizado * delta_B_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_B[index_camada_oculta]) + 1e-9)
 
-            self.matriz_adagrad_V += delta_V ** 2
-            self.matriz_V -= (self.txAprendizado * delta_V) / \
-                             (numpy.sqrt(self.matriz_adagrad_V) + 1e-9)
-
-
-
     def treinar(self, entradas_treino: list[list[list]], saidas_treino: list[list[list]], n_epocas: int,
                 tx_aprendizado: float):
         self.txAprendizado = tx_aprendizado
@@ -249,19 +269,24 @@ class RNN:
                               estados_ocultos)
 
     def prever(self, entrada, isSaida = False, isNormalizarSaida = True):
-        estados_ocultos, saida = self.forward(entrada)
-        saida = [numpy.asarray(saida).reshape(-1)]
-        if isNormalizarSaida:
-            saida_formatada = [f"{x*100:.4f}%" for x in numpy.asarray(saida).reshape(-1)]
-        else:
-            saida_formatada = [x for x in numpy.asarray(saida).reshape(-1)]
-        return estados_ocultos, saida_formatada
+        estados_ocultos, saidas_rede = self.forward(entrada)
+        saidas_formatada = []
+
+        for lote in saidas_rede:
+            for saida in lote:
+                if isNormalizarSaida:
+                    saida_formatada = [f"{x * 100:.4f}%" for x in numpy.asarray(saida).reshape(-1)]
+                    saidas_formatada.append(saida_formatada)
+                else:
+                    saidas_formatada.append([x for x in numpy.asarray(saida).reshape(-1)])
+
+        return estados_ocultos, saidas_formatada
 
     def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True) -> list[list]:
         if not isTreinar:
             return [[]]
 
-        nEpocas = 1500
+        nEpocas = 25
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
         qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida
@@ -272,12 +297,11 @@ class RNN:
         print("N neuronios primeira camada oculta: ", qtdeNeuroniosPrimeiraCamada)
         print("Qtde dados:", qtdeDados, ", TxAprendizado: ", taxaAprendizado)
 
-
         self.__init__(nNeuroniosEntrada=qtdeNeuroniosEntrada,
                       nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0),
                                               int(qtdeNeuroniosPrimeiraCamada * 0.7),
                                               int(qtdeNeuroniosPrimeiraCamada * 0.3)],
-                      nNeuroniosSaida=qtdeneuroniosSaida)
+                      arrCamadasNeuroniosSaida=qtdeneuroniosSaida)
 
         self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_saidas_esperadas,
                      n_epocas=nEpocas, tx_aprendizado=taxaAprendizado)

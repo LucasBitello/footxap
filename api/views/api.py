@@ -91,9 +91,7 @@ def searchTeams(request):
 
 def obterStatistcsTeamsPlay(request):
     iaRegras = IARegras()
-    rnnHome = RNN(1, [1], 1)
-    rnnAway = RNN(1, [1], 1)
-    rnnPartida = RNN(1, [1], 1)
+    rnnPartida = RNN(1, [1], [1])
 
     rbm = DBN(25, 25, 0.01)
     uteisRegras = UteisRegras()
@@ -131,7 +129,13 @@ def obterStatistcsTeamsPlay(request):
     dictPrevPartida = {}
 
     for i in range(len(datasetTeamsPlayPartida.arr_name_values_saida)):
-        dictPrevPartida[datasetTeamsPlayPartida.arr_name_values_saida[i]] = arrPrevPartida[0][i]
+        name_chave_prob = datasetTeamsPlayPartida.arr_name_values_saida[i]
+        dictPrevPartida[name_chave_prob] = {}
+        dictPrevPartida[name_chave_prob] = {
+            "vitoria": arrPrevPartida[0][i][0],
+            "empate": arrPrevPartida[0][i][1],
+            "derrota": arrPrevPartida[0][i][2]
+        }
 
     arrPrevTreino.append(datasetTeamsPlayPartida.arr_name_values_saida)
     arrPrevTreino.append(str("Previsoes Partida: \n" + ",".join(list(map(str, arrPrevPartida)))))

@@ -148,9 +148,7 @@ async function searchTeams(isHome){
                     iptSearchTeam.value = name_team
                     iptSearchTeam.setAttribute("data-id-team-selected", id_team)
 
-                    let imgTeamSelected = document.getElementById("img-team"+name_diff_item)
-                    imgTeamSelected.setAttribute("src", logo_team)
-                    imgTeamSelected.setAttribute("width", document.documentElement.clientWidth * 0.33)
+                    setImgTeam(isHome, logo_team)
 
                     if(!isHome){
                         let id_team_home_selected = document.getElementById("input-search-team-home")
@@ -254,8 +252,13 @@ async function showJogos(id_season){
         jogosTeam.innerHTML += `
             <tr class="tr-team-tabela paddaing-vertical-5px">
                 <td>
-                    <a href="#" class="a-link-team-vs-team" data-id-team-home="${team["team_home"]["id_team"]}"
-                    data-id-team-away="${team["team_away"]["id_team"]}"> 
+                    <a href="#" class="a-link-team-vs-team" 
+                    data-id-team-home="${team["team_home"]["id_team"]}"
+                    data-name-team-home="${team["team_home"]["info_team"]["name"]}"
+                    data-logo-team-home="${team["team_home"]["info_team"]["logo"]}"
+                    data-id-team-away="${team["team_away"]["id_team"]}"
+                    data-name-team-away="${team["team_away"]["info_team"]["name"]}"
+                    data-logo-team-away="${team["team_away"]["info_team"]["logo"]}"> 
                         ${team["team_home"]["name_team"]} <b>VS</b> ${team["team_away"]["name_team"]}
                     </a> 
                     <br> as: ${team["data_jogo"]}
@@ -267,8 +270,22 @@ async function showJogos(id_season){
             element.addEventListener("click", async () => {
                 let id_season_selected = document.getElementById("select-season").value
                 let iptSearchTeamHome = document.getElementById("input-search-team-home")
+                let iptSearchTeamAway = document.getElementById("input-search-team-away")
+
                 let id_team_home = element.getAttribute("data-id-team-home")
+                let name_team_home = element.getAttribute("data-name-team-home")
+                let logo_team_home = element.getAttribute("data-logo-team-home")
+
                 let id_team_away = element.getAttribute("data-id-team-away")
+                let name_team_away = element.getAttribute("data-name-team-away")
+                let logo_team_away = element.getAttribute("data-logo-team-away")
+
+                iptSearchTeamHome.value = name_team_home
+                iptSearchTeamAway.value = name_team_away
+
+                setImgTeam(true, logo_team_home)
+                setImgTeam(false, logo_team_away)
+
 
                 await fazerRequisicaoParaIA(id_season_selected, id_team_home, id_team_away)
             })
@@ -280,13 +297,26 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
     let params = "/statistics?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
     let probsIA = await callGETAPI(params)
 
-    let msg = ""
+    let div_estatisticas_team_home = document.getElementById("div-estatisticas-team-home")
+    div_estatisticas_team_home.innerHTML = `
+        <label>Probabilidades: <br>
+            <label>Vitória: ${probsIA["probabilidades_home"]["vitoria"]}</label><br>
+            <label>Empate: ${probsIA["probabilidades_home"]["empate"]}</label><br>
+            <label>Derrota: ${probsIA["probabilidades_home"]["derrota"]}</label><br>
+        </label>
+    `
 
-    for (let key in probsIA){
-        msg += `${key}: ${probsIA[key]} \n`
-    }
-
-    alert(msg)
+    let div_estatisticas_team_away = document.getElementById("div-estatisticas-team-away")
+    console.log(probsIA)
+    console.log(probsIA["probabilidades_away"])
+    console.log(probsIA["probabilidades_away"]["vitoria"])
+    div_estatisticas_team_away.innerHTML = `
+        <label>Probabilidades: <br>
+            <label>Vitória: ${probsIA["probabilidades_away"]["vitoria"]}</label><br>
+            <label>Empate: ${probsIA["probabilidades_away"]["empate"]}</label><br>
+            <label>Derrota: ${probsIA["probabilidades_away"]["derrota"]}</label><br>
+        </label>
+    `
 }
 
 function ajustarLayout(){
@@ -308,4 +338,10 @@ function ajustarLayout(){
         div_team_x_away.classList.remove("team-x")
         div_team_x_away.classList.add("team-x-mobile")
     }
+}
+
+function setImgTeam(isHome, logo_team){
+    let imgTeamSelected = document.getElementById("img-team" + (isHome ? "-home" : "-away"))
+    imgTeamSelected.setAttribute("src", logo_team)
+    imgTeamSelected.setAttribute("width", document.documentElement.clientWidth * 0.33)
 }

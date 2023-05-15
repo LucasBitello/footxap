@@ -7,6 +7,7 @@ from api.models.fixturesModel import Fixture
 from api.models.fixturesTeamsModel import FixtureTeams
 from api.models.leaguesModel import League
 from api.models.seasonsModel import Season
+from api.models.teamsModel import Team
 
 
 class InfoTeamJogo:
@@ -28,6 +29,7 @@ class TeamPontuacao:
         self.qtde_derrotas: int = 0
         self.qtde_gols_marcados: int = 0
         self.qtde_gols_sofridos: int = 0
+        self.info_team: Team = None
 
         self.qtde_resultados_ultimos_jogos: int = 5
         self.arr_resultados_ultimos_jogos: list[InfoTeamJogo] = []
@@ -62,6 +64,7 @@ class TabelaPontuacaoRegras:
             newTeamPontuacao = TeamPontuacao()
             newTeamPontuacao.id_team = team.id
             newTeamPontuacao.name_team = team.name
+            newTeamPontuacao.info_team = self.teamsRegras.obter(id=team.id, isAtualizarDB=False)[0]
 
             last_index_ultimos_jogos = 0
 

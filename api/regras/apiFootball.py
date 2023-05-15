@@ -1,6 +1,6 @@
 import http
 import datetime
-from json import loads
+from json import loads, dumps
 from urllib.parse import quote
 
 class RegraAPIFootBall:
@@ -24,4 +24,5 @@ class RegraAPIFootBall:
 
         resposta = conexao.getresponse()
         data = resposta.read()
-        return loads(data.decode("utf-8"))
+        dataNormalizada = loads(data.decode("utf-8"))
+        return dataNormalizada

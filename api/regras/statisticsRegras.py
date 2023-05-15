@@ -23,8 +23,8 @@ class TeamsPlaysSaida:
 
 class TeamsPlaysSaidaPartida:
     def __init__(self):
-        self.winner_home: int = None
-        self.winner_away: int = None
+        self.probabilidades_home: int = None
+        self.probabilidades_away: int = None
         self.empate: int = None
         self.qtde_gols_marcados: int = None
 
@@ -137,15 +137,15 @@ class StatisticsRegras:
                     if team.is_winner == 0:
                         newTeamPlays.saida_prevista.is_winner = 0
                         newTeamPlays.saida_prevista_partida.empate = 0
-                        newTeamPlays.saida_prevista_partida.winner_home = 0
+                        newTeamPlays.saida_prevista_partida.probabilidades_home = 0
                     elif team.is_winner is None:
                         newTeamPlays.saida_prevista.is_winner = 1
                         newTeamPlays.saida_prevista_partida.empate = 1
-                        newTeamPlays.saida_prevista_partida.winner_home = 0
+                        newTeamPlays.saida_prevista_partida.probabilidades_home = 1
                     elif team.is_winner == 1:
                         newTeamPlays.saida_prevista.is_winner = 2
                         newTeamPlays.saida_prevista_partida.empate = 0
-                        newTeamPlays.saida_prevista_partida.winner_home = 1
+                        newTeamPlays.saida_prevista_partida.probabilidades_home = 2
 
                     newTeamPlays.qtde_gols_marcados_home = team.goals
                     newTeamPlays.saida_prevista.qtde_gols_marcados += team.goals
@@ -191,15 +191,15 @@ class StatisticsRegras:
                     if team.is_winner == 0:
                         newTeamPlays.saida_prevista.is_winner = 0
                         newTeamPlays.saida_prevista_partida.empate = 0
-                        newTeamPlays.saida_prevista_partida.winner_away = 0
+                        newTeamPlays.saida_prevista_partida.probabilidades_away = 0
                     elif team.is_winner is None:
                         newTeamPlays.saida_prevista.is_winner = 1
                         newTeamPlays.saida_prevista_partida.empate = 1
-                        newTeamPlays.saida_prevista_partida.winner_away = 0
+                        newTeamPlays.saida_prevista_partida.probabilidades_away = 1
                     elif team.is_winner == 1:
                         newTeamPlays.saida_prevista.is_winner = 2
                         newTeamPlays.saida_prevista_partida.empate = 0
-                        newTeamPlays.saida_prevista_partida.winner_away = 1
+                        newTeamPlays.saida_prevista_partida.probabilidades_away = 2
 
                     newTeamPlays.qtde_gols_marcados_away = team.goals
                     newTeamPlays.saida_prevista.qtde_gols_marcados += team.goals
@@ -247,7 +247,7 @@ class StatisticsRegras:
                                         qtdeDados: int, isPartida: bool = True, isFiltrarTeams: bool = False) -> DatasetRNN:
         arrKeysIgnorar: list = ["data_fixture", "is_prever", "name_team_home", "name_team_away", "saida_prevista",
                                 "saida_prevista_partida", "qtde_gols_marcados_away", "qtde_gols_marcados_home",
-                                "qtde_gols_marcados"]
+                                "qtde_gols_marcados", "empate"]
         arrDadosEntrada: list = []
         arrDadosEsperados: list = []
         arrDadosEsperadosPartida: list = []
@@ -349,24 +349,13 @@ class StatisticsRegras:
 
 
         arrDadosEsperadosPartidaNormalizadosEmClasses = []
-        for dadoEsperados in arrDadosEsperadosPartida:
-            arrDadosClasse = []
-            for index_max_value in range(len(max_esp_part.tolist())):
-                max_value = max_esp_part[index_max_value]
-                dado_value = dadoEsperados[index_max_value]
-
-                if max_value <= 1:
-                    arrDadosClasse.append(dado_value)
-                    continue
-
-                for i in range(max_value + 1):
-                    classe = 0
-                    if dado_value == i:
-                        classe = 1
-
-                    arrDadosClasse.append(classe)
-
-            arrDadosEsperadosPartidaNormalizadosEmClasses.append(arrDadosClasse)
+        for dadoEsperadosPartida in arrDadosEsperadosPartida:
+            arrCamadasSaidas = []
+            for indexDadoEsperados in range(len(dadoEsperadosPartida)):
+                arrDadosClasse = [0 for max_esp in range(max_esp_part[indexDadoEsperados] + 1)]
+                arrDadosClasse[dadoEsperadosPartida[indexDadoEsperados]] = 1
+                arrCamadasSaidas.append([arrDadosClasse])
+            arrDadosEsperadosPartidaNormalizadosEmClasses.append(arrCamadasSaidas)
 
         newDatasetNormalizado = DatasetRNN()
         newDatasetNormalizado.arr_entradas_treino = [arrDadosEntradaNormalizados]
@@ -387,13 +376,20 @@ class StatisticsRegras:
             newDatasetNormalizado.arr_saidas_esperadas = [arrDadosEsperadosNormalizadosEmClasses]
             newDatasetNormalizado.arr_name_values_saida = ordemNameValuesSaida
 
-        saidasEsperadasNormalizadas = []
+        saidasEsperadasNormalizadasBatch = []
 
         for batch in newDatasetNormalizado.arr_saidas_esperadas:
-            saidasEsperadasNormalizadas.append([numpy.asarray(rotulo).reshape(-1, 1) for rotulo in batch])
+            saidasEsperadasNormalizadas = []
+            for saida in batch:
+                saidasEsperadasNormalizadas.append([numpy.asarray(rotulo).reshape(-1, 1) for rotulo in saida])
+            saidasEsperadasNormalizadasBatch.append(saidasEsperadasNormalizadas)
 
-        newDatasetNormalizado.arr_saidas_esperadas = saidasEsperadasNormalizadas
-        newDatasetNormalizado.quantia_neuronios_saida = len(newDatasetNormalizado.arr_saidas_esperadas[0][0])
+        newDatasetNormalizado.arr_saidas_esperadas = saidasEsperadasNormalizadasBatch
+
+        newDatasetNormalizado.quantia_neuronios_saida = []
+        for lote in newDatasetNormalizado.arr_saidas_esperadas:
+            for camadaSaia in lote[0]:
+                newDatasetNormalizado.quantia_neuronios_saida.append(len(camadaSaia))
 
         return newDatasetNormalizado
 
