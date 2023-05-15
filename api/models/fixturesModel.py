@@ -223,11 +223,9 @@ class FixturesModel(Model):
         return arrFixtures
 
     def obterNextFixtureByidSeasonTeam(self, id_season: int, id_team: int, arrIdsFixtureIgnorar: list = []) -> list[Fixture]:
-
-        print(arrIdsFixtureIgnorar)
         sqlIdsIgnorar = f" AND fix.id not in ({','.join(arrIdsFixtureIgnorar) if len(arrIdsFixtureIgnorar) >= 2 else str(arrIdsFixtureIgnorar[0])})" \
             if len(arrIdsFixtureIgnorar) >= 1 else ""
-        print(sqlIdsIgnorar)
+
         query = f"SELECT fix.* from {self.name_table} as fix" \
                 f" JOIN fixture_teams as fte on fte.id_fixture = fix.id" \
                 f" WHERE (fix.status <> 'FT' AND fix.status <> 'AET' AND fix.status <> 'PEN' AND fix.status <> 'CANC' " \
