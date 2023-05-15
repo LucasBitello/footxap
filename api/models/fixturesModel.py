@@ -222,14 +222,21 @@ class FixturesModel(Model):
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture)
         return arrFixtures
 
-    def obterNextFixtureByidSeasonTeam(self, id_season: int, id_team: int) -> list[Fixture]:
+    def obterNextFixtureByidSeasonTeam(self, id_season: int, id_team: int, arrIdsFixtureIgnorar: list = []) -> list[Fixture]:
+
+        print(arrIdsFixtureIgnorar)
+        sqlIdsIgnorar = f" AND fix.id not in ({','.join(arrIdsFixtureIgnorar) if len(arrIdsFixtureIgnorar) >= 2 else str(arrIdsFixtureIgnorar[0])})" \
+            if len(arrIdsFixtureIgnorar) >= 1 else ""
+        print(sqlIdsIgnorar)
         query = f"SELECT fix.* from {self.name_table} as fix" \
                 f" JOIN fixture_teams as fte on fte.id_fixture = fix.id" \
                 f" WHERE (fix.status <> 'FT' AND fix.status <> 'AET' AND fix.status <> 'PEN' AND fix.status <> 'CANC' " \
                 f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD')" \
                 f" AND fix.id_season not in(222, 223, 224) and fte.id_team = {id_team}" \
+                f" {sqlIdsIgnorar}" \
                 f" ORDER BY fix.date ASC LIMIT 1"
 
+        print(query)
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture)
         return arrFixtures
 

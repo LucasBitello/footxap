@@ -45,10 +45,25 @@ class FixturesRegras:
             fixture.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
 
         if id_season is not None:
-            nextFixtureTeamHome = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=id_season, id_team=idTeamHome)[0]
-            nextFixtureTeamHome.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
-                                                                                             arrDados=[nextFixtureTeamHome.id])
-            nextFixtureTeamHome.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeamHome.id_season])[0]
-            arrFixtures.append(nextFixtureTeamHome)
+            isEncontrouNextPartida = False
+            arrIdsFixtureIgnorar = []
+            while not isEncontrouNextPartida:
+
+                nextFixtureTeamHome = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=id_season,
+                                                                                        id_team=idTeamHome,
+                                                                                        arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)[0]
+
+                nextFixtureTeamHome.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
+                                                                                                 arrDados=[nextFixtureTeamHome.id])
+
+                for fixtureTeam in nextFixtureTeamHome.teams:
+                    fixtureTeam: FixtureTeams = fixtureTeam
+                    if fixtureTeam.id_team == idTeamAway:
+                        isEncontrouNextPartida = True
+                        nextFixtureTeamHome.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeamHome.id_season])[0]
+                        arrFixtures.append(nextFixtureTeamHome)
+
+                if not isEncontrouNextPartida:
+                    arrIdsFixtureIgnorar.append(nextFixtureTeamHome.id)
 
         return arrFixtures
