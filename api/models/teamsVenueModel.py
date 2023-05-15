@@ -54,7 +54,7 @@ class TeamsVenueModel(Model):
         newTeamVenue.capacity = teamVenue["capacity"]
         newTeamVenue.surface = teamVenue["surface"]
         newTeamVenue.image = teamVenue["image"]
-
+        print(newTeamVenue.__dict__)
         self.salvar(data=[newTeamVenue])
 
 class TeamVenue(ClassModel):
