@@ -234,7 +234,6 @@ class FixturesModel(Model):
                 f" {sqlIdsIgnorar}" \
                 f" ORDER BY fix.date ASC LIMIT 1"
 
-        print(query)
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture)
         return arrFixtures
 
