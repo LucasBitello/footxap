@@ -121,18 +121,13 @@ class StatisticsRegras:
                 print("Vai prever o jogo para a data: ", fixture.date)
                 dateFutura = (datetime.now() + timedelta(days=2.0)).strftime("%Y-%m-%d")
 
-                if fixture.date.strftime("%Y-%m-%d") >= dateFutura or \
-                        fixture.date.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
-                    print("DB não possui a fixture atual desejada: ", fixture.date, " : ", dateFutura)
+                if fixture.date.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
                     raise "Erro sem fixture"
 
             for team in fixture.teams:
                 #if team.id_team == idTeamHome or (team.id_team != idTeamAway and fixture.teams[indexOutherTeam].id_team != idTeamHome):
                 if team.is_home == 1:
-                    if isFixtureTreino and team.id_team in arrIdsHomeAway:
-                        newTeamPlays.is_team_home_playing_home = team.is_home
-                    else:
-                        newTeamPlays.is_team_home_playing_home = 0
+                    newTeamPlays.is_team_home_playing_home = 1
 
                     newTeamPlays.id_team_home = team.id_team
                     dataTeamHome: Team = self.teamsRegras.teamsModel.obterByColumnsID(arrDados=[team.id_team])[0]
@@ -187,11 +182,7 @@ class StatisticsRegras:
                         id_season=newTeamPlays.id_season, typeInfo="E")
 
                 else:
-                    if isFixtureTreino and team.id_team in arrIdsHomeAway:
-                        newTeamPlays.is_team_away_playing_home = team.is_home
-                    else:
-                        newTeamPlays.is_team_away_playing_home = 0
-
+                    newTeamPlays.is_team_away_playing_home = 0
                     newTeamPlays.id_team_away = team.id_team
                     dataTeamAway: Team = self.teamsRegras.teamsModel.obterByColumnsID(arrDados=[team.id_team])[0]
                     newTeamPlays.name_team_away = dataTeamAway.name
