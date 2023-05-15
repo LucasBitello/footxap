@@ -35,15 +35,12 @@ class TabelaJogosRegras:
     def obterTabelaJogos(self, id_season: int) -> Tabelajogos:
         tabelaPontuacao = self.tabelaPontucaoRegras.obterTabelaPontucao(id_season=id_season)
         arrTabelaJogos = []
-        arrIdsTeamVerificados = []
         newTabelaJogos = Tabelajogos()
+        arrIdsFixtureIgnorar = []
 
         for team in tabelaPontuacao.arr_team_pontuacao:
-            if team.id_team in arrIdsTeamVerificados:
-                continue
-
             newTeamJogo = TeamJogo()
-            nextFixture = self.fixturesRegras.fixturesModel.obterNextFixtureByidSeasonTeam(None, team.id_team)
+            nextFixture = self.fixturesRegras.fixturesModel.obterNextFixtureByidSeasonTeam(None, team.id_team, arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)
 
             if len(nextFixture) == 0:
                 continue
@@ -58,14 +55,13 @@ class TabelaJogosRegras:
                     for team2 in tabelaPontuacao.arr_team_pontuacao:
                         if team2.id_team == fixtureTeam.id_team:
                             newTeamJogo.team_home = team2
-                            arrIdsTeamVerificados.append(team2.id_team)
                 elif fixtureTeam.is_home == 0:
                     for team2 in tabelaPontuacao.arr_team_pontuacao:
                         if team2.id_team == fixtureTeam.id_team:
                             newTeamJogo.team_away = team2
-                            arrIdsTeamVerificados.append(team2.id_team)
 
             newTabelaJogos.arr_next_jogos.append(newTeamJogo)
+            arrIdsFixtureIgnorar.append(nextFixture.id)
 
         newTabelaJogos.arr_next_jogos = sorted(newTabelaJogos.arr_next_jogos,
                                                        key=lambda teamJogos: (teamJogos.data_jogo),
