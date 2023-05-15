@@ -162,7 +162,7 @@ class RNN:
                 estado_oculto_t = numpy.tanh(sum_dot_U_W)
 
                 arrEstadosOcultos[indexEntrada][indexCamadaOculta] = estado_oculto_t
-            saida_t = self.softmax(numpy.dot(self.matriz_V, arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B[-1])
+            saida_t = self.sigmoid(numpy.dot(self.matriz_V, arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B[-1])
             arrSaidas.append(saida_t)
 
         return arrEstadosOcultos, arrSaidas
@@ -185,8 +185,8 @@ class RNN:
                                                   (numpy.sqrt(self.matriz_adagrad_B[-1]) + 1e-9)
 
             #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_relu(saidas[index_entrada_t])
-            #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t])
-            delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t])
+            delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t])
+            #delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t])
             delta_oculto = numpy.dot(self.matriz_V.T, erro_t) * self.derivada_tanh(estadosOcultos[index_entrada_t][-1])
 
             for index_camada_oculta in range(len(self.nNeuroniosCamadaOculta) - 1, -1, -1):
