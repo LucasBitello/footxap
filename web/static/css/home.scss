@@ -222,3 +222,53 @@ thead {
   width: 98%;
 }
 
+.div-estatisticas-team {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  padding-right: 15%;
+  padding-left: 15%;
+  align-items: center;
+}
+
+.div-info-resultados-ia {
+  margin-top: 3%;
+  background-color: #444448;
+  color: white;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 15%;
+  margin-right: 15%;
+  padding-left: 5px;
+  font-size: 18px;
+  font-family: sans-serif;
+}
+
+.div-estatisticas-team-winner {
+  height: 5vh;
+  background-color: #98da98;
+  width: 33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-left-radius: 5px;
+}
+
+.div-estatisticas-team-empate {
+  height: 5vh;
+  background-color: #a9a9a9;
+  width: 34%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.div-estatisticas-team-derrota {
+  height: 5vh;
+  background-color: #c59799;
+  width: 33%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom-right-radius: 5px;
+}

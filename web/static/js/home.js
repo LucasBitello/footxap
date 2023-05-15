@@ -299,23 +299,40 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
 
     let div_estatisticas_team_home = document.getElementById("div-estatisticas-team-home")
     div_estatisticas_team_home.innerHTML = `
-        <label>Probabilidades: <br>
-            <label>Vitória: ${probsIA["probabilidades_home"]["vitoria"]}</label><br>
-            <label>Empate: ${probsIA["probabilidades_home"]["empate"]}</label><br>
-            <label>Derrota: ${probsIA["probabilidades_home"]["derrota"]}</label><br>
-        </label>
+        <div class="div-info-resultados-ia">
+            <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
+            <label>Erro da rede ficou em: ${probsIA["erro"]} </label>
+        </div>
+        <div class="div-estatisticas-team">
+            <div class="div-estatisticas-team-winner">
+                <label>Vitória: ${probsIA["probabilidades_home"]["vitoria"]}</label><br>
+            </div>
+            <div class="div-estatisticas-team-empate">
+                <label>Empate: ${probsIA["probabilidades_home"]["empate"]}</label><br>
+            </div>
+            <div class="div-estatisticas-team-derrota">
+                <label>Derrota: ${probsIA["probabilidades_home"]["derrota"]}</label><br>
+            </div>
+        </div>
     `
 
     let div_estatisticas_team_away = document.getElementById("div-estatisticas-team-away")
-    console.log(probsIA)
-    console.log(probsIA["probabilidades_away"])
-    console.log(probsIA["probabilidades_away"]["vitoria"])
     div_estatisticas_team_away.innerHTML = `
-        <label>Probabilidades: <br>
-            <label>Vitória: ${probsIA["probabilidades_away"]["vitoria"]}</label><br>
-            <label>Empate: ${probsIA["probabilidades_away"]["empate"]}</label><br>
-            <label>Derrota: ${probsIA["probabilidades_away"]["derrota"]}</label><br>
-        </label>
+        <div class="div-info-resultados-ia">
+            <label>Previsões geradas pela FIA versão: ${probsIA["v_ia"]} </label><br>
+            <label>Erro da rede ficou em: ${probsIA["erro"]} </label>
+        </div>
+        <div class="div-estatisticas-team">
+            <div class="div-estatisticas-team-winner">
+                <label>Vitória: ${probsIA["probabilidades_away"]["vitoria"]}</label><br>
+            </div>
+            <div class="div-estatisticas-team-empate">
+                <label>Empate: ${probsIA["probabilidades_away"]["empate"]}</label><br>
+            </div>
+            <div class="div-estatisticas-team-derrota">
+                <label>Derrota: ${probsIA["probabilidades_away"]["derrota"]}</label><br>
+            </div>
+        </div>
     `
 }
 

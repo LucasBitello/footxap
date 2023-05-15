@@ -246,11 +246,11 @@ class RNN:
                                                       (numpy.sqrt(self.matriz_adagrad_B[index_camada_oculta]) + 1e-9)
 
     def treinar(self, entradas_treino: list[list[list]], saidas_treino: list[list[list]], n_epocas: int,
-                tx_aprendizado: float):
+                tx_aprendizado: float) -> float:
         self.txAprendizado = tx_aprendizado
         epoch = 0
         isBrekarWhile = False
-
+        loss = 0
         while not isBrekarWhile:
             epoch += 1
 
@@ -258,7 +258,7 @@ class RNN:
                 estados_ocultos, saidas = self.forward(entradas=entradas_treino[index])
 
                 if epoch % 2 == 0:
-                    isBrekarWhile, mensagem = self.iaRegras.obterErroSaida(rotulos_saidas=saidas_treino[index],
+                    isBrekarWhile, mensagem, loss = self.iaRegras.obterErroSaida(rotulos_saidas=saidas_treino[index],
                                                                            saidas_previstas=saidas, epoca_atual=epoch,
                                                                            taxa_aprendizado=self.txAprendizado)
 
@@ -267,6 +267,7 @@ class RNN:
 
                 self.backward(entradas_treino[index], saidas_treino[index], saidas,
                               estados_ocultos)
+        return loss
 
     def prever(self, entrada, isSaida = False, isNormalizarSaida = True):
         estados_ocultos, saidas_rede = self.forward(entrada)
@@ -303,7 +304,7 @@ class RNN:
                                               int(qtdeNeuroniosPrimeiraCamada * 0.3)],
                       arrCamadasNeuroniosSaida=qtdeneuroniosSaida)
 
-        self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_saidas_esperadas,
+        loss = self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_saidas_esperadas,
                      n_epocas=nEpocas, tx_aprendizado=taxaAprendizado)
 
         print(datasetRNN.dado_exemplo)
@@ -314,4 +315,4 @@ class RNN:
         for dadosPrever in datasetRNN.arr_prevevisao:
             arrPrevisoes.append(self.prever(entrada=[dadosPrever])[1])
 
-        return arrPrevisoes
+        return arrPrevisoes, loss

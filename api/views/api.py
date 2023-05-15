@@ -124,9 +124,12 @@ def obterStatistcsTeamsPlay(request):
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],
                                                                        qtdeDados=25, isFiltrarTeams=True)
     arrPrevTreino = []
-    arrPrevPartida = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida)
+    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida)
 
-    dictPrevPartida = {}
+    dictPrevPartida = {
+        "v_ia": "0.35.1",
+        "erro": loss
+    }
 
     for i in range(len(datasetTeamsPlayPartida.arr_name_values_saida)):
         name_chave_prob = datasetTeamsPlayPartida.arr_name_values_saida[i]

@@ -66,4 +66,4 @@ class IARegras:
         if isPrintarMensagem:
             print(mensagem_loss)
 
-        return isBrekarTreino, mensagem_loss
+        return isBrekarTreino, mensagem_loss, loss
