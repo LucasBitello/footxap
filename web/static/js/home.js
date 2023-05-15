@@ -150,7 +150,7 @@ async function searchTeams(isHome){
 
                     let imgTeamSelected = document.getElementById("img-team"+name_diff_item)
                     imgTeamSelected.setAttribute("src", logo_team)
-                    imgTeamSelected.setAttribute("width", window.screen.width * 0.25)
+                    imgTeamSelected.setAttribute("width", document.documentElement.clientWidth * 0.33)
 
                     if(!isHome){
                         let id_team_home_selected = document.getElementById("input-search-team-home")
