@@ -15,8 +15,15 @@ async function callPOSTAPI(dadosPost, params) {
     return await response.json()
 }
 
-async function callGETAPI(params, isShowLoader = true) {
+async function callGETAPI(params, isShowLoader = true, isMostrarMensagem = false) {
     let loader = document.createElement('div');
+
+    if (isMostrarMensagem){
+        loader.innerHTML = `
+            <label>${gerarMensagemAleatoria()}</label>
+        `
+    }
+
 
     if (isShowLoader){
         loader.classList.add('loader');
@@ -50,7 +57,22 @@ async function callGETAPI(params, isShowLoader = true) {
             document.body.removeChild(loader);
         }
     }
+}
 
+function gerarMensagemAleatoria(){
+    let arrMensagens = []
+    arrMensagens.push(" quando voltar pelo menos lave a mão.")
+    arrMensagens.push(" prepare um café.")
+    arrMensagens.push(" reflita sobre sua vida.")
+    arrMensagens.push(" tira uma soneca.")
+    arrMensagens.push(" pense nisso: se dois humberto estiverem juntos, posso chama-los de doisberto.")
+    arrMensagens.push(" pense nisso: o maior inimigo da hipotenusa é o carteto fantástico")
+    arrMensagens.push(" pense nisso: se eu cobrir uma papelada eu posso chama-la de pavestida.")
 
+    let indexMensagem = Math.floor(Math.random() * (arrMensagens.length));
 
+    console.log(indexMensagem)
+    let mensagemLoader = "Treinamento da rede pode levar até 5 minutos então " + arrMensagens[indexMensagem]
+    console.log(mensagemLoader)
+    return mensagemLoader
 }

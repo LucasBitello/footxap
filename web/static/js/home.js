@@ -295,7 +295,7 @@ async function showJogos(id_season){
 
 async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
     let params = "/statistics?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
-    let probsIA = await callGETAPI(params)
+    let probsIA = await callGETAPI(params, true, true)
 
     let div_estatisticas_team_home = document.getElementById("div-estatisticas-team-home")
     div_estatisticas_team_home.innerHTML = `
