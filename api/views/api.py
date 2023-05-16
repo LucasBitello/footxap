@@ -1,5 +1,5 @@
 import numpy
-
+from datetime import datetime, timedelta
 from json import loads, JSONDecoder, JSONEncoder, dumps
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -129,12 +129,19 @@ def obterStatistcsTeamsPlay(request):
                                                                        qtdeDados=40, isFiltrarTeams=True)
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida)
+    data_jogo_prevista = None
+
+    for teamsPlay in arrTeamsPlayPartida:
+        if teamsPlay.is_prever == 1:
+            data_jogo_prevista = (teamsPlay.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
+            break
 
     dictPrevPartida = {
         "v_ia": "0.35.1",
         "erro": loss,
         "qtde_dados_home": qtdeDadosHome,
-        "qtde_dados_away": qtdeDadosAway
+        "qtde_dados_away": qtdeDadosAway,
+        "data_jogo_previsto": data_jogo_prevista
     }
 
     for i in range(len(datasetTeamsPlayPartida.arr_name_values_saida)):
