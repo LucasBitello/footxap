@@ -257,7 +257,7 @@ class RNN:
             for index in range(len(entradas_treino)):
                 estados_ocultos, saidas = self.forward(entradas=entradas_treino[index])
 
-                if epoch % 2 == 0:
+                if epoch % 10 == 0:
                     isBrekarWhile, mensagem, loss = self.iaRegras.obterErroSaida(rotulos_saidas=saidas_treino[index],
                                                                            saidas_previstas=saidas, epoca_atual=epoch,
                                                                            taxa_aprendizado=self.txAprendizado)

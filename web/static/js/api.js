@@ -75,9 +75,6 @@ function gerarMensagemAleatoria(){
     arrMensagens.push(" pense nisso: se eu cobrir uma papelada eu posso chama-la de pavestida.")
 
     let indexMensagem = Math.floor(Math.random() * (arrMensagens.length));
-
-    console.log(indexMensagem)
-    let mensagemLoader = "Treinamento da rede pode levar até 5 minutos então " + arrMensagens[indexMensagem]
-    console.log(mensagemLoader)
+    let mensagemLoader = "Treinamento da rede pode levar até 10 minutos então " + arrMensagens[indexMensagem]
     return mensagemLoader
 }

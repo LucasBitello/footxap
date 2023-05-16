@@ -66,6 +66,17 @@ class Database:
             self.closeConnection()
             return data
 
+    def executeSelectSemRestricao(self, query: str, params: list = []) -> list:
+        self.openConnection()
+        with self._instance.conexao.cursor() as cursor:
+            cursor.execute(query, params)
+            nameColumns = [col[0] for col in cursor.description]
+            rowsData = cursor.fetchall()
+            data = [dict(zip(nameColumns, row)) for row in rowsData]
+
+            self.closeConnection()
+            return data
+
 
     def executeModifyQuery(self, query: str, params: list = [], isCommit: bool = True) -> list[int, int]:
         with self.conexao.cursor() as cursor:
@@ -246,11 +257,25 @@ class Model(AtualizarDatabase):
 
         for key in dataUpdate.keys():
             if dataUpdate[key] is None:
-                continue
+                sqlColunsSettings = f"SHOW COLUMNS FROM {self.name_table} WHERE Field = '{key}'"
+                arrSettingsColunm = self.database.executeSelectSemRestricao(query=sqlColunsSettings)
+                configColumn = None
+                if len(arrSettingsColunm) == 0:
+                    continue
+                elif len(arrSettingsColunm) == 1:
+                    configColumn = arrSettingsColunm[0]
+                else:
+                    raise f"Muitchos dados nesse sql {sqlColunsSettings}"
 
-            arrData.append(dataUpdate[key])
-            strUpdateColumn = "" + key + " = %s"
-            arrStrUpdateColumn.append(strUpdateColumn)
+                if configColumn["Null"] == "YES":
+                    strUpdateColumn = "" + key + " = NULL"
+                    arrStrUpdateColumn.append(strUpdateColumn)
+                else:
+                    continue
+            else:
+                arrData.append(dataUpdate[key])
+                strUpdateColumn = "" + key + " = %s"
+                arrStrUpdateColumn.append(strUpdateColumn)
 
         query = "UPDATE " + name_table + " SET " + ",".join(arrStrUpdateColumn)
 

@@ -56,7 +56,6 @@ class TeamsVenueModel(Model):
         newTeamVenue.capacity = teamVenue["capacity"]
         newTeamVenue.surface = teamVenue["surface"]
         newTeamVenue.image = teamVenue["image"]
-        print(json.dumps(newTeamVenue.__dict__, ensure_ascii=False).encode('utf-8'))
         self.salvar(data=[newTeamVenue])
 
 class TeamVenue(ClassModel):
