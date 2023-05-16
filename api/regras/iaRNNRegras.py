@@ -174,7 +174,7 @@ class RNN:
             arrCamadasSaidas_t = []
 
             for indexCamadaSaida in range(len(self.arrCamadasNeuroniosSaida)):
-                saida_camada_t = self.sigmoid(numpy.dot(self.matriz_V[indexCamadaSaida], arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B_saida[indexCamadaSaida])
+                saida_camada_t = self.softmax(numpy.dot(self.matriz_V[indexCamadaSaida], arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B_saida[indexCamadaSaida])
                 arrCamadasSaidas_t.append(saida_camada_t)
 
             arrSaidas.append(arrCamadasSaidas_t)
@@ -199,15 +199,15 @@ class RNN:
                 arr_erros_t.append(erro_t)
 
                 #atualiza o bias da saida
-                derivda = self.sigmoid(saidas[index_entrada_t][index_camada_saida])
+                derivda = self.softmax(saidas[index_entrada_t][index_camada_saida])
                 delta_B_saida[index_camada_saida] += numpy.dot(erro_t.T, derivda)
                 self.matriz_adagrad_B_saida[index_camada_saida] += delta_B_saida[index_camada_saida] ** 2
                 self.matriz_B_saida[index_camada_saida] -= (self.txAprendizado * delta_B_saida[index_camada_saida]) / \
                                                       (numpy.sqrt(self.matriz_adagrad_B_saida[index_camada_saida]) + 1e-9)
 
                 # delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_relu(saidas[index_entrada_t])
-                delta_V[index_camada_saida] += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t][index_camada_saida])
-                # delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t])
+                #delta_V[index_camada_saida] += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t][index_camada_saida])
+                delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_softmax_matriz(saidas[index_entrada_t][index_camada_saida])
 
                 self.matriz_adagrad_V[index_camada_saida] += delta_V[index_camada_saida] ** 2
                 self.matriz_V[index_camada_saida] -= (self.txAprendizado * delta_V[index_camada_saida]) / \

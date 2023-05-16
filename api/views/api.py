@@ -124,15 +124,17 @@ def obterStatistcsTeamsPlay(request):
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
                                      " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
-    datasetTeamsPlayPartida = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
+    datasetTeamsPlayPartida, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],
-                                                                       qtdeDados=25, isFiltrarTeams=True)
+                                                                       qtdeDados=40, isFiltrarTeams=True)
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida)
 
     dictPrevPartida = {
         "v_ia": "0.35.1",
-        "erro": loss
+        "erro": loss,
+        "qtde_dados_home": qtdeDadosHome,
+        "qtde_dados_away": qtdeDadosAway
     }
 
     for i in range(len(datasetTeamsPlayPartida.arr_name_values_saida)):

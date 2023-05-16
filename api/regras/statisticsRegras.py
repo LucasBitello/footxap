@@ -261,27 +261,35 @@ class StatisticsRegras:
 
         qtdeDadosTeamPrincipal = 0
         qtdeDadosTeamAdversario = 0
+        qtdeDadosLevadosEmConsideracao = 0
 
         for team in list(reversed(arrTeamsPlays)):
+            qtdeDadosLevadosEmConsideracao += 1
             if isFiltrarTeams:
                 if team.id_team_away not in arrIdsTeamPrever and team.id_team_home not in arrIdsTeamPrever:
                     continue
 
                 if len(arrIdsTeamPrever) == 1:
                     if (team.id_team_home == arrIdsTeamPrever[0] or team.id_team_away == arrIdsTeamPrever[0]):
-                        qtdeDadosTeamPrincipal += 1
-                        if qtdeDadosTeamPrincipal >= qtdeDados:
+                        if qtdeDadosTeamPrincipal <= qtdeDados:
+                            qtdeDadosTeamPrincipal += 1
+
+                        if qtdeDadosTeamPrincipal > qtdeDados:
                             continue
 
                 if len(arrIdsTeamPrever) == 2:
                     if (team.id_team_home == arrIdsTeamPrever[0] or team.id_team_away == arrIdsTeamPrever[0]):
-                        qtdeDadosTeamPrincipal += 1
-                        if qtdeDadosTeamPrincipal >= qtdeDados:
+                        if qtdeDadosTeamPrincipal <= qtdeDados:
+                            qtdeDadosTeamPrincipal += 1
+
+                        if qtdeDadosTeamPrincipal > qtdeDados:
                             continue
 
                     if (team.id_team_home == arrIdsTeamPrever[1] or team.id_team_away == arrIdsTeamPrever[1]):
-                        qtdeDadosTeamAdversario += 1
-                        if qtdeDadosTeamAdversario >= qtdeDados:
+                        if qtdeDadosTeamAdversario <= qtdeDados:
+                            qtdeDadosTeamAdversario += 1
+
+                        if qtdeDadosTeamAdversario > qtdeDados:
                             continue
 
 
@@ -391,7 +399,7 @@ class StatisticsRegras:
             for camadaSaia in lote[0]:
                 newDatasetNormalizado.quantia_neuronios_saida.append(len(camadaSaia))
 
-        return newDatasetNormalizado
+        return newDatasetNormalizado, qtdeDadosLevadosEmConsideracao, qtdeDadosTeamPrincipal, qtdeDadosTeamAdversario
 
 
     def obterUltimaTeamPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int, id_season: int = None) -> TeamsPlaysEntrada:

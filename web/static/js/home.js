@@ -302,6 +302,7 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
+            <label>Foi usado os ultimos ${probsIA["qtde_dados_home"]} jogos desse time. </label><br><br>
             <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label>
         </div>
         <div class="div-estatisticas-team">
@@ -321,7 +322,9 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
     div_estatisticas_team_away.innerHTML = `
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela FIA versão: ${probsIA["v_ia"]} </label><br>
-            <label>Erro da rede ficou em: ${probsIA["erro"]} </label>
+            <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
+            <label>Foi usado os ultimos ${probsIA["qtde_dados_away"]} jogos desse time. </label><br><br>
+            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label>
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
