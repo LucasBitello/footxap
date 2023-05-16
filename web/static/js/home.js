@@ -249,6 +249,10 @@ async function showJogos(id_season){
     jogosTeam.innerHTML = ``
 
     for (let team of tabelaJogos["arr_next_jogos"]){
+        if(isVazia(team["team_home"]) || isVazia(team["team_away"])){
+            continue
+        }
+
         jogosTeam.innerHTML += `
             <tr class="tr-team-tabela paddaing-vertical-5px">
                 <td>
