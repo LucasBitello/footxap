@@ -116,9 +116,13 @@ def obterStatistcsTeamsPlay(request):
         statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeamAway);
 
     print("######### Treinando Partida ##########")
-    arrTeamsPlayPartida = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeamHome,
-                                                                     idTeamAdversario=idTeamAway,
-                                                                     id_season=idSeason)
+    try:
+        arrTeamsPlayPartida = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeamHome,
+                                                                         idTeamAdversario=idTeamAway,
+                                                                         id_season=idSeason)
+    except:
+        return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
+                                     " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
     datasetTeamsPlayPartida = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],

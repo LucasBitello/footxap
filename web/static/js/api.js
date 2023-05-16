@@ -51,7 +51,12 @@ async function callGETAPI(params, isShowLoader = true, isMostrarMensagem = false
         if (isShowLoader){
             document.body.removeChild(loader);
         }
-        return responseJson["response"]
+        if (responseJson["erro"] === undefined){
+            return responseJson["response"]
+        }else {
+            alert(responseJson["erro"])
+        }
+
     }catch (error){
         if (isShowLoader){
             document.body.removeChild(loader);
