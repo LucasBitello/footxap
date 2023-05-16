@@ -287,12 +287,12 @@ class RNN:
         if not isTreinar:
             return [[]]
 
-        nEpocas = 1500
+        nEpocas = 2000
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
         qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida
-        qtdeNeuroniosPrimeiraCamada = 200
-        taxaAprendizado = 0.001
+        qtdeNeuroniosPrimeiraCamada = 100
+        taxaAprendizado = 0.003
 
         print("N neuronios entrada:", qtdeNeuroniosEntrada)
         print("N neuronios primeira camada oculta: ", qtdeNeuroniosPrimeiraCamada)
@@ -300,8 +300,7 @@ class RNN:
 
         self.__init__(nNeuroniosEntrada=qtdeNeuroniosEntrada,
                       nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0),
-                                              int(qtdeNeuroniosPrimeiraCamada * 0.7),
-                                              int(qtdeNeuroniosPrimeiraCamada * 0.3)],
+                                              int(qtdeNeuroniosPrimeiraCamada * 1.0)],
                       arrCamadasNeuroniosSaida=qtdeneuroniosSaida)
 
         loss = self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_saidas_esperadas,
