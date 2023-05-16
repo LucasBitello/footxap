@@ -61,6 +61,8 @@ async function callGETAPI(params, isShowLoader = true, isMostrarMensagem = false
         if (isShowLoader){
             document.body.removeChild(loader);
         }
+
+        alert("Ops alguém derramou café na minha placa e não consegui processar oque você pediu.")
     }
 }
 

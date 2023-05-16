@@ -49,7 +49,7 @@ class FixturesRegras:
             arrIdsFixtureIgnorar = []
             while not isEncontrouNextPartida:
 
-                nextFixtureTeamHome = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=id_season,
+                nextFixtureTeamHome = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=None,
                                                                                         id_team=idTeamHome,
                                                                                         arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)[0]
 

@@ -40,7 +40,7 @@ class TabelaJogosRegras:
 
         for team in tabelaPontuacao.arr_team_pontuacao:
             newTeamJogo = TeamJogo()
-            nextFixture = self.fixturesRegras.fixturesModel.obterNextFixtureByidSeasonTeam(None, team.id_team, arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)
+            nextFixture = self.fixturesRegras.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=id_season, id_team=team.id_team, arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)
 
             if len(nextFixture) == 0:
                 continue

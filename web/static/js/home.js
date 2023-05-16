@@ -298,10 +298,14 @@ async function showJogos(id_season){
 }
 
 async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
+    let div_estatisticas_team_home = document.getElementById("div-estatisticas-team-home")
+    let div_estatisticas_team_away = document.getElementById("div-estatisticas-team-away")
+    div_estatisticas_team_home.innerHTML = ``
+    div_estatisticas_team_away.innerHTML = ``
+
     let params = "/statistics?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
     let probsIA = await callGETAPI(params, true, true)
 
-    let div_estatisticas_team_home = document.getElementById("div-estatisticas-team-home")
     div_estatisticas_team_home.innerHTML = `
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
@@ -322,10 +326,9 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
         </div>
     `
 
-    let div_estatisticas_team_away = document.getElementById("div-estatisticas-team-away")
     div_estatisticas_team_away.innerHTML = `
         <div class="div-info-resultados-ia">
-            <label>Previsões geradas pela FIA versão: ${probsIA["v_ia"]} </label><br>
+            <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
             <label>Foi usado os ultimos ${probsIA["qtde_dados_away"]} jogos desse time. </label><br><br>
             <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label>

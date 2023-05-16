@@ -91,7 +91,7 @@ class FixturesModel(Model):
         season: Season = self.seasonsModel.obterByColumnsID([idSeason])[0]
         league: League = self.leaguesModel.obterByColumnsID([season.id_league])[0]
 
-        if league.id in [82, 117, 118]:
+        if league.id_api in [10, 666, 667]:
             return
 
         arrFixtures = self.fazerConsultaFixturesApiFootball(id_league=league.id_api, year_season=season.year)
@@ -216,13 +216,12 @@ class FixturesModel(Model):
         arrIds = [str(id) for id in arrIds]
         query = f"SELECT * from {self.name_table} as fix WHERE fix.id_season in({','.join(arrIds)})" \
                 f" AND (fix.status = 'FT' OR fix.status = 'AET' OR fix.status = 'PEN')" \
-                f" AND fix.id_season not in(222, 223, 224)" \
                 f" ORDER BY fix.date ASC"
 
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture)
         return arrFixtures
 
-    def obterNextFixtureByidSeasonTeam(self, id_season: int, id_team: int, arrIdsFixtureIgnorar: list = []) -> list[Fixture]:
+    def obterNextFixtureByidSeasonTeam(self, id_team: int, arrIdsFixtureIgnorar: list = [], id_season: int = None) -> list[Fixture]:
         sqlIdsIgnorar = ""
         arrIdsFixtureIgnorar = [str(idFix) for idFix in arrIdsFixtureIgnorar]
         if len(arrIdsFixtureIgnorar) >= 2:
@@ -230,11 +229,16 @@ class FixturesModel(Model):
         elif len(arrIdsFixtureIgnorar) == 1:
             sqlIdsIgnorar = f" AND fix.id not in ({arrIdsFixtureIgnorar[0]})"
 
+        if id_season is not None:
+            sqlIdSeason = f"AND fix.id_season = {id_season}"
+        else:
+            sqlIdSeason = ""
+
         query = f"SELECT fix.* from {self.name_table} as fix" \
                 f" JOIN fixture_teams as fte on fte.id_fixture = fix.id" \
                 f" WHERE (fix.status <> 'FT' AND fix.status <> 'AET' AND fix.status <> 'PEN' AND fix.status <> 'CANC' " \
                 f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD')" \
-                f" AND fix.id_season not in(222, 223, 224) and fte.id_team = {id_team}" \
+                f" {sqlIdSeason} AND fte.id_team = {id_team}" \
                 f" {sqlIdsIgnorar}" \
                 f" ORDER BY fix.date ASC LIMIT 1"
 

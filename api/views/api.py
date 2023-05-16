@@ -141,9 +141,9 @@ def obterStatistcsTeamsPlay(request):
         name_chave_prob = datasetTeamsPlayPartida.arr_name_values_saida[i]
         dictPrevPartida[name_chave_prob] = {}
         dictPrevPartida[name_chave_prob] = {
-            "vitoria": arrPrevPartida[0][i][0],
+            "vitoria": arrPrevPartida[0][i][2],
             "empate": arrPrevPartida[0][i][1],
-            "derrota": arrPrevPartida[0][i][2]
+            "derrota": arrPrevPartida[0][i][0]
         }
 
     arrPrevTreino.append(datasetTeamsPlayPartida.arr_name_values_saida)
