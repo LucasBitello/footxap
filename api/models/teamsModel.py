@@ -129,6 +129,7 @@ class TeamsModel(Model):
             newTeam.national = dataTeam["national"]
             newTeam.last_modification = (datetime.now() - timedelta(days=2.0)).strftime("%Y-%m-%d %H:%M:%S")
 
+            print(newTeam.__dict__)
             id_team_salvo = self.salvar(data=[newTeam]).getID()
 
             if dataVenue["id"] is not None:
