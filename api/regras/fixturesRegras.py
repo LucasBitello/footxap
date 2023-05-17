@@ -56,14 +56,19 @@ class FixturesRegras:
                 nextFixtureTeamHome.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
                                                                                                  arrDados=[nextFixtureTeamHome.id])
 
-                for fixtureTeam in nextFixtureTeamHome.teams:
-                    fixtureTeam: FixtureTeams = fixtureTeam
-                    if fixtureTeam.id_team == idTeamAway:
-                        isEncontrouNextPartida = True
-                        nextFixtureTeamHome.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeamHome.id_season])[0]
-                        arrFixtures.append(nextFixtureTeamHome)
+                if idTeamAway is not None:
+                    for fixtureTeam in nextFixtureTeamHome.teams:
+                        fixtureTeam: FixtureTeams = fixtureTeam
+                        if fixtureTeam.id_team == idTeamAway:
+                            isEncontrouNextPartida = True
+                            nextFixtureTeamHome.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeamHome.id_season])[0]
+                            arrFixtures.append(nextFixtureTeamHome)
 
-                if not isEncontrouNextPartida:
-                    arrIdsFixtureIgnorar.append(nextFixtureTeamHome.id)
+                    if not isEncontrouNextPartida:
+                        arrIdsFixtureIgnorar.append(nextFixtureTeamHome.id)
+                else:
+                    nextFixtureTeamHome.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeamHome.id_season])[0]
+                    arrFixtures.append(nextFixtureTeamHome)
+                    isEncontrouNextPartida = True
 
         return arrFixtures

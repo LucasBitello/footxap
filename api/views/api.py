@@ -166,6 +166,73 @@ def obterStatistcsTeamsPlay(request):
 
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
+def obterPrevisaoTeam(request):
+    iaRegras = IARegras()
+    rnnPartida = RNN(1, [1], [1])
+    rbm = DBN(25, 25, 0.01)
+    uteisRegras = UteisRegras()
+    statisticsRegras = StatisticsRegras()
+    idSeason = request.GET.get("id_season")
+    idTeam = request.GET.get("id_team")
+
+    if idSeason is None and idTeam is None:
+        raise "É necessário passar o prametro id_season ou id_team"
+
+    print("############## new Request #######################")
+    idSeason = int(idSeason)
+    idTeam = int(idTeam)
+
+    statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeam);
+
+    print("######### Treinando Team ##########")
+    try:
+        arrTeamsPlay = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeam, id_season=idSeason)
+    except:
+        return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
+                                     " não se preocupe até o dia do jogo terei as informações."}, safe=False)
+
+    datasetTeamsPlay, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlay,
+                                                                                        arrIdsTeamPrever=[idTeam],
+                                                                                        qtdeDados=40,
+                                                                                        isFiltrarTeams=True)
+    arrPrevTreino = []
+    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay)
+    data_jogo_prevista = None
+
+    for teamsPlay in arrTeamsPlay:
+        if teamsPlay.is_prever == 1:
+            data_jogo_prevista = (teamsPlay.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
+            break
+
+    dictPrevPartida = {
+        "v_ia": "0.35.1",
+        "erro": loss,
+        "qtde_dados_home": qtdeDadosHome,
+        "qtde_dados_away": qtdeDadosAway,
+        "data_jogo_previsto": data_jogo_prevista
+    }
+
+    for i in range(len(datasetTeamsPlay.arr_name_values_saida)):
+        name_chave_prob = datasetTeamsPlay.arr_name_values_saida[i]
+        dictPrevPartida[name_chave_prob] = {}
+        dictPrevPartida[name_chave_prob] = {
+            "vitoria": arrPrevPartida[0][i][2],
+            "empate": arrPrevPartida[0][i][1],
+            "derrota": arrPrevPartida[0][i][0]
+        }
+
+    arrPrevTreino.append(datasetTeamsPlay.arr_name_values_saida)
+    arrPrevTreino.append(str("Previsoes Partida: \n" + ",".join(list(map(str, arrPrevPartida)))))
+
+
+    print("######### Previsões ##########")
+    name_team_home = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeam])[0].name
+    print("Team home: ", name_team_home)
+    for prev in arrPrevTreino:
+        print(prev)
+
+    return JsonResponse({"response": dictPrevPartida}, safe=False)
+
 def obterTabelaPontuacao(request):
     tabelaPontucaoRegras = TabelaPontuacaoRegras()
     uteisRegras = UteisRegras()

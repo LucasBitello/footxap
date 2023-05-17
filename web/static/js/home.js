@@ -298,8 +298,15 @@ async function showJogos(id_season){
 }
 
 async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
-    let div_estatisticas_team_home = document.getElementById("div-estatisticas-team-home")
-    let div_estatisticas_team_away = document.getElementById("div-estatisticas-team-away")
+    await fazerRequisicaoParaIAPreverTime("div-previsao-team-home", id_season, id_team_home)
+    await fazerRequisicaoParaIAPreverTime("div-previsao-team-away", id_season, id_team_away)
+
+    await fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away)
+}
+
+async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away){
+    let div_estatisticas_team_home = document.getElementById("div-previsao-partida-team-home")
+    let div_estatisticas_team_away = document.getElementById("div-previsao-partida-team-away")
     div_estatisticas_team_home.innerHTML = ``
     div_estatisticas_team_away.innerHTML = ``
 
@@ -312,7 +319,8 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
             <label>Foi usado os ultimos ${probsIA["qtde_dados_home"]} jogos desse time. </label><br>
             <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
-            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label>
+            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br>br>
+            <label><b>Previsão com base no histórico dos dois times:</b></label>
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
@@ -333,7 +341,36 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
             <label>Foi usado os ultimos ${probsIA["qtde_dados_away"]} jogos desse time. </label><br>
             <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
-            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label>
+            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br><br>
+            <label><b>Previsão com base no histórico dos dois times:</b></label>
+        </div>
+        <div class="div-estatisticas-team">
+            <div class="div-estatisticas-team-winner">
+                <label>Vitória: ${probsIA["probabilidades_away"]["vitoria"]}</label><br>
+            </div>
+            <div class="div-estatisticas-team-empate">
+                <label>Empate: ${probsIA["probabilidades_away"]["empate"]}</label><br>
+            </div>
+            <div class="div-estatisticas-team-derrota">
+                <label>Derrota: ${probsIA["probabilidades_away"]["derrota"]}</label><br>
+            </div>
+        </div>
+    `
+}
+
+async function fazerRequisicaoParaIAPreverTime(name_id_div, id_season, id_team){
+    let div_previsao_team = document.getElementById(name_id_div);
+    let params = "/previsao-team?id_season="+id_season+"&id_team="+id_team
+    let probsIA = await callGETAPI(params, true, true)
+
+    div_previsao_team.innerHTML = `
+        <div class="div-info-resultados-ia">
+            <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
+            <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
+            <label>Foi usado os ultimos ${probsIA["qtde_dados_home"]} jogos desse time. </label><br>
+            <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
+            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br><br>
+            <label><b>Previsão com base no histórico desse único time:</b></label>
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">

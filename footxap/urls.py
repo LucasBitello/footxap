@@ -18,7 +18,7 @@ from django.urls import path
 from web.views.home import index
 #from api.views.tests import urlTesteMetodos
 from api.views.api import obterCountries, obterLeagues, obterSeasons, atualizarSeasonsTeamsFixtures, searchTeams, \
-    obterStatistcsTeamsPlay, obterTabelaPontuacao, obterTabelaJogos
+    obterStatistcsTeamsPlay, obterTabelaPontuacao, obterTabelaJogos, obterPrevisaoTeam
 
 nivelAPIatual = "api/v1"
 
@@ -36,6 +36,7 @@ urlpatterns = [
     path(nivelAPIatual + '/seasons/atualizar', atualizarSeasonsTeamsFixtures),
     path(nivelAPIatual + '/teams/search', searchTeams),
     path(nivelAPIatual + '/statistics', obterStatistcsTeamsPlay),
+    path(nivelAPIatual + '/previsao-team', obterPrevisaoTeam),
     path(nivelAPIatual + '/tabela', obterTabelaPontuacao),
     path(nivelAPIatual + '/jogos', obterTabelaJogos)
 ]
