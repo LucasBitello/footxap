@@ -128,7 +128,7 @@ def obterStatistcsTeamsPlay(request):
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],
                                                                        qtdeDados=30, isFiltrarTeams=True)
     arrPrevTreino = []
-    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida)
+    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida, nEpocas=750)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlayPartida:
@@ -196,7 +196,7 @@ def obterPrevisaoTeam(request):
                                                                                         qtdeDados=25,
                                                                                         isFiltrarTeams=True)
     arrPrevTreino = []
-    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay, nEpocas=750)
+    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay, nEpocas=500)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlay:
