@@ -298,17 +298,19 @@ async function showJogos(id_season){
 }
 
 async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
+    document.getElementById("div-previsao-partida-team-home").innerHTML = ``
+    document.getElementById("div-previsao-partida-team-away").innerHTML = ``
+    document.getElementById("div-previsao-team-home").innerHTML = ``;
+    document.getElementById("div-previsao-team-away").innerHTML = ``;
+
     await fazerRequisicaoParaIAPreverTime("div-previsao-team-home", id_season, id_team_home)
     await fazerRequisicaoParaIAPreverTime("div-previsao-team-away", id_season, id_team_away)
-
     await fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away)
 }
 
 async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away){
     let div_estatisticas_team_home = document.getElementById("div-previsao-partida-team-home")
     let div_estatisticas_team_away = document.getElementById("div-previsao-partida-team-away")
-    div_estatisticas_team_home.innerHTML = ``
-    div_estatisticas_team_away.innerHTML = ``
 
     let params = "/statistics?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
     let probsIA = await callGETAPI(params, true, true)
@@ -319,7 +321,7 @@ async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_te
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
             <label>Foi usado os ultimos ${probsIA["qtde_dados_home"]} jogos desse time. </label><br>
             <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
-            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br>br>
+            <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br><br>
             <label><b>Previsão com base no histórico dos dois times:</b></label>
         </div>
         <div class="div-estatisticas-team">

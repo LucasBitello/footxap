@@ -102,9 +102,9 @@ class TeamsModel(Model):
             dataTeam = data["team"]
             dataVenue = data["venue"]
 
-            if country.name != dataTeam["country"] and country.name != "World":
-                print("WARNING dados team está com o nome do pais errado: " + str(dataTeam))
-                print(f"DB: {country.name}, API: {dataTeam['country']}")
+            #if country.name != dataTeam["country"] and country.name != "World":
+                #print("WARNING dados team está com o nome do pais errado: " + str(dataTeam))
+                #print(f"DB: {country.name}, API: {dataTeam['country']}")
 
             arrCountry: list[Country] = self.countriesModel.obterByReferenceApi(dadosBusca=[dataTeam["country"]])
 

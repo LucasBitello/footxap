@@ -283,11 +283,11 @@ class RNN:
 
         return estados_ocultos, saidas_formatada
 
-    def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True) -> list[list]:
+    def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True, nEpocas: int = 2000) -> list[list]:
         if not isTreinar:
             return [[]]
 
-        nEpocas = 2000
+        nEpocas = nEpocas
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
         qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida
