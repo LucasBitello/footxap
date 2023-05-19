@@ -253,7 +253,9 @@ def obterTabelaJogos(request):
         raise "Sem id_season como parametro para obter tabela pontuacao"
 
     teamRegras.teamsModel.atualizarDados(id_season=idSeason)
+    print("atualizaou teams")
     fixturesRegras.fixturesModel.atualizarDados(id_season=idSeason)
+    print("atualizaou fixtures")
     tabelajogos = tabelaJogosRegras.obterTabelaJogos(id_season=idSeason)
     tabelaJogosNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelajogos])[0]
     return JsonResponse({"response": tabelaJogosNormalizada}, safe=True)
