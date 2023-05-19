@@ -27,7 +27,6 @@ class TabelaJogosRegras:
     def __init__(self):
         self.fixturesRegras = FixturesRegras()
         self.leaguesRegras = LeaguesRegras()
-        self.seasonRegras = SeasonsRegras()
         self.tabelaPontucaoRegras = TabelaPontuacaoRegras()
         self.teamsRegras = TeamsRegras()
 

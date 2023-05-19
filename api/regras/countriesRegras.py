@@ -11,10 +11,4 @@ class CountriesRegras:
         else:
             arrDados = self.countriesModel.obterByColumnsID(arrDados=[id])
 
-            if len(arrDados) == 1:
-                country: Country = arrDados[0]
-                country.is_obter_dados = 1
-                self.countriesModel.salvar(data=[country])
-                arrDados = [country]
-
         return arrDados

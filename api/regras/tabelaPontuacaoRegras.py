@@ -64,7 +64,7 @@ class TabelaPontuacaoRegras:
             newTeamPontuacao = TeamPontuacao()
             newTeamPontuacao.id_team = team.id
             newTeamPontuacao.name_team = team.name
-            newTeamPontuacao.info_team = self.teamsRegras.obter(id=team.id, isAtualizarDB=False)[0]
+            newTeamPontuacao.info_team = self.teamsRegras.obter(id=team.id)[0]
 
             last_index_ultimos_jogos = 0
 

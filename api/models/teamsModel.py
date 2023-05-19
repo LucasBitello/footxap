@@ -47,6 +47,7 @@ class TeamsModel(Model):
             `founded` INT NULL,
             `national` INT NOT NULL,
             `logo` MEDIUMTEXT NULL,
+            `last_get_data_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
                 CONSTRAINT `id_country_tea_cou`
@@ -127,7 +128,6 @@ class TeamsModel(Model):
             newTeam.logo = dataTeam["logo"]
             newTeam.founded = dataTeam["founded"]
             newTeam.national = dataTeam["national"]
-            newTeam.last_modification = (datetime.now() - timedelta(days=2.0)).strftime("%Y-%m-%d %H:%M:%S")
 
             id_team_salvo = self.salvar(data=[newTeam]).getID()
 
@@ -144,36 +144,18 @@ class TeamsModel(Model):
             self.teamsSeasonsModel.atualizarDBTeamSeason(id_team=id_team_salvo, id_season=arrSeasons[0].id)
 
 
-    def atualizarDados(self, id_team: int = None):
-        if id_team is not None:
-            team: Team = self.obterByColumnsID(arrDados=[id_team])[0]
-            self.leaguesModel.atualizarFlagIsObterDadosLeagueByTeam(id_team_api=team.id_api)
-
-        arrSeasons: list[Season] = self.teamsSeasonsModel.obterSeasonsSemTeams()
-
-        for season in arrSeasons:
-            arrLeagues: list[League] = self.leaguesModel.obterByColumnsID(arrDados=[season.id_league])
-
-            if len(arrLeagues) == 0 or len(arrLeagues) >= 2:
-                raise "Opss parece que tem 2 ou nenhuma league para a mesma season " + str(season.__dict__)
-
-            league: League = arrLeagues[0]
-            functionAttTeams = lambda: self.atualizarDBTeam(id_league_api=league.id_api, year_season=season.year)
-            self.atualizarTabela(model=self, functionAtualizacao=functionAttTeams, isForçarAtualização=True)
-
-
-    def atualizarTeamsByLeagueSeason(self, id_season: int, isAtualizarLastModification: bool = True):
+    def atualizarDados(self, id_season: int):
         season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
         league: League = self.leaguesModel.obterByColumnsID(arrDados=[season.id_league])[0]
-        season.last_modification: datetime = season.last_modification
+        dateNow = datetime.now().strftime("%Y-%m-%d")
 
-        if season.last_modification.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
+        if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow and season.current == 1):
             functionAttTeams = lambda: self.atualizarDBTeam(id_league_api=league.id_api, year_season=season.year)
             self.atualizarTabela(model=self, functionAtualizacao=functionAttTeams, isForçarAtualização=True)
 
-            if isAtualizarLastModification:
-                season.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                self.seasonsModel.salvar(data=[season])
+            season.last_get_teams_api = datetime.now().strftime(self.seasonsModel.formato_datetime_YYYY_MM_DD_H_M_S)
+            self.seasonsModel.salvar(data=[season])
+
 
     def obterTeamsByName(self, name_team: str) -> list[Team]:
         query = "SELECT * FROM " + self.name_table + " where name like %s limit 15"
@@ -206,6 +188,7 @@ class Team(ClassModel):
         self.founded: int = None
         self.national: bool = None
         self.logo: str = None
+        self.last_get_data_api: str = None
         self.last_modification: str = None
 
         super().__init__(dado=team)

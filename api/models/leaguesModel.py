@@ -36,6 +36,7 @@ class LeaguesModel(Model):
             `type` VARCHAR(255) NOT NULL,
             `logo` LONGTEXT NULL,
             `is_obter_dados` TINYINT NOT NULL DEFAULT 0,
+            `self.last_get_data_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
             PRIMARY KEY (`id`),
             CONSTRAINT `id_country`
@@ -47,9 +48,6 @@ class LeaguesModel(Model):
 
         self.executarQuery(query=query, params=[])
 
-    def obterByidCounty(self, idCountry: int) -> list[League]:
-        arrleagues: list[League] = self.obterByColumns(arrNameColuns=["id_country"], arrDados=[idCountry])
-        return arrleagues
 
     def fazerConsultaApiFootball(self, id_league: int = None, name: str = None, country: str = None,
                                        code_country: str = None, season: int = None, id_team: int = None, type: str = None,
@@ -122,69 +120,26 @@ class LeaguesModel(Model):
 
             self.seasonsModel.atualizarDBSeasonsByLeague(dataSeasons, idLeagueSalvo)
 
-    def atualizarDados(self):
-        arrCountries: list[Country] = self.countriesModel.obterTudo()
+    def atualizarDados(self, id_country: int, id_league: int = None):
+        country: Country = self.countriesModel.obterByColumnsID(arrDados=[id_country])[0]
+        arrLeagues = self.obterByColumns(arrNameColuns=["id_country"], arrDados=[country.id])
+        functionAttDB = lambda: self.atualizarDBLeague(name_country=country.name)
 
-        for country in arrCountries:
-            if country.is_obter_dados == 0:
-                continue
+        if len(arrLeagues) == 0:
+            self.atualizarTabela(model=self, functionAtualizacao=functionAttDB, isForçarAtualização=True)
+        else:
+            dateNow = datetime.now().strftime("%Y-%m-%d")
+            for league in arrLeagues:
+                seasonAtual = self.seasonsModel.obterSeasonAtualByIdLeague(idLeague=league.id)
+                isForcarAtualizacao = league.id == id_league
 
-            arrLeagues = self.obterByidCounty(idCountry=country.id)
-            functionAttDB = lambda: self.atualizarDBLeague(name_country=country.name)
-
-            if len(arrLeagues) == 0:
-                self.atualizarTabela(model=self, functionAtualizacao=functionAttDB, isForçarAtualização=True)
-            else:
-                for league in arrLeagues:
-                    seasonAtual = self.seasonsModel.obterSeasonAtualByIdLeague(idLeague=league.id)
-                    dateNow = datetime.now().strftime("%Y-%m-%d")
-
-                    if seasonAtual is None:
-                        self.atualizarTabela(model=self, functionAtualizacao=functionAttDB)
-                    elif seasonAtual.end is None:
-                        raise "Season atual: " + str(seasonAtual.__dict__) + " está sem data de fim"
-                    elif seasonAtual.end.strftime("%Y-%m-%d") < dateNow and seasonAtual.current == 1:
-                        datetimeNow = datetime.now()
-                        diff_ms = int((datetimeNow - seasonAtual.last_modification).total_seconds() * 1000)
-
-                        if diff_ms >= self.rateRefeshTableInMs:
-                            self.atualizarTabela(model=self, functionAtualizacao=functionAttDB, isForçarAtualização=True)
-                    else:
-                        continue
-
-    def atualizarFlagIsObterDadosLeagueByTeam(self, id_team_api: int):
-        arrDataLeagues = self.fazerConsultaApiFootball(id_team=id_team_api)
-
-        for dataLeague in arrDataLeagues:
-            leagueAPI = dataLeague["league"]
-            countryAPI = dataLeague["country"]
-
-            id_league_api = leagueAPI["id"]
-            arrLeaguesDB = self.obterByReferenceApi(dadosBusca=[id_league_api])
-
-            if len(arrLeaguesDB) == 0:
-                self.atualizarDBLeague(name_country=countryAPI["name"])
-                arrLeaguesDB = self.obterByReferenceApi(dadosBusca=[id_league_api])
-            if len(arrLeaguesDB) >= 2 or len(arrLeaguesDB) == 0:
-                print(len(arrLeaguesDB))
-                raise "Leagues duplicadas ou sem no metrodo atualizarFlagIsObterDadosLeagueByTeam()"
-
-            league: League = arrLeaguesDB[0]
-            league.is_obter_dados = 1
-            self.salvar(data=[league])
-
-        self.atualizarDados()
-
-    def atualizarSeasonsByIdLeague(self, id_league: int):
-        league: League = self.obterByColumnsID(arrDados=[id_league])[0]
-        league.last_modification: datetime = league.last_modification
-
-        if league.last_modification.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
-            functionAttTeams = lambda: self.atualizarDBLeague(id_league_api=league.id_api)
-            self.atualizarTabela(model=self, functionAtualizacao=functionAttTeams, isForçarAtualização=True)
-
-            league.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.salvar(data=[league])
+                if seasonAtual is None:
+                    self.atualizarTabela(model=self, functionAtualizacao=functionAttDB, isForçarAtualização=isForcarAtualizacao)
+                elif seasonAtual.end is None:
+                    print("Season atual: " + str(seasonAtual.__dict__) + " está sem data de fim")
+                    raise "Season atual: " + str(seasonAtual.__dict__) + " está sem data de fim"
+                elif seasonAtual.end.strftime("%Y-%m-%d") < dateNow:
+                    self.atualizarTabela(model=self, functionAtualizacao=functionAttDB, isForçarAtualização=isForcarAtualizacao)
 
 
 class League(ClassModel):
@@ -196,6 +151,7 @@ class League(ClassModel):
         self.type: str = None
         self.logo: str = None
         self.is_obter_dados: int = None
+        self.last_get_data_api = None
         self.last_modification: str = None
 
         super().__init__(dado=league)

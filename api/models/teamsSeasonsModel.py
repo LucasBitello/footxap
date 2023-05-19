@@ -35,7 +35,9 @@ class TeamsSeasonsModel(Model):
             `id` INT NOT NULL AUTO_INCREMENT,
             `id_team` INT NOT NULL,
             `id_season` INT NOT NULL,
+            `last_get_data_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
+
             PRIMARY KEY (`id`),
             INDEX `id_team_tls_tea_idx` (`id_team` ASC) VISIBLE,
             INDEX `id_team_tls_sle_idx` (`id_season` ASC) VISIBLE,
@@ -86,6 +88,7 @@ class TeamSeason(ClassModel):
         self.id: int = None
         self.id_team: int = None
         self.id_season: int = None
+        self.last_get_data_api = None
         self.last_modification: str = None
 
         super().__init__(dado=teamSeason)

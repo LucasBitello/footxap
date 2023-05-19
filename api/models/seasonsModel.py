@@ -24,11 +24,8 @@ class SeasonsModel(Model):
 
         self.criarTableDataBase()
 
-    def obterByidLeague(self, idLeague: int) -> list[Season]:
-        arrSeasons: list[Season] = self.obterByColumns(arrNameColuns=["id_league"], arrDados=[idLeague])
-        return arrSeasons
 
-    def obterSeasonAtualByIdLeague(self, idLeague: int):
+    def obterSeasonAtualByIdLeague(self, idLeague: int) -> Season | None:
         query = f"SELECT * FROM {self.name_table} WHERE id_league = {idLeague} AND current = 1"
         arrSeasons: list[Season] = self.database.executeSelectQuery(query=query, classModelDB=self.classModelDB, params=[])
 
@@ -45,6 +42,9 @@ class SeasonsModel(Model):
             `start` DATE NULL,
             `end` DATE NULL,
             `current` INT NULL,
+            `last_get_data_api` DATETIME NULL,
+            `last_get_teams_api` DATETIME NULL,
+            `last_get_fixtures_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
             PRIMARY KEY (`id`),
             CONSTRAINT `id_league`
@@ -70,7 +70,9 @@ class SeasonsModel(Model):
             if len(arrSeason) == 0:
                 newSeason.id = None
             elif len(arrSeason) >= 2:
-                raise "seasson year:" + str(dataSeason["year"]) + "league_id: " + str(id_league_db) + " está duplicado."
+                msgError = "seasson year:" + str(dataSeason["year"]) + "league_id: " + str(id_league_db) + " está duplicado."
+                print(msgError)
+                raise msgError
             else:
                 newSeason.id = arrSeason[0].id
                 #Feito para evitar dados muito antigos não é util por Hora.
@@ -82,7 +84,6 @@ class SeasonsModel(Model):
             newSeason.start = dataSeason["start"]
             newSeason.end = dataSeason["end"]
             newSeason.current = int(dataSeason["current"])
-            newSeason.last_modification = (datetime.now() - timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S")
 
             self.salvar(data=[newSeason])
 
@@ -94,6 +95,9 @@ class Season(ClassModel):
         self.start: str = None
         self.end: str = None
         self.current = None
+        self.last_get_data_api = None
+        self.last_get_teams_api = None
+        self.last_get_fixtures_api = None
         self.last_modification = None
 
         super().__init__(dado=season)

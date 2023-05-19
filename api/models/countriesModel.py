@@ -38,15 +38,6 @@ class CountriesModel(Model):
         self.executarQuery(query=query, params=[])
 
 
-    def obterNamebyId(self, id: int) -> str:
-        arrContries: list[Country] = self.obterByColumnsID(arrDados=[id])
-
-        if len(arrContries) == 0:
-            return None
-        else:
-            return arrContries[0].name
-
-
     def fazerConsultaApiFootball(self, name: str = None, code: str = None, search: str = None) -> list[dict]:
         arrParams = []
         query = "countries"
@@ -81,7 +72,7 @@ class CountriesModel(Model):
             country.code = data["code"]
             country.flag = data["flag"]
             country.id = self.obterIdByReferenceIdApi(idApi=data["name"])
-            country.is_obter_dados = 1 if country.name == "World" else 0
+            country.is_obter_dados = 1
 
             self.salvar(data=[country])
 

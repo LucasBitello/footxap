@@ -283,7 +283,8 @@ class RNN:
 
         return estados_ocultos, saidas_formatada
 
-    def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True, nEpocas: int = 2000) -> list[list]:
+    def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True,
+                   nNeuroniosPrimeiraCamada: int = 100, nEpocas: int = 2000, txAprendizado: float = 0.01) -> list[list]:
         if not isTreinar:
             return [[]]
 
@@ -291,16 +292,15 @@ class RNN:
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
         qtdeneuroniosSaida = datasetRNN.quantia_neuronios_saida
-        qtdeNeuroniosPrimeiraCamada = 100
-        taxaAprendizado = 0.003
+        qtdeNeuroniosPrimeiraCamada = nNeuroniosPrimeiraCamada
+        taxaAprendizado = txAprendizado
 
         print("N neuronios entrada:", qtdeNeuroniosEntrada)
         print("N neuronios primeira camada oculta: ", qtdeNeuroniosPrimeiraCamada)
         print("Qtde dados:", qtdeDados, ", TxAprendizado: ", taxaAprendizado)
 
         self.__init__(nNeuroniosEntrada=qtdeNeuroniosEntrada,
-                      nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0),
-                                              int(qtdeNeuroniosPrimeiraCamada * 1.0)],
+                      nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0)],
                       arrCamadasNeuroniosSaida=qtdeneuroniosSaida)
 
         loss = self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_saidas_esperadas,

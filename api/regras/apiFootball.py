@@ -4,7 +4,7 @@ from json import loads, dumps
 from urllib.parse import quote
 
 class RegraAPIFootBall:
-    def conecarAPIFootball(self, params: str) -> list:
+    def conecarAPIFootball(self, params: str, isHOuveErroCOnexao: bool = False) -> list:
         url = "v3.football.api-sports.io"
         conexao = http.client.HTTPSConnection(url)
         headers = {
@@ -19,10 +19,22 @@ class RegraAPIFootBall:
             urlParams = newURLParams
             print("url normalizada to: " + "https://" + url + urlParams)
 
-        conexao.request("GET", urlParams, headers=headers)
-        print("\n ParametrosUrl: \n %s \n URL: \n %s" % (urlParams, ("https://" + url + urlParams)))
+        isDeuCertoRequest = False
 
-        resposta = conexao.getresponse()
-        data = resposta.read()
-        dataNormalizada = loads(data.decode("utf-8"))
+        while not isDeuCertoRequest:
+            conexao.request("GET", urlParams, headers=headers)
+            print("\n ParametrosUrl: \n %s \n URL: \n %s" % (urlParams, ("https://" + url + urlParams)))
+
+            resposta = conexao.getresponse()
+            data = resposta.read()
+            if resposta.status == 200:
+                if data:
+                    dataNormalizada = loads(data.decode("utf-8"))
+                    isDeuCertoRequest = True
+                else:
+                    print("print erro na requisição porém status 200", data)
+            else:
+                print("print erro na requisição status: ", resposta.status, ", dados: ", data)
+
+
         return dataNormalizada

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from api.models.model import Model, ReferenciaDatabaseToAPI, ReferenciaTabelasFilhas, IdTabelas, ReferenciaTabelasPai, ClassModel
 from api.models.leaguesModel import LeaguesModel, League
@@ -9,9 +9,11 @@ from api.models.fixturesTeamsLineupsModel import FixturesTeamsLineupsModel, Fixt
 from api.models.fixturesTeamsStatisticsModel import FixturesTeamsStatisticsModel, FixtureTeamStatistic
 from api.models.teamsSeasonsModel import TeamsSeasonsModel, TeamSeason
 from api.models.teamsModel import TeamsModel, Team
+from api.models.countriesModel import Country, CountriesModel
 
 class FixturesModel(Model):
     def __init__(self, teamsModel: object):
+        self.countriesModel = CountriesModel()
         self.leaguesModel = LeaguesModel()
         self.seasonsModel = SeasonsModel()
         self.teamsModel = TeamsModel()
@@ -122,6 +124,8 @@ class FixturesModel(Model):
             `round` VARCHAR(255) NOT NULL,
             `status` VARCHAR(255) NOT NULL,
             `time_elapsed` VARCHAR(255) NULL,
+            `last_get_statistics_api` DATETIME NULL,
+            `last_get_lineups_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX `id_season_fls_sea_idx` (`id_season` ASC) VISIBLE,
@@ -135,51 +139,61 @@ class FixturesModel(Model):
         self.executarQuery(query=query, params=[])
 
 
-    def atualizarDados(self, id_season: int = None, id_team: int = None):
-        arrSeasons = self.obterSeasonsComTeamsSemFixtures(id_season=id_season, id_team=id_team)
-
-        for season in arrSeasons:
-            arrFixtures: list[Fixture] = self.obterByColumns(arrNameColuns=["id_season"], arrDados=[season.id])
-            functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
-            self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
-
-        if id_team is not None:
-            arrSeasons = self.obterSeasonsComFixtures(id_season=id_season, id_team=id_team)
-
-            for season in arrSeasons:
-                arrFixtures: list[Fixture] = self.obterFixturesOrderDataBy(id_team=id_team, id_season=season.id,
-                                                                           isApenasConcluidas=False)
-
-                functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
-                self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
-
-        if id_season is not None and id_team is None:
-            season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
-            functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
-            self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
-
-
-    def obterSeasonsComTeamsSemFixtures(self, id_season: int = None, id_team: int = None) -> list[Season]:
-        arrStrQueryWhere = []
-
-        if id_season is None and id_team is None:
-            raise "è obrigatorio o id_team ou o id_season para obter as fixtures para atualizar."
+    def atualizarDados(self, id_season: int = None, arr_ids_team: list[int] = []):
+        dateNow = datetime.now().strftime("%Y-%m-%d")
 
         if id_season is not None:
-            arrStrQueryWhere.append(f"sea.id = {id_season}")
-        if id_team is not None:
-            arrStrQueryWhere.append(f"tse.id_team = {id_team}")
+            season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
+            functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
 
-        queryWhere = " AND " + " AND ".join(arrStrQueryWhere) if len(arrStrQueryWhere) >= 1 else ""
+            if season.last_get_fixtures_api is None or (season.last_get_fixtures_api.strftime("%Y-%m-%d") < dateNow and season.current == 1):
+                self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
+                season.last_get_fixtures_api = datetime.now().strftime(self.seasonsModel.formato_datetime_YYYY_MM_DD_H_M_S)
+                self.seasonsModel.salvar(data=season)
 
-        query = f"SELECT sea.* FROM {self.seasonsModel.name_table} as sea" \
-                f" JOIN {self.teamsSeasonsModel.name_table} as tse on tse.id_season = sea.id" \
-                f" LEFT JOIN {self.name_table} as fix on fix.id_season = sea.id" \
-                f" WHERE fix.id IS NULL {queryWhere}" \
-                f" GROUP BY sea.id ORDER BY sea.year ASC"
 
-        arrSeasons: list[Season] = self.database.executeSelectQuery(query=query, classModelDB=Season, params=[])
-        return arrSeasons
+        if len(arr_ids_team) >= 1:
+            for id_team in arr_ids_team:
+                if id_team is None:
+                    continue
+
+                team: Team = self.teamsModel.obterByColumnsID(arrDados=[id_team])[0]
+
+                if team.last_get_data_api is None or  (team.last_get_data_api.strftime("%Y-%m-%d") < dateNow):
+                    arrDataLeagues = self.leaguesModel.fazerConsultaApiFootball(id_team=team.id_api)
+
+                    for dataLeague in arrDataLeagues:
+                        leagueAPI = dataLeague["league"]
+                        countryAPI = dataLeague["country"]
+                        id_league_api = leagueAPI["id"]
+                        arrLeaguesDB = self.leaguesModel.obterByReferenceApi(dadosBusca=[id_league_api])
+
+                        if len(arrLeaguesDB) == 0:
+                            country: Country = self.countriesModel.obterByColumns(arrNameColuns=["name"],
+                                                                                  arrDados=[countryAPI["name"]])[0]
+                            self.leaguesModel.atualizarDados(id_country=country.id)
+                            arrLeaguesDB = self.obterByReferenceApi(dadosBusca=[id_league_api])
+
+                        elif len(arrLeaguesDB) >= 2 or len(arrLeaguesDB) == 0:
+                            raise "Leagues duplicadas ou sem league"
+
+                        else:
+                            league: League = arrLeaguesDB[0]
+                            arrSeasons: list[Season] = self.seasonsModel.obterByColumns(arrNameColuns=["id_league"], arrDados=[league.id])
+
+                            for season in arrSeasons:
+                                if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow):
+                                    self.teamsModel.atualizarDados(id_season=season.id)
+
+                                if season.last_get_fixtures_api is None or (season.last_get_fixtures_api.strftime("%Y-%m-%d") < dateNow):
+                                    functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
+                                    self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
+
+                                    season.last_get_fixtures_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
+                                    self.seasonsModel.salvar(data=[season])
+
+                    team.last_get_data_api = datetime.now().strftime(self.teamsModel.formato_datetime_YYYY_MM_DD_H_M_S)
+                    self.teamsModel.salvar(data=[team])
 
     def obterFixturesOrderDataBy(self, id_season: int = None, id_team: int = None, isASC: bool = True,
                                  limit: int = None, isApenasConcluidas: bool = True) -> list[Fixture]:
@@ -246,58 +260,6 @@ class FixturesModel(Model):
         return arrFixtures
 
 
-    def obterSeasonsComFixtures(self, id_season: int = None, id_team: int = None) -> list[Season]:
-        arrStrQueryWhere = []
-
-        if id_season is None and id_team is None:
-            raise "è obrigatorio o id_team ou o id_season para obter as fixtures para atualizar."
-
-        if id_season is not None:
-            arrStrQueryWhere.append(f"sea.id = {id_season}")
-        if id_team is not None:
-            arrStrQueryWhere.append(f"tse.id_team = {id_team}")
-
-        queryWhere = " AND " + " AND ".join(arrStrQueryWhere) if len(arrStrQueryWhere) >= 1 else ""
-
-        query = f"SELECT sea.* FROM {self.seasonsModel.name_table} as sea" \
-                f" JOIN {self.teamsSeasonsModel.name_table} as tse on tse.id_season = sea.id" \
-                f" LEFT JOIN {self.name_table} as fix on fix.id_season = sea.id" \
-                f" WHERE fix.id IS NOT NULL {queryWhere}" \
-                f" GROUP BY sea.id ORDER BY sea.year ASC"
-
-        arrSeasons: list[Season] = self.database.executeSelectQuery(query=query, classModelDB=Season, params=[])
-        return arrSeasons
-
-
-    def atualizarFixturesByidTeam(self, id_team: int):
-        self.teamsModel.atualizarDados(id_team=id_team)
-        team: Team = self.teamsModel.obterByColumnsID(arrDados=[id_team])[0]
-        arrTeamSeason: list[TeamSeason] = self.teamsSeasonsModel.obterByColumns(arrNameColuns=["id_team"], arrDados=[id_team])
-
-        if team.last_modification.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
-            for teamSeason in arrTeamSeason:
-                if teamSeason.last_modification.strftime("%Y-%m-%d") >= datetime.now().strftime("%Y-%m-%d"):
-                    continue
-
-                self.atualizarDados(id_season=teamSeason.id_season, id_team=id_team)
-
-                teamSeason.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                self.teamsSeasonsModel.salvar(data=[teamSeason])
-
-            team.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            self.teamsModel.salvar(data=[team])
-
-    def atualizarFixturesByIdSeason(self, id_season: int, isAtualizarLastModification: bool = True):
-        season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
-
-        if season.last_modification.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
-            self.atualizarDados(id_season=season.id)
-
-            if isAtualizarLastModification:
-                season.last_modification = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                self.seasonsModel.salvar(data=[season])
-
-
 class Fixture(ClassModel):
     def __init__(self, fixture: dict|object = None):
         self.id: int = None
@@ -307,6 +269,8 @@ class Fixture(ClassModel):
         self.round: str = None
         self.status: str = None
         self.time_elapsed: str = None
+        self.last_get_statistics_api: str = None
+        self.last_get_lineups_api: str = None
         self.last_modification: str = None
 
         super().__init__(dado=fixture)

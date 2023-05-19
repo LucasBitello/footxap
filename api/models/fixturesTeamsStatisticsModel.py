@@ -1,6 +1,6 @@
 from __future__ import annotations
 from api.models.model import Model, ReferenciaTabelasFilhas, IdTabelas, ReferenciaTabelasPai, ClassModel
-
+from api.models.typeFixtureTeamStatisticModel import TypesFixturesTeamsStatisticsModel, TypesFixturesTeamsStatistics
 class FixturesTeamsStatisticsModel(Model):
     def __init__(self):
         super().__init__(
@@ -24,6 +24,8 @@ class FixturesTeamsStatisticsModel(Model):
             classModelDB=FixtureTeamStatistic,
             rate_refesh_table_in_ms=0)
 
+        self.criarTableDataBase()
+        self.typesFixturesTeamsStatisticsModel = TypesFixturesTeamsStatisticsModel()
 
     def fazerConsultaFixturesStatisticsApiFootball(self, id_fixture: int, id_team: int = None,
                                                    name_type: str = None):
@@ -50,7 +52,7 @@ class FixturesTeamsStatisticsModel(Model):
         return responseData
 
 
-    def atualizarDBFixtureTeamStatistics(self, idFixtureAPI: int) -> None:
+    def atualizarDBFixtureTeamStatistics(self, idFixture: int) -> None:
         arrResponse = self.fazerConsultaFixturesStatisticsApiFootball(id_fixture=idFixtureAPI)
 
         for response in arrResponse:
@@ -69,11 +71,11 @@ class FixturesTeamsStatisticsModel(Model):
                 newFixtureTeamStatistic.id_type_statistic = typeStatisctic.id
 
                 if type(dataStatistic["value"]) == str:
-                    newFixtureTeamStatistic.value = int(dataStatistic["value"].rstrip("%"))
+                    newFixtureTeamStatistic.value = int(dataStatistic["value"].rstrip("%")) / 100
                 else:
                     newFixtureTeamStatistic.value = dataStatistic["value"]
 
-                self.fixturesTeamsStatisticsModel.salvar(data=[newFixtureTeamStatistic.getDict()])
+                self.fixturesTeamsStatisticsModel.salvar(data=[newFixtureTeamStatistic])
 
 
     def criarTableDataBase(self):
@@ -82,7 +84,7 @@ class FixturesTeamsStatisticsModel(Model):
             `id_fixture` INT NOT NULL,
             `id_team` INT NOT NULL,
             `id_type_statistic` INT NOT NULL,
-            `value` INT NULL,
+            `value` FLOAT NULL,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX `id_fixture_fts_fix_idx` (`id_fixture` ASC) VISIBLE,
@@ -114,7 +116,7 @@ class FixtureTeamStatistic(ClassModel):
         self.id_fixture: int = None
         self.id_team: int = None
         self.id_type_statistic: int = None
-        self.value: int = None
+        self.value: float = None
         self.last_modification: str = None
 
         super().__init__(dado=fixtureTeamStatistic)

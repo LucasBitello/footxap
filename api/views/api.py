@@ -54,25 +54,9 @@ def obterSeasons(request):
     if idLeague is None:
         raise "É necessário passar o prametro id_league"
 
-    seasonsRegras.leaguesRegras.leaguesModel.atualizarSeasonsByIdLeague(id_league=idLeague)
     arrSeasons = seasonsRegras.obter(idLeague=idLeague)
     arrSeasons = uteisRegras.normalizarDadosForView(arrDados=arrSeasons)
     return JsonResponse({"response": arrSeasons}, safe=False)
-
-
-def atualizarSeasonsTeamsFixtures(request):
-    teamsRegras = TeamsRegras()
-    fixturesRegras = FixturesRegras()
-    seasonsRegras = SeasonsRegras()
-    idSeason = request.GET.get("id_season")
-
-    if idSeason is None:
-        raise "É necessário passar o prametro id_season"
-
-
-    teamsRegras.teamsModel.atualizarTeamsByLeagueSeason(id_season=int(idSeason), isAtualizarLastModification=False)
-    fixturesRegras.fixturesModel.atualizarFixturesByIdSeason(id_season=int(idSeason))
-    return JsonResponse({"response": "Team da Season atualizados"}, safe=False)
 
 
 def searchTeams(request):
@@ -85,9 +69,12 @@ def searchTeams(request):
     if idSeason is None:
         raise "É necessário passar o prametro id_season"
 
+    teamsRegras.teamsModel.atualizarDados(id_season=idSeason)
+
     arrTeams = teamsRegras.obter(name=name, id_season=idSeason)
     arrTeams = uteisRegras.normalizarDadosForView(arrDados=arrTeams)
     return JsonResponse({"response": arrTeams}, safe=False)
+
 
 def obterStatistcsTeamsPlay(request):
     iaRegras = IARegras()
@@ -96,6 +83,7 @@ def obterStatistcsTeamsPlay(request):
     rbm = DBN(25, 25, 0.01)
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
+    fixturesRegras = FixturesRegras()
     idSeason = request.GET.get("id_season")
     idTeamHome = request.GET.get("id_team_home")
     idTeamAway = request.GET.get("id_team_away")
@@ -110,12 +98,9 @@ def obterStatistcsTeamsPlay(request):
     idTeamHome = int(idTeamHome)
     idTeamAway = int(idTeamAway) if idTeamAway is not None else None
 
-    statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeamHome);
-
-    if idTeamAway is not None:
-        statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeamAway);
-
     print("######### Treinando Partida ##########")
+    fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeamHome, idTeamAway])
+
     try:
         arrTeamsPlayPartida = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeamHome,
                                                                          idTeamAdversario=idTeamAway,
@@ -128,7 +113,9 @@ def obterStatistcsTeamsPlay(request):
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],
                                                                        qtdeDados=30, isFiltrarTeams=True)
     arrPrevTreino = []
-    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida, nEpocas=750)
+    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida,
+                                                 nNeuroniosPrimeiraCamada=int((qtdeDadosHome + qtdeDadosAway)),
+                                                 nEpocas=1500, txAprendizado=0.007)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlayPartida:
@@ -172,6 +159,7 @@ def obterPrevisaoTeam(request):
     rbm = DBN(25, 25, 0.01)
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
+    fixturesRegras = FixturesRegras()
     idSeason = request.GET.get("id_season")
     idTeam = request.GET.get("id_team")
 
@@ -182,21 +170,24 @@ def obterPrevisaoTeam(request):
     idSeason = int(idSeason)
     idTeam = int(idTeam)
 
-    statisticsRegras.fixturesRegras.fixturesModel.atualizarFixturesByidTeam(id_team=idTeam);
+    fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeam])
 
     print("######### Treinando Team ##########")
     try:
         arrTeamsPlay = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeam, id_season=idSeason)
-    except:
+    except Exception as exc:
+        print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
                                      " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
     datasetTeamsPlay, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlay,
                                                                                         arrIdsTeamPrever=[idTeam],
-                                                                                        qtdeDados=25,
+                                                                                        qtdeDados=30,
                                                                                         isFiltrarTeams=True)
     arrPrevTreino = []
-    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay, nEpocas=500)
+    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay,
+                                                 nNeuroniosPrimeiraCamada=int(qtdeDadosHome * 2),
+                                                 nEpocas=1500, txAprendizado=0.005)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlay:
@@ -234,20 +225,26 @@ def obterPrevisaoTeam(request):
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
 def obterTabelaPontuacao(request):
-    tabelaPontucaoRegras = TabelaPontuacaoRegras()
+    fixturesRegras = FixturesRegras()
+    teamRegras = TeamsRegras()
     uteisRegras = UteisRegras()
+    tabelaPontucaoRegras = TabelaPontuacaoRegras()
 
     idSeason = request.GET.get("id_season")
 
     if idSeason is None:
         raise "Sem id_season como parametro para obter tabela pontuacao"
 
+    teamRegras.teamsModel.atualizarDados(id_season=idSeason)
+    fixturesRegras.fixturesModel.atualizarDados(id_season=idSeason)
     tabelaPontuacao = tabelaPontucaoRegras.obterTabelaPontucao(id_season=idSeason)
     tabelaPontuacaoNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelaPontuacao])[0]
     return JsonResponse({"response": tabelaPontuacaoNormalizada}, safe=True)
 
 def obterTabelaJogos(request):
+    fixturesRegras = FixturesRegras()
     tabelaJogosRegras = TabelaJogosRegras()
+    teamRegras = TeamsRegras()
     uteisRegras = UteisRegras()
 
     idSeason = request.GET.get("id_season")
@@ -255,6 +252,8 @@ def obterTabelaJogos(request):
     if idSeason is None:
         raise "Sem id_season como parametro para obter tabela pontuacao"
 
+    teamRegras.teamsModel.atualizarDados(id_season=idSeason)
+    fixturesRegras.fixturesModel.atualizarDados(id_season=idSeason)
     tabelajogos = tabelaJogosRegras.obterTabelaJogos(id_season=idSeason)
     tabelaJogosNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelajogos])[0]
     return JsonResponse({"response": tabelaJogosNormalizada}, safe=True)

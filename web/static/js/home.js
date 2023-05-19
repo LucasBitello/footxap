@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if(!isNaN(parseInt(id_season))){
             localStorage.setItem("id_season_selected", id_season)
-            await callGETAPI("/seasons/atualizar?id_season="+id_season)
             await ajustarGridTabelaOuJogos()
         }
     })

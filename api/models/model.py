@@ -273,7 +273,12 @@ class Model(AtualizarDatabase):
                 else:
                     continue
             else:
-                arrData.append(dataUpdate[key])
+                if key == self.name_column_last_modification:
+                    datetimeNow = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
+                    arrData.append(datetimeNow)
+                else:
+                    arrData.append(dataUpdate[key])
+
                 strUpdateColumn = "" + key + " = %s"
                 arrStrUpdateColumn.append(strUpdateColumn)
 
@@ -294,14 +299,6 @@ class Model(AtualizarDatabase):
         arrData = arrData + arrDataWhere
         infoReturnDB = self.database.executeModifyQuery(query, arrData)
         qtdeRowsAfetadas = infoReturnDB[1]
-
-        """if qtdeRowsAfetadas >= 1:
-            datetimeNow = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
-            queryAttLastUpdated = "UPDATE " + self.name_table \
-                                  + " SET " + self.name_column_last_modification  + " = '" + datetimeNow+"'" \
-                                  + queryWhere
-            self.database.executeModifyQuery(queryAttLastUpdated, arrDataWhere)"""
-
         lastId = dataUpdate[columns_id[0]]
         return lastId
 

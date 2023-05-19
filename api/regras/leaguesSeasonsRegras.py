@@ -14,19 +14,14 @@ class LeaguesRegras:
             raise "Parametro idCountry ou idLeague é obrigatório"
         else:
             if idCountry is not None:
-                country = self.countriesRegras.obter(id=idCountry)[0]
-                self.leaguesModel.atualizarDados()
-                arrLeagues: list[League] = self.leaguesModel.obterByidCounty(idCountry=country.id)
+                self.leaguesModel.atualizarDados(id_country=idCountry)
+                arrLeagues: list[League] = self.leaguesModel.obterByColumns(arrNameColuns=["id_country"], arrDados=[idCountry])
 
             elif idLeague is not None:
+                league: League = self.leaguesModel.obterByColumnsID(arrDados=[idLeague])[0]
+                self.leaguesModel.atualizarDados(id_country=league.id_country, id_league=idLeague)
+
                 arrLeagues: list[League] = self.leaguesModel.obterByColumnsID(arrDados=[idLeague])
-
-                if len(arrLeagues) == 1:
-                    league: League = arrLeagues[0]
-                    league.is_obter_dados = 1
-
-                    self.leaguesModel.salvar(data=[league])
-                    arrLeagues = [league]
 
         return arrLeagues
 
@@ -41,7 +36,7 @@ class SeasonsRegras:
 
         if idLeague is not None:
             league: League = self.leaguesRegras.obter(idLeague=idLeague)[0]
-            arrDados: list[Season] = self.seasonsModel.obterByidLeague(idLeague=league.id)
+            arrDados: list[Season] = self.seasonsModel.obterByColumns(arrNameColuns=["id_league"], arrDados=[league.id])
         elif id is not None:
             arrDados: list[Season] = self.seasonsModel.obterByColumnsID(arrDados=[id])
 

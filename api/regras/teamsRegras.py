@@ -4,10 +4,8 @@ class TeamsRegras:
     def __init__(self):
         self.teamsModel = TeamsModel()
 
-    def obter(self, id: int = None, name: str = None, id_season: int = None, isAtualizarDB: bool = True) -> list[Team]:
+    def obter(self, id: int = None, name: str = None, id_season: int = None) -> list[Team]:
         if id is not None and id_season is None:
-            if isAtualizarDB:
-                self.teamsModel.atualizarDados(id_team=id)
             arrTeams = self.teamsModel.obterByColumnsID(arrDados=[id])
         elif id_season is not None:
             if name is None:
