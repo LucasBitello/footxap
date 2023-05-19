@@ -20,10 +20,15 @@ class RegraAPIFootBall:
             print("url normalizada to: " + "https://" + url + urlParams)
 
         isDeuCertoRequest = False
+        nroMaxTentativas = 5
+        nroTentativas = 0
+        print("\n ParametrosUrl: \n %s \n URL: \n %s" % (urlParams, ("https://" + url + urlParams)))
 
-        while not isDeuCertoRequest:
+        while not isDeuCertoRequest and nroTentativas < nroMaxTentativas:
+            nroTentativas += 1
+            print("fez ", nroTentativas, " tentativa de conexao")
+
             conexao.request("GET", urlParams, headers=headers)
-            print("\n ParametrosUrl: \n %s \n URL: \n %s" % (urlParams, ("https://" + url + urlParams)))
 
             resposta = conexao.getresponse()
             data = resposta.read()
