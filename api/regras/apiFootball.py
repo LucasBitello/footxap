@@ -26,8 +26,6 @@ class RegraAPIFootBall:
 
         while not isDeuCertoRequest and nroTentativas < nroMaxTentativas:
             nroTentativas += 1
-            print("fez ", nroTentativas, " tentativa de conexao")
-
             conexao.request("GET", urlParams, headers=headers)
 
             resposta = conexao.getresponse()
