@@ -184,13 +184,15 @@ class FixturesModel(Model):
                             for season in arrSeasons:
                                 if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow):
                                     self.teamsModel.atualizarDados(id_season=season.id)
+                                    season.last_get_teams_api = datetime.now().strftime(self.teamsModel.formato_datetime_YYYY_MM_DD_H_M_S)
 
                                 if season.last_get_fixtures_api is None or (season.last_get_fixtures_api.strftime("%Y-%m-%d") < dateNow):
                                     functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
                                     self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
 
                                     season.last_get_fixtures_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
-                                    self.seasonsModel.salvar(data=[season])
+
+                                self.seasonsModel.salvar(data=[season])
 
                     team.last_get_data_api = datetime.now().strftime(self.teamsModel.formato_datetime_YYYY_MM_DD_H_M_S)
                     self.teamsModel.salvar(data=[team])
