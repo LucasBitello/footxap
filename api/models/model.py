@@ -25,7 +25,7 @@ class Database:
         isConectou = False
         while not isConectou:
             try:
-                #self.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1")
+                self.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1")
                 isConectou = True
             except connection.Error as cExc:
                 print("abrir conexao falhou tentando novamente.")
@@ -37,7 +37,7 @@ class Database:
         return
         while not isFechou:
             try:
-                #self.conexao.close()
+                self.conexao.close()
                 isFechou = True
             except connection.Error as cExc:
                 print("fechar conexao falhou tentando novamente.")

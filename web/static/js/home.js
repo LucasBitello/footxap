@@ -85,7 +85,8 @@ async function ajustarSelectSeason(id_html_select) {
         selectSeason.innerHTML = `<option value="0" selected>Selecione uma temporada...</option>`
 
         for (let season of arrSeasons){
-            selectSeason.innerHTML += `<option value="${season["id"]}">${season["year"]}</option>`
+            let isPossuiEstatisticas = season["has_statistics_fixtures"] === 1 ? '&#128405;' : '';
+            selectSeason.innerHTML += `<option value="${season["id"]}">${season["year"]} ${isPossuiEstatisticas}</option>`
         }
     }
 }
@@ -297,13 +298,18 @@ async function showJogos(id_season){
 }
 
 async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
+    document.getElementById("div-estatisticas-team-home").innerHTML = ``
+    document.getElementById("div-estatisticas-team-away").innerHTML = ``
     document.getElementById("div-previsao-partida-team-home").innerHTML = ``
     document.getElementById("div-previsao-partida-team-away").innerHTML = ``
     document.getElementById("div-previsao-team-home").innerHTML = ``;
     document.getElementById("div-previsao-team-away").innerHTML = ``;
 
+    await fazerRequisicaoEstatisticas("div-estatisticas-team-home", id_season, id_team_home, true)
+    await fazerRequisicaoEstatisticas("div-estatisticas-team-away", id_season, id_team_away, false)
     await fazerRequisicaoParaIAPreverTime("div-previsao-team-home", id_season, id_team_home, true)
     await fazerRequisicaoParaIAPreverTime("div-previsao-team-away", id_season, id_team_away, false)
+    return;
     await fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away)
 }
 
@@ -388,6 +394,50 @@ async function fazerRequisicaoParaIAPreverTime(name_id_div, id_season, id_team, 
     `
 }
 
+async function fazerRequisicaoEstatisticas(name_id_div, id_season, id_team, is_home){
+    let params = "/statistics?id_season="+id_season+"&id_team="+id_team
+    let arrTeamsEstatisticas = await callGETAPI(params, true, true)
+    let div_estatisticas = document.getElementById(name_id_div)
+    div_estatisticas.classList.add("grid-2-colunas")
+    div_estatisticas.classList.add("margin-horizontal-15px")
+    div_estatisticas.classList.add("margin-vertical-15px")
+
+    if(arrTeamsEstatisticas.length >= 2){
+        alert("eitaa BB, retornando mais doque devia para as Estatisticas")
+        throw new Error("eitaa BB, retornando mais doque devia para as Estatisticas")
+    }
+
+    let teamStatistics = arrTeamsEstatisticas[0]
+    let arrTeamEstatisticas = teamStatistics["arr_dataset_data_fixture_team"].slice(-1)
+    let arrMediasTeamEstatisticas = arrTeamEstatisticas[0]["media_estatisticas"]
+    console.log(arrMediasTeamEstatisticas)
+
+    div_estatisticas.innerHTML = `
+        <div class="display-flex-row-space-between backgroud-color-444448 width-100 align-items-center font-weight-bold">
+            <label class="text-align-center width-100 color-white">
+                Estátisticas para o dia: ${arrTeamEstatisticas[0]["data_fixture"]}
+            </label>
+        </div>
+    `
+
+    for(let media of arrMediasTeamEstatisticas){
+        let nameClassColorGoodEstatistica = obterNameClassColorGoodEstatistica(media)
+        let setaInclinacao = obterSetaInclinacaoMedia(media)
+        div_estatisticas.innerHTML += `
+            <div class="display-flex-row-space-between backgroud-color-444448">
+                <label class="paddaing-horizontal-15px paddaing-vertical-5px width-80 color-white">
+                    ${media["name_statistic"]}: ${setaInclinacao}
+                </label>
+                <label class="width-20 paddaing-vertical-5px color-black 
+                              ${nameClassColorGoodEstatistica} text-align-center">
+                    ${media["media_"+media["id_statistic"]+ "_formatada"]} 
+                </label>
+            </div>
+            
+        `
+    }
+}
+
 function ajustarLayout(){
     if (/Mobi/.test(navigator.userAgent) || document.documentElement.clientWidth <= 600){
         let div_menu_left = document.getElementById("div-menu-left")
@@ -414,3 +464,64 @@ function setImgTeam(isHome, logo_team){
     imgTeamSelected.setAttribute("src", logo_team)
     imgTeamSelected.setAttribute("width", document.documentElement.clientWidth * 0.33)
 }
+
+function obterNameClassColorGoodEstatistica(mediaEstatistica){
+    let is_caindo = mediaEstatistica["is_caindo"]
+    let is_decline_good = mediaEstatistica["is_decline_good"]
+    let inclinacao_media = mediaEstatistica["inclinacao_media"]
+    let media = mediaEstatistica["media_"+mediaEstatistica["id_statistic"]]
+    let name_class = "backgroud-color-empate"
+
+    //0.005 == 0,5%
+    if(inclinacao_media < 0.005 || media === 0){
+        return name_class
+    }
+
+    if(is_caindo){
+        if(is_decline_good){
+            name_class = "backgroud-color-vitoria"
+        }else{
+            name_class = "backgroud-color-derrota"
+        }
+    }else{
+        if(is_decline_good){
+            name_class = "backgroud-color-derrota"
+        }else{
+            name_class = "backgroud-color-vitoria"
+        }
+
+    }
+
+    return name_class
+}
+
+function obterSetaInclinacaoMedia(mediaEstatistica){
+    let is_caindo = mediaEstatistica["is_caindo"]
+    let is_decline_good = mediaEstatistica["is_decline_good"]
+    let inclinacao_media = mediaEstatistica["inclinacao_media"]
+    let name_class = `<i class="fa-solid fa-grip-lines color-empate float-right"></i>`
+    let media = mediaEstatistica["media_"+mediaEstatistica["id_statistic"]]
+
+    //0.005 == 0,5%
+    if(inclinacao_media < 0.005 || media === 0){
+        return name_class
+    }
+
+    if(is_caindo){
+        if(is_decline_good){
+            name_class = `<i class="fa-solid fa-arrow-down color-vitoria float-right"></i>`
+        }else{
+            name_class = `<i class="fa-solid fa-arrow-down color-derrota float-right"></i>`
+        }
+    }else{
+        if(is_decline_good){
+            name_class = `<i class="fa-solid fa-arrow-up color-derrota float-right"></i>`
+        }else {
+            name_class = `<i class="fa-solid fa-arrow-up color-vitoria float-right"></i>`
+        }
+
+    }
+
+    return name_class
+}
+

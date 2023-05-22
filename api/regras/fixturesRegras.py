@@ -4,18 +4,34 @@ from api.models.fixturesTeamsModel import FixtureTeams
 from api.models.teamsModel import TeamsModel, Team
 from api.models.teamsSeasonsModel import TeamSeason
 from api.models.seasonsModel import Season
+from api.models.fixturesTeamsStatisticsModel import FixtureTeamStatistic
 
 class FixturesRegras:
     def __init__(self):
         self.teamsModel = TeamsModel()
         self.fixturesModel = FixturesModel(teamsModel=self.teamsModel)
 
-    def obter(self, id_season: int = None, id_team: int = None, ) -> list[Fixture]:
-        arrFixtures: list[Fixture] = self.fixturesModel.obterFixturesOrderDataBy(id_season=id_season, id_team=id_team)
+    def obter(self, id_season: int = None, id_team: int = None, isAsc: bool = True, limit: int = None,
+              isApenasConcluidas: bool = True, isApenasComStatistics: bool = False, isObterProximoJogo: bool = False) -> list[Fixture]:
+
+        arrFixtures: list[Fixture] = self.fixturesModel.obterFixturesOrderDataBy(id_season=id_season, id_team=id_team,
+                                                                                 isASC=isAsc, limit=limit,
+                                                                                 isApenasConcluidas=isApenasConcluidas,
+                                                                                 isApenasComStatistics=isApenasComStatistics)
 
         for fixture in arrFixtures:
             fixture.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
                                                                                  arrDados=[fixture.id])
+
+        if isObterProximoJogo:
+            fixture = self.obterProximoJogo(id_team=id_team)
+
+            if fixture is not None:
+                if isAsc:
+                    arrFixtures.append(fixture)
+                else:
+                    arrFixtures.insert(0, fixture)
+
         return arrFixtures
 
     def obterTodasASFixturesSeasonAllTeamsByIdTeam(self, idTeamHome: int, idTeamAway: int = None, id_season: int = None) -> list[Fixture]:
@@ -72,3 +88,46 @@ class FixturesRegras:
                     isEncontrouNextPartida = True
 
         return arrFixtures
+
+    def obterFixtureEstatisticasByIdFixtureIdTeam(self, id_fixture: int, id_team: int) -> list[FixtureTeamStatistic]:
+        arrFixturesEstatisticas: list[FixtureTeamStatistic] = \
+            self.fixturesModel.fixturesTeamsStatisticsModel.obterByColumns(arrNameColuns=["id_fixture", "id_team"],
+                                                                           arrDados=[id_fixture, id_team])
+
+        return arrFixturesEstatisticas
+
+    def obterProximoJogo(self, id_team: int, id_team_away: int = None) -> Fixture:
+        isEncontrouNextPartida = False
+        arrIdsFixtureIgnorar = []
+        nextFixtureTeam = None
+
+        while not isEncontrouNextPartida:
+
+            arrNextFixtureTeam = self.fixturesModel.obterNextFixtureByidSeasonTeam(id_season=None,
+                                                                                id_team=id_team,
+                                                                                arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)
+
+            if len(arrNextFixtureTeam) == 0:
+                return None
+
+            nextFixtureTeam = arrNextFixtureTeam[0]
+            nextFixtureTeam.teams = self.fixturesModel.fixturesTeamsModel.obterByColumns(
+                arrNameColuns=["id_fixture"],
+                arrDados=[nextFixtureTeam.id])
+
+            if id_team_away is not None:
+                for fixtureTeam in nextFixtureTeam.teams:
+                    fixtureTeam: FixtureTeams = fixtureTeam
+                    if fixtureTeam.id_team == id_team_away:
+                        isEncontrouNextPartida = True
+                        nextFixtureTeam.season: Season = \
+                            self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeam.id_season])[0]
+
+                if not isEncontrouNextPartida:
+                    arrIdsFixtureIgnorar.append(nextFixtureTeam.id)
+            else:
+                nextFixtureTeam.season: Season = \
+                    self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[nextFixtureTeam.id_season])[0]
+                isEncontrouNextPartida = True
+
+        return nextFixtureTeam

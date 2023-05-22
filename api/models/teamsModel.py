@@ -118,8 +118,11 @@ class TeamsModel(Model):
 
             country: Country = arrCountry[0]
             id_team_salvo: Team = self.obterIdByReferenceIdApi(dataTeam["id"])
-
             newTeam = Team()
+
+            if id_team_salvo is not None:
+                newTeam = self.obterByColumnsID(arrDados=[id_team_salvo])[0]
+
             newTeam.id = id_team_salvo
             newTeam.id_country = country.id
             newTeam.id_api = dataTeam["id"]
@@ -144,10 +147,13 @@ class TeamsModel(Model):
             self.teamsSeasonsModel.atualizarDBTeamSeason(id_team=id_team_salvo, id_season=arrSeasons[0].id)
 
 
-    def atualizarDados(self, id_season: int):
+    def atualizarDados(self, id_season: int) -> None:
         season: Season = self.seasonsModel.obterByColumnsID(arrDados=[id_season])[0]
         league: League = self.leaguesModel.obterByColumnsID(arrDados=[season.id_league])[0]
         dateNow = datetime.now().strftime("%Y-%m-%d")
+
+        if league.id_api in [10, 666, 667]:
+            return
 
         if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow and season.current == 1):
             functionAttTeams = lambda: self.atualizarDBTeam(id_league_api=league.id_api, year_season=season.year)

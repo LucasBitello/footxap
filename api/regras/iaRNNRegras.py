@@ -9,9 +9,9 @@ from api.regras.iaRegras import IARegras
 
 class DatasetRNN:
     def __init__(self):
-        self.arr_entradas_treino: list = []
-        self.arr_saidas_esperadas: list = []
-        self.arr_prevevisao: list = []
+        self.arr_entradas_treino: list[list[list]] = []
+        self.arr_saidas_esperadas: list[list[list]] = []
+        self.arr_prevevisao: list = list[list[list]]
 
         self.max_value_entradas: list = []
         self.min_value_entradas: list = []

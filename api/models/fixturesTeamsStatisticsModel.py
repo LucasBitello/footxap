@@ -1,8 +1,9 @@
 from __future__ import annotations
 from api.models.model import Model, ReferenciaTabelasFilhas, IdTabelas, ReferenciaTabelasPai, ClassModel
 from api.models.typeFixtureTeamStatisticModel import TypesFixturesTeamsStatisticsModel, TypesFixturesTeamsStatistics
+
 class FixturesTeamsStatisticsModel(Model):
-    def __init__(self):
+    def __init__(self, fixtureModel, teamModel):
         super().__init__(
             name_table="fixture_team_statistics",
             id_tabela=IdTabelas().fixture_team_estatistics,
@@ -24,8 +25,10 @@ class FixturesTeamsStatisticsModel(Model):
             classModelDB=FixtureTeamStatistic,
             rate_refesh_table_in_ms=0)
 
-        self.criarTableDataBase()
+        self.teamModel = teamModel
+        self.fixtureModel = fixtureModel
         self.typesFixturesTeamsStatisticsModel = TypesFixturesTeamsStatisticsModel()
+        self.criarTableDataBase()
 
     def fazerConsultaFixturesStatisticsApiFootball(self, id_fixture: int, id_team: int = None,
                                                    name_type: str = None):
@@ -53,7 +56,8 @@ class FixturesTeamsStatisticsModel(Model):
 
 
     def atualizarDBFixtureTeamStatistics(self, idFixture: int) -> None:
-        arrResponse = self.fazerConsultaFixturesStatisticsApiFootball(id_fixture=idFixtureAPI)
+        fixtureDB = self.fixtureModel.obterByColumnsID(arrDados=[idFixture])[0]
+        arrResponse = self.fazerConsultaFixturesStatisticsApiFootball(id_fixture=fixtureDB.id_api)
 
         for response in arrResponse:
             arrDataStatistics = response["statistics"]
@@ -62,8 +66,7 @@ class FixturesTeamsStatisticsModel(Model):
                 typeStatisctic: TypesFixturesTeamsStatistics = self.typesFixturesTeamsStatisticsModel.obterTypesFixturesTeamsStatistics(
                     name_type=dataStatistic["type"])
 
-                team: Team = self.teamsModel.obterByReferenceApi(dadosBusca=[response["team"]["id"]])[0]
-                fixtureDB: Fixture = self.fixturesModel.obterByReferenceApi(dadosBusca=[idFixtureAPI])[0]
+                team = self.teamModel.obterByReferenceApi(dadosBusca=[response["team"]["id"]])[0]
 
                 newFixtureTeamStatistic = FixtureTeamStatistic()
                 newFixtureTeamStatistic.id_fixture = fixtureDB.id
@@ -71,11 +74,11 @@ class FixturesTeamsStatisticsModel(Model):
                 newFixtureTeamStatistic.id_type_statistic = typeStatisctic.id
 
                 if type(dataStatistic["value"]) == str:
-                    newFixtureTeamStatistic.value = int(dataStatistic["value"].rstrip("%")) / 100
+                    newFixtureTeamStatistic.value = float(dataStatistic["value"].rstrip("%")) / 100
                 else:
                     newFixtureTeamStatistic.value = dataStatistic["value"]
 
-                self.fixturesTeamsStatisticsModel.salvar(data=[newFixtureTeamStatistic])
+                self.salvar(data=[newFixtureTeamStatistic])
 
 
     def criarTableDataBase(self):
@@ -87,9 +90,6 @@ class FixturesTeamsStatisticsModel(Model):
             `value` FLOAT NULL,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
-                INDEX `id_fixture_fts_fix_idx` (`id_fixture` ASC) VISIBLE,
-                INDEX `id_team_fts_tea_idx` (`id_team` ASC) VISIBLE,
-                INDEX `id_type_statistic_fts_tfts_idx` (`id_type_statistic` ASC) VISIBLE,
                 CONSTRAINT `id_fixture_fts_fix`
                 FOREIGN KEY (`id_fixture`)
                 REFERENCES `fixture` (`id`)
@@ -108,6 +108,10 @@ class FixturesTeamsStatisticsModel(Model):
                 UNIQUE(`id_fixture`, `id_team`, `id_type_statistic`));"""
 
         self.executarQuery(query=query, params=[])
+
+
+    def atualizarDados(self, id_fixture: int):
+        self.atualizarDBFixtureTeamStatistics(idFixture=id_fixture)
 
 
 class FixtureTeamStatistic(ClassModel):

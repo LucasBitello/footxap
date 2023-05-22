@@ -36,7 +36,7 @@ class LeaguesModel(Model):
             `type` VARCHAR(255) NOT NULL,
             `logo` LONGTEXT NULL,
             `is_obter_dados` TINYINT NOT NULL DEFAULT 0,
-            `self.last_get_data_api` DATETIME NULL,
+            `last_get_data_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
             PRIMARY KEY (`id`),
             CONSTRAINT `id_country`

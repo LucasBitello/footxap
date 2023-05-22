@@ -48,8 +48,8 @@ class FixturesModel(Model):
 
         self.criarTableDataBase()
         self.fixturesTeamsModel = FixturesTeamsModel(teamsModel=teamsModel)
-        '''self.fixturesTeamsLineupsModel = FixturesTeamsLineupsModel()
-        self.fixturesTeamsStatisticsModel = FixturesTeamsStatisticsModel()'''
+        self.fixturesTeamsStatisticsModel = FixturesTeamsStatisticsModel(fixtureModel=self, teamModel=teamsModel)
+        '''self.fixturesTeamsLineupsModel = FixturesTeamsLineupsModel()'''
 
 
     def fazerConsultaFixturesApiFootball(self, id_fixture: int = None, date: str = None, id_league: int = None,
@@ -103,7 +103,11 @@ class FixturesModel(Model):
                 "%Y-%m-%d %H:%M:%S")
 
             newFixture = Fixture()
-            newFixture.id = self.obterIdByReferenceIdApi(fixture["fixture"]["id"])
+            arrFixtureDB = self.obterByReferenceApi(dadosBusca=[fixture["fixture"]["id"]])
+
+            if len(arrFixtureDB) == 1:
+                newFixture = arrFixtureDB[0]
+
             newFixture.id_api = fixture["fixture"]["id"]
             newFixture.id_season = idSeason
             newFixture.date = dataFixtureFormatada
@@ -139,7 +143,7 @@ class FixturesModel(Model):
         self.executarQuery(query=query, params=[])
 
 
-    def atualizarDados(self, id_season: int = None, arr_ids_team: list[int] = []):
+    def atualizarDados(self, id_season: int = None, arr_ids_team: list[int] = [], qtde_dados_estatisticas: int = 15):
         dateNow = datetime.now().strftime("%Y-%m-%d")
 
         if id_season is not None:
@@ -159,7 +163,7 @@ class FixturesModel(Model):
 
                 team: Team = self.teamsModel.obterByColumnsID(arrDados=[id_team])[0]
 
-                if team.last_get_data_api is None or  (team.last_get_data_api.strftime("%Y-%m-%d") < dateNow):
+                if team.last_get_data_api is None or (team.last_get_data_api.strftime("%Y-%m-%d") < dateNow):
                     arrDataLeagues = self.leaguesModel.fazerConsultaApiFootball(id_team=team.id_api)
 
                     for dataLeague in arrDataLeagues:
@@ -182,11 +186,21 @@ class FixturesModel(Model):
                             arrSeasons: list[Season] = self.seasonsModel.obterByColumns(arrNameColuns=["id_league"], arrDados=[league.id])
 
                             for season in arrSeasons:
-                                if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow):
+                                arrFixturesEmAberto = self.obterFixturesOrderDataBy(id_season=season.id, id_team=None,
+                                                                                    isApenasConcluidas=False,
+                                                                                    isApenasEmAberto=True)
+                                isPossuisFixturesEmAberto = len(arrFixturesEmAberto) >= 1
+
+                                isObterFixtures = season.last_get_fixtures_api is None or \
+                                                  (season.last_get_fixtures_api.strftime("%Y-%m-%d") < dateNow and season.current == 1) or \
+                                                  (isPossuisFixturesEmAberto and season.current == 0)
+
+
+                                if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow and season.current == 1):
                                     self.teamsModel.atualizarDados(id_season=season.id)
                                     season.last_get_teams_api = datetime.now().strftime(self.teamsModel.formato_datetime_YYYY_MM_DD_H_M_S)
 
-                                if season.last_get_fixtures_api is None or (season.last_get_fixtures_api.strftime("%Y-%m-%d") < dateNow):
+                                if isObterFixtures:
                                     functionAttFixtures = lambda: self.atualizarDBFixtures(idSeason=season.id)
                                     self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
 
@@ -197,32 +211,52 @@ class FixturesModel(Model):
                     team.last_get_data_api = datetime.now().strftime(self.teamsModel.formato_datetime_YYYY_MM_DD_H_M_S)
                     self.teamsModel.salvar(data=[team])
 
-    def obterFixturesOrderDataBy(self, id_season: int = None, id_team: int = None, isASC: bool = True,
-                                 limit: int = None, isApenasConcluidas: bool = True) -> list[Fixture]:
+                arrFixturesForStatistics: list[Fixture] = self.obterFixturesOrderDataBy(id_team=id_team, isASC=False,
+                                                                           limit=qtde_dados_estatisticas,
+                                                                           isApenasConcluidas=True,
+                                                                           isApenasComStatistics=True)
 
+                for fixture in arrFixturesForStatistics:
+                    seasonFixture: Season = self.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
+                    if fixture.last_get_statistics_api is None and seasonFixture.has_statistics_fixtures == 1:
+                        self.fixturesTeamsStatisticsModel.atualizarDados(id_fixture=fixture.id)
+
+                        fixture.last_get_statistics_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
+                        self.salvar(data=[fixture])
+
+    def obterFixturesOrderDataBy(self, id_season: int = None, id_team: int = None, isASC: bool = True, limit: int = None,
+                                 isApenasConcluidas: bool = True, isApenasComStatistics: bool = False, isApenasEmAberto: bool = False) -> list[Fixture]:
+
+        arrStatusConcluido = ["'FT'", "'AET'", "'PEN'"]
+        arrStatusEmAberto = ["'NS'", "'TBD'", "'PST'"]
         queryOrder = " ORDER BY date" + (" ASC" if isASC else " DESC")
         queryLimite = f" LIMIT {limit}" if limit is not None else ""
-        queryApenasConcluidas = " AND fix.time_elapsed IS NOT NULL" if isApenasConcluidas else ""
+        queryApenasConcluidas = " AND fix.status in (" + ",".join(arrStatusConcluido) + ")" if isApenasConcluidas else ""
+        queryApenasComStatistics = " AND sea.has_statistics_fixtures = 1" if isApenasComStatistics else ""
+        queryApenasEmAberto = " AND fix.status in (" + ",".join( arrStatusEmAberto) + ")" if isApenasEmAberto else ""
         arrParams = []
 
         if id_season is not None and id_team is not None:
             arrParams = [id_season, id_team]
             query = f"SELECT fix.* FROM {self.name_table} as fix " \
                     f" JOIN {self.fixturesTeamsModel.name_table} as fte on fte.id_fixture = fix.id" \
-                    f" WHERE fix.id_season = %s AND fte.id_team = %s {queryApenasConcluidas}" \
+                    f" JOIN {self.seasonsModel.name_table} as sea on sea.id = fix.id_season" \
+                    f" WHERE fix.id_season = %s AND fte.id_team = %s {queryApenasConcluidas} {queryApenasEmAberto} {queryApenasComStatistics}" \
                     f" {queryOrder} {queryLimite}"
 
         elif id_team is not None:
             arrParams = [id_team]
             query = f"SELECT fix.* FROM {self.name_table} as fix " \
                     f" JOIN {self.fixturesTeamsModel.name_table} as fte on fte.id_fixture = fix.id" \
-                    f" WHERE fte.id_team = %s {queryApenasConcluidas}" \
+                    f" JOIN {self.seasonsModel.name_table} as sea on sea.id = fix.id_season" \
+                    f" WHERE fte.id_team = %s {queryApenasConcluidas} {queryApenasComStatistics}" \
                     f" {queryOrder} {queryLimite}"
 
         elif id_season is not None:
             arrParams = [id_season]
             query = f"SELECT fix.* FROM {self.name_table} as fix " \
-                    f" WHERE fix.id_season = %s {queryApenasConcluidas}" \
+                    f" JOIN {self.seasonsModel.name_table} as sea on sea.id = fix.id_season" \
+                    f" WHERE fix.id_season = %s {queryApenasConcluidas} {queryApenasEmAberto} {queryApenasComStatistics}" \
                     f" {queryOrder} {queryLimite}"
 
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture, params=arrParams)

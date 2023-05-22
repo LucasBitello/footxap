@@ -16,6 +16,7 @@ from api.regras.iaRegras import IARegras
 from api.regras.tabelaJogosRegras import TabelaJogosRegras
 from api.regras.tabelaPontuacaoRegras import TabelaPontuacaoRegras
 from api.regras.fixturesRegras import FixturesRegras
+from api.regras.datasetFixturesRegras import DatasetFixtureRegras
 # Create your views here.
 
 from api.models.countriesModel import Country
@@ -115,7 +116,7 @@ def obterStatistcsTeamsPlay(request):
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida,
                                                  nNeuroniosPrimeiraCamada=int((qtdeDadosHome + qtdeDadosAway)),
-                                                 nEpocas=1500, txAprendizado=0.007)
+                                                 nEpocas=250, txAprendizado=0.007)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlayPartida:
@@ -187,7 +188,7 @@ def obterPrevisaoTeam(request):
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay,
                                                  nNeuroniosPrimeiraCamada=int(qtdeDadosHome * 2),
-                                                 nEpocas=1500, txAprendizado=0.005)
+                                                 nEpocas=250, txAprendizado=0.005)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlay:
@@ -257,3 +258,15 @@ def obterTabelaJogos(request):
     tabelajogos = tabelaJogosRegras.obterTabelaJogos(id_season=idSeason)
     tabelaJogosNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelajogos])[0]
     return JsonResponse({"response": tabelaJogosNormalizada}, safe=True)
+
+def obterEstatisticas(request):
+    datasetFixtureRegras = DatasetFixtureRegras()
+    uteisRegras = UteisRegras()
+    id_team = request.GET.get("id_team")
+
+    if id_team is None:
+        raise "Sem id_season como parametro para obter tabela pontuacao"
+
+    arrRetorno = datasetFixtureRegras.criarDatasetFixture(arr_ids_team=[int(id_team)], isFiltrarApenasTeams=True)
+    arrRetornoNormalizado = uteisRegras.normalizarDadosForView(arrDados=arrRetorno)
+    return JsonResponse({"response": arrRetornoNormalizado}, safe=False)

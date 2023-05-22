@@ -1,5 +1,5 @@
 import datetime
-
+from api.models.model import Database
 
 class ParamsNotNone:
     def __init__(self):
@@ -16,7 +16,8 @@ class UteisRegras():
 
         return paramsNotNone
 
-    def normalizarDadosForView(self, arrDados: list[object]) -> list[dict]:
+    def normalizarDadosForView(self, arrDados: list[object], isFecharConexao: bool = True) -> list[dict]:
+        database = Database()
         arrDadosJson = []
         arrDadosNormalizados = []
 
@@ -35,7 +36,7 @@ class UteisRegras():
                     dado[key] = self.normalizarDadosForView(dado[key])
                 elif (type(dado[key]) != int and type(dado[key]) != float and type(dado[key]) != str and
                       type(dado[key]) != list and dado[key] is not None and type(dado[key]) != datetime.datetime and
-                      type(dado[key]) != datetime.date):
+                      type(dado[key]) != datetime.date and type(dado[key]) != dict and type(dado[key]) != bool):
                     dado[key] = dado[key].__dict__
                     for key2 in dado[key]:
                         if type(dado[key][key2]) == list and len(dado[key][key2]) >= 1:

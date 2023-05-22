@@ -27,6 +27,18 @@ label {
   max-width: 10%;
 }
 
+.width-15 {
+  width: 15%;
+}
+
+.width-20 {
+  width: 20%;
+}
+
+.width-80 {
+  width: 80%;
+}
+
 .heigth-25vh {
   height: 25vh;
 }
@@ -53,6 +65,18 @@ label {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.display-flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.grid-2-colunas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 3px;
 }
 
 .position-absolute {
@@ -111,12 +135,24 @@ label {
   color: #2bc72b;
 }
 
+.backgroud-color-vitoria {
+  background-color: #98da98;
+}
+
 .color-derrota {
   color: #fa3f3f;
 }
 
+.backgroud-color-derrota {
+  background-color: #c59799;
+}
+
 .color-empate {
   color: #a4a4a4;
+}
+
+.backgroud-color-empate {
+  background-color: #a9a9a9;
 }
 
 .color-black {
@@ -129,6 +165,10 @@ label {
 
 .backgroud-color-black{
   background-color: black;
+}
+
+.backgroud-color-444448{
+  background-color: #444448
 }
 
 .font-size-0-8-em{
@@ -149,8 +189,39 @@ label {
   margin-bottom: 5px;
 }
 
+.margin-vertical-15px {
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.margin-horizontal-15px{
+  margin-left: 15px;
+  margin-right: 15px;
+}
 
 .paddaing-vertical-3px {
   padding-top: 3px;
   padding-bottom: 3px;
+}
+
+.paddaing-horizontal-15px {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.paddaing-horizontal-10px {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.float-right {
+  float: right;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.font-weight-bold {
+  font-weight: bold;
 }

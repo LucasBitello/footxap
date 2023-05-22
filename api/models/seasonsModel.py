@@ -42,6 +42,13 @@ class SeasonsModel(Model):
             `start` DATE NULL,
             `end` DATE NULL,
             `current` INT NULL,
+            `has_events` INT NOT NULL,
+            `has_lineups` INT NOT NULL,
+            `has_statistics_fixtures` INT NOT NULL,
+            `has_statistics_players` INT NOT NULL,
+            `has_players` INT NOT NULL,
+            `has_predictions` INT NOT NULL,
+            `has_odds` INT NOT NULL,
             `last_get_data_api` DATETIME NULL,
             `last_get_teams_api` DATETIME NULL,
             `last_get_fixtures_api` DATETIME NULL,
@@ -74,8 +81,9 @@ class SeasonsModel(Model):
                 print(msgError)
                 raise msgError
             else:
-                newSeason.id = arrSeason[0].id
-                #Feito para evitar dados muito antigos não é util por Hora.
+                newSeason = arrSeason[0]
+
+            #Feito para evitar dados muito antigos não é util por Hora.
             if int(dataSeason["year"]) <= 2020:
                  continue
 
@@ -84,6 +92,13 @@ class SeasonsModel(Model):
             newSeason.start = dataSeason["start"]
             newSeason.end = dataSeason["end"]
             newSeason.current = int(dataSeason["current"])
+            newSeason.has_events = int(dataSeason["coverage"]["fixtures"]["events"])
+            newSeason.has_lineups = int(dataSeason["coverage"]["fixtures"]["lineups"])
+            newSeason.has_statistics_fixtures = int(dataSeason["coverage"]["fixtures"]["statistics_fixtures"])
+            newSeason.has_statistics_players = int(dataSeason["coverage"]["fixtures"]["statistics_players"])
+            newSeason.has_players = int(dataSeason["coverage"]["players"])
+            newSeason.has_predictions = int(dataSeason["coverage"]["predictions"])
+            newSeason.has_odds = int(dataSeason["coverage"]["odds"])
 
             self.salvar(data=[newSeason])
 
@@ -95,6 +110,13 @@ class Season(ClassModel):
         self.start: str = None
         self.end: str = None
         self.current = None
+        self.has_events: int = None
+        self.has_lineups: int = None
+        self.has_statistics_fixtures: int = None
+        self.has_statistics_players: int = None
+        self.has_players: int = None
+        self.has_predictions: int = None
+        self.has_odds: int = None
         self.last_get_data_api = None
         self.last_get_teams_api = None
         self.last_get_fixtures_api = None

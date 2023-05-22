@@ -5,6 +5,7 @@ class TypesFixturesTeamsStatistics(ClassModel):
     def __init__(self, typesFixturesTeamsStatistics: dict|object = None):
         self.id: int = None
         self.name_statistic: str = None
+        self.is_decline_good: int = None
 
         super().__init__(dado=typesFixturesTeamsStatistics)
 
@@ -31,6 +32,7 @@ class TypesFixturesTeamsStatisticsModel(Model):
         query = f"""CREATE TABLE IF NOT EXISTS `type_fixture_team_statistic` (
             `id` INT NOT NULL AUTO_INCREMENT,
             `name_statistic` VARCHAR(255) NOT NULL,
+            `is_decline_good` INT NOT NULL DEFAULT 0,
             PRIMARY KEY (`id`),
             UNIQUE  (`name_statistic`));"""
 
@@ -42,9 +44,13 @@ class TypesFixturesTeamsStatisticsModel(Model):
             arrNameColuns=["name_statistic"], arrDados=[name_type])
 
         if len(arrTypeStatistics) == 0:
+            arrNamesIsDeclineGood = ["Fouls", "Offsides", "Yellow Cards", "Red Cards"]
             newTypeStatistics = TypesFixturesTeamsStatistics()
             newTypeStatistics.name_statistic = name_type
             newTypeStatistics.id = self.salvar(data=[newTypeStatistics]).getID()
+
+            if name_type in arrNamesIsDeclineGood:
+                newTypeStatistics.is_decline_good = 1
 
             return newTypeStatistics
         else:
