@@ -14,6 +14,11 @@ class Database:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)
                 cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1", charset='utf8mb4')
+
+                while not cls._instance.conexao:
+                    time.sleep(1)
+                    cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1", charset='utf8mb4')
+
                 newCursonMaxTime = cls._instance.conexao.cursor()
                 newCursonMaxTime.execute("SET max_execution_time = 30")
             return cls._instance

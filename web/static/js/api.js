@@ -22,6 +22,9 @@ async function callGETAPI(params, isShowLoader = true, isMostrarMensagem = false
         loader.innerHTML = `
             <label>${gerarMensagemAleatoria()}</label>
         `
+    }else {
+        loader.innerHTML = `Se tiver demorando demais e não apareceu nenhum erro é pq ainda ta processando, então esperAAAAAAAAAAAA. 
+                            <br><br> Mas se demorar mais de 15 minutos me avisa :)`
     }
 
 

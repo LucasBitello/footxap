@@ -68,7 +68,16 @@ class FixturesTeamsStatisticsModel(Model):
 
                 team = self.teamModel.obterByReferenceApi(dadosBusca=[response["team"]["id"]])[0]
 
-                newFixtureTeamStatistic = FixtureTeamStatistic()
+                arrFixtureTeamStatistic = self.obterByColumns(arrNameColuns=["id_fixture", "id_team", "id_type_statistic"],
+                                                              arrDados=[fixtureDB.id, team.id, typeStatisctic.id])
+
+                if len(arrFixtureTeamStatistic) == 1:
+                    newFixtureTeamStatistic = arrFixtureTeamStatistic[0]
+                elif len(arrFixtureTeamStatistic) >= 2:
+                    raise "UEPAAA tem algum erro com essas statisticas: " + str(fixtureDB.id)
+                else:
+                    newFixtureTeamStatistic = FixtureTeamStatistic()
+
                 newFixtureTeamStatistic.id_fixture = fixtureDB.id
                 newFixtureTeamStatistic.id_team = team.id
                 newFixtureTeamStatistic.id_type_statistic = typeStatisctic.id
