@@ -117,7 +117,7 @@ def obterPrevisaoPartida(request):
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida,
                                                  nNeuroniosPrimeiraCamada=int((qtdeDadosHome + qtdeDadosAway)),
-                                                 nEpocas=75, txAprendizado=0.001)
+                                                 nEpocas=750, txAprendizado=0.001)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlayPartida:
