@@ -197,7 +197,7 @@ class DBN:
 
     def treinarDBN(self, dataset: DatasetRNN) -> DatasetRNN:
         arrEntradas = dataset.arr_entradas_treino
-        arrSaida = dataset.arr_saidas_esperadas
+        arrSaida = dataset.arr_camadas_saidas
 
         print("DBN:", len(arrEntradas), len(arrSaida))
 

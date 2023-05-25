@@ -45,25 +45,3 @@ class IARegras:
 
         return new_k_arr_dados
 
-    def obterErroSaida(self, rotulos_saidas: list, saidas_previstas: list, epoca_atual: int, taxa_aprendizado: float,
-                       erro_aceitavel: float = 0.01, isPrintarMensagem: bool = True) -> list[bool, str]:
-        # mean absolute error" (MAE) ou "erro médio absoluto"
-        # loss = -numpy.mean(numpy.abs(numpy.asarray(saidas) - numpy.asarray(saidas_in_k_folds[index_entrada])))
-
-        # entropia cruzada (cross-entropy)
-        loss = -numpy.mean(numpy.sum(rotulos_saidas * numpy.log(saidas_previstas), axis=0))
-
-        # (MSE - Mean Squared Error)
-        #loss = numpy.mean(numpy.power(numpy.asarray(rotulos_saidas) - numpy.asarray(saidas_previstas), 2))
-
-        isBrekarTreino: bool = False
-
-        if loss <= erro_aceitavel:
-            isBrekarTreino = True
-
-        mensagem_loss = f"Epoch: {epoca_atual}, erro: {loss}, TxAprendizado: {taxa_aprendizado}"
-
-        if isPrintarMensagem:
-            print(mensagem_loss)
-
-        return isBrekarTreino, mensagem_loss, loss

@@ -70,7 +70,7 @@ async function ajustarSelectLeague(id_html_select) {
         selectLeagues.innerHTML = `<option value="0" selected>Selecione uma liga...</option>`
 
         for (let league of arrLeagues){
-            selectLeagues.innerHTML += `<option value="${league["id"]}">${league["name"]}</option>`
+            selectLeagues.innerHTML += `<option value="${league["id"]}" class="fa-solid fa-arrow-down">${league["name"]}</option>`
         }
     }
 }
@@ -223,13 +223,13 @@ async function showTabela(id_season){
         let div_team_ultimos_jogos = document.getElementById(`ultimos-team-${team["id_team"]}`)
 
         for(let jogo of arr_last_jogos){
-            if (jogo["is_winner"] === 1){
+            if (jogo["is_winner_home"] === 1){
                 div_team_ultimos_jogos.innerHTML +=
                     `<div><i class="fa-solid ${jogo["is_home"] === 1 ? "fa-house" : "fa-circle" } color-vitoria font-size-0-8-em"></i></div>`
-            }else if (jogo["is_winner"] === 0){
+            }else if (jogo["is_winner_home"] === 0){
                 div_team_ultimos_jogos.innerHTML +=
                     `<div><i class="fa-solid ${jogo["is_home"] === 1 ? "fa-house" : "fa-circle" } color-derrota font-size-0-8-em"></i></div>`
-            }else if (jogo["is_winner"] === null){
+            }else if (jogo["is_winner_home"] === null){
                 div_team_ultimos_jogos.innerHTML +=
                     `<div><i class="fa-solid ${jogo["is_home"] === 1 ? "fa-house" : "fa-circle" } color-empate font-size-0-8-em"></i></div>`
             }
@@ -309,7 +309,6 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
     await fazerRequisicaoEstatisticas("div-estatisticas-team-away", id_season, id_team_away, false)
     await fazerRequisicaoParaIAPreverTime("div-previsao-team-home", id_season, id_team_home, true)
     await fazerRequisicaoParaIAPreverTime("div-previsao-team-away", id_season, id_team_away, false)
-    return;
     await fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away)
 }
 
@@ -317,7 +316,7 @@ async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_te
     let div_estatisticas_team_home = document.getElementById("div-previsao-partida-team-home")
     let div_estatisticas_team_away = document.getElementById("div-previsao-partida-team-away")
 
-    let params = "/statistics?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
+    let params = "/previsao-partida?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
     let probsIA = await callGETAPI(params, true, true)
 
     div_estatisticas_team_home.innerHTML = `
@@ -331,13 +330,13 @@ async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_te
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
-                <label>Vitória: ${probsIA["probabilidades_home"]["vitoria"]}</label><br>
+                <label>Vitória: ${probsIA["is_winner_home"]["vitoria"]}</label><br>
             </div>
             <div class="div-estatisticas-team-empate">
-                <label>Empate: ${probsIA["probabilidades_home"]["empate"]}</label><br>
+                <label>Empate: ${probsIA["is_winner_home"]["empate"]}</label><br>
             </div>
             <div class="div-estatisticas-team-derrota">
-                <label>Derrota: ${probsIA["probabilidades_home"]["derrota"]}</label><br>
+                <label>Derrota: ${probsIA["is_winner_home"]["derrota"]}</label><br>
             </div>
         </div>
     `
@@ -353,13 +352,13 @@ async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_te
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
-                <label>Vitória: ${probsIA["probabilidades_away"]["vitoria"]}</label><br>
+                <label>Vitória: ${probsIA["is_winner_away"]["vitoria"]}</label><br>
             </div>
             <div class="div-estatisticas-team-empate">
-                <label>Empate: ${probsIA["probabilidades_away"]["empate"]}</label><br>
+                <label>Empate: ${probsIA["is_winner_away"]["empate"]}</label><br>
             </div>
             <div class="div-estatisticas-team-derrota">
-                <label>Derrota: ${probsIA["probabilidades_away"]["derrota"]}</label><br>
+                <label>Derrota: ${probsIA["is_winner_away"]["derrota"]}</label><br>
             </div>
         </div>
     `
@@ -369,8 +368,11 @@ async function fazerRequisicaoParaIAPreverTime(name_id_div, id_season, id_team, 
     let div_previsao_team = document.getElementById(name_id_div);
     let params = "/previsao-team?id_season="+id_season+"&id_team="+id_team
     let probsIA = await callGETAPI(params, true, true)
-    let chave_home_away = is_home ? "_home" : "_away"
+    let chave_home_away = is_home ? "is_winner_home" : "is_winner_away"
 
+    console.log(probsIA)
+    console.log(chave_home_away)
+    console.log(probsIA[chave_home_away])
     div_previsao_team.innerHTML = `
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
@@ -382,13 +384,13 @@ async function fazerRequisicaoParaIAPreverTime(name_id_div, id_season, id_team, 
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
-                <label>Vitória: ${probsIA[`probabilidades${chave_home_away}`]["vitoria"]}</label><br>
+                <label>Vitória: ${probsIA[chave_home_away]["vitoria"]}</label><br>
             </div>
             <div class="div-estatisticas-team-empate">
-                <label>Empate: ${probsIA[`probabilidades${chave_home_away}`]["empate"]}</label><br>
+                <label>Empate: ${probsIA[chave_home_away]["empate"]}</label><br>
             </div>
             <div class="div-estatisticas-team-derrota">
-                <label>Derrota: ${probsIA[`probabilidades${chave_home_away}`]["derrota"]}</label><br>
+                <label>Derrota: ${probsIA[chave_home_away]["derrota"]}</label><br>
             </div>
         </div>
     `

@@ -23,6 +23,9 @@ from api.models.countriesModel import Country
 from api.models.leaguesModel import League
 from api.models.teamsModel import Team
 
+from api.models.model import Database
+
+database = Database()
 
 def obterCountries(request):
     uteisRegras = UteisRegras()
@@ -77,11 +80,9 @@ def searchTeams(request):
     return JsonResponse({"response": arrTeams}, safe=False)
 
 
-def obterStatistcsTeamsPlay(request):
+def obterPrevisaoPartida(request):
     iaRegras = IARegras()
-    rnnPartida = RNN(1, [1], [1])
-
-    rbm = DBN(25, 25, 0.01)
+    rnnPartida = RNN(1, [1], [])
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
     fixturesRegras = FixturesRegras()
@@ -112,11 +113,11 @@ def obterStatistcsTeamsPlay(request):
 
     datasetTeamsPlayPartida, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],
-                                                                       qtdeDados=30, isFiltrarTeams=True)
+                                                                       qtdeDados=50, isFiltrarTeams=True, isPartida=False)
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida,
                                                  nNeuroniosPrimeiraCamada=int((qtdeDadosHome + qtdeDadosAway)),
-                                                 nEpocas=250, txAprendizado=0.007)
+                                                 nEpocas=1000, txAprendizado=0.001)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlayPartida:
@@ -136,8 +137,8 @@ def obterStatistcsTeamsPlay(request):
         name_chave_prob = datasetTeamsPlayPartida.arr_name_values_saida[i]
         dictPrevPartida[name_chave_prob] = {}
         dictPrevPartida[name_chave_prob] = {
-            "vitoria": arrPrevPartida[0][i][2],
-            "empate": arrPrevPartida[0][i][1],
+            "vitoria": arrPrevPartida[0][i][1],
+            "empate": 0,
             "derrota": arrPrevPartida[0][i][0]
         }
 
@@ -152,11 +153,12 @@ def obterStatistcsTeamsPlay(request):
     for prev in arrPrevTreino:
         print(prev)
 
+    database.closeConnection()
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
 def obterPrevisaoTeam(request):
     iaRegras = IARegras()
-    rnnPartida = RNN(1, [1], [1])
+    rnnPartida = RNN(1, [1], [])
     rbm = DBN(25, 25, 0.01)
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
@@ -183,17 +185,20 @@ def obterPrevisaoTeam(request):
 
     datasetTeamsPlay, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlay,
                                                                                         arrIdsTeamPrever=[idTeam],
-                                                                                        qtdeDados=30,
-                                                                                        isFiltrarTeams=True)
+                                                                                        qtdeDados=50,
+                                                                                        isFiltrarTeams=True,
+                                                                                        isPartida=False)
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay,
                                                  nNeuroniosPrimeiraCamada=int(qtdeDadosHome * 2),
-                                                 nEpocas=250, txAprendizado=0.005)
+                                                 nEpocas=1000, txAprendizado=0.001)
     data_jogo_prevista = None
+    is_home = None
 
     for teamsPlay in arrTeamsPlay:
         if teamsPlay.is_prever == 1:
             data_jogo_prevista = (teamsPlay.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
+            is_home = teamsPlay.id_team_home == idTeam
             break
 
     dictPrevPartida = {
@@ -204,14 +209,16 @@ def obterPrevisaoTeam(request):
         "data_jogo_previsto": data_jogo_prevista
     }
 
+    key_chave = "is_winner_home" if is_home else "is_winner_away"
     for i in range(len(datasetTeamsPlay.arr_name_values_saida)):
-        name_chave_prob = datasetTeamsPlay.arr_name_values_saida[i]
-        dictPrevPartida[name_chave_prob] = {}
-        dictPrevPartida[name_chave_prob] = {
-            "vitoria": arrPrevPartida[0][i][2],
-            "empate": arrPrevPartida[0][i][1],
-            "derrota": arrPrevPartida[0][i][0]
-        }
+        if datasetTeamsPlay.arr_name_values_saida[i] == key_chave:
+            name_chave_prob = datasetTeamsPlay.arr_name_values_saida[i]
+            dictPrevPartida[name_chave_prob] = {}
+            dictPrevPartida[name_chave_prob] = {
+                "vitoria": arrPrevPartida[0][i][1],
+                "empate": 0,
+                "derrota": arrPrevPartida[0][i][0]
+            }
 
     arrPrevTreino.append(datasetTeamsPlay.arr_name_values_saida)
     arrPrevTreino.append(str("Previsoes Partida: \n" + ",".join(list(map(str, arrPrevPartida)))))
@@ -222,7 +229,7 @@ def obterPrevisaoTeam(request):
     print("Team home: ", name_team_home)
     for prev in arrPrevTreino:
         print(prev)
-
+    database.closeConnection()
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
 def obterTabelaPontuacao(request):

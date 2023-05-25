@@ -42,7 +42,8 @@ class Database:
         return
         while not isFechou:
             try:
-                self.conexao.close()
+                if self.conexao:
+                    self.conexao.close()
                 isFechou = True
             except connection.Error as cExc:
                 print("fechar conexao falhou tentando novamente.")

@@ -49,4 +49,5 @@ class UteisRegras():
 
             arrDadosNormalizados.append(dado)
 
+        database.closeConnection()
         return arrDadosNormalizados
