@@ -113,11 +113,11 @@ def obterPrevisaoPartida(request):
 
     datasetTeamsPlayPartida, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
                                                                        arrIdsTeamPrever=[idTeamHome, idTeamAway],
-                                                                       qtdeDados=50, isFiltrarTeams=True, isPartida=False)
+                                                                       qtdeDados=25, isFiltrarTeams=True, isPartida=False)
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida,
                                                  nNeuroniosPrimeiraCamada=int((qtdeDadosHome + qtdeDadosAway)),
-                                                 nEpocas=1000, txAprendizado=0.001)
+                                                 nEpocas=75, txAprendizado=0.001)
     data_jogo_prevista = None
 
     for teamsPlay in arrTeamsPlayPartida:
@@ -185,13 +185,13 @@ def obterPrevisaoTeam(request):
 
     datasetTeamsPlay, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlay,
                                                                                         arrIdsTeamPrever=[idTeam],
-                                                                                        qtdeDados=50,
+                                                                                        qtdeDados=25,
                                                                                         isFiltrarTeams=True,
                                                                                         isPartida=False)
     arrPrevTreino = []
     arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay,
                                                  nNeuroniosPrimeiraCamada=int(qtdeDadosHome * 2),
-                                                 nEpocas=1000, txAprendizado=0.001)
+                                                 nEpocas=750, txAprendizado=0.001)
     data_jogo_prevista = None
     is_home = None
 
