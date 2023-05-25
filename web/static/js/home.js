@@ -223,13 +223,13 @@ async function showTabela(id_season){
         let div_team_ultimos_jogos = document.getElementById(`ultimos-team-${team["id_team"]}`)
 
         for(let jogo of arr_last_jogos){
-            if (jogo["is_winner_home"] === 1){
+            if (jogo["is_winner"] === 1){
                 div_team_ultimos_jogos.innerHTML +=
                     `<div><i class="fa-solid ${jogo["is_home"] === 1 ? "fa-house" : "fa-circle" } color-vitoria font-size-0-8-em"></i></div>`
-            }else if (jogo["is_winner_home"] === 0){
+            }else if (jogo["is_winner"] === 0){
                 div_team_ultimos_jogos.innerHTML +=
                     `<div><i class="fa-solid ${jogo["is_home"] === 1 ? "fa-house" : "fa-circle" } color-derrota font-size-0-8-em"></i></div>`
-            }else if (jogo["is_winner_home"] === null){
+            }else if (jogo["is_winner"] === null){
                 div_team_ultimos_jogos.innerHTML +=
                     `<div><i class="fa-solid ${jogo["is_home"] === 1 ? "fa-house" : "fa-circle" } color-empate font-size-0-8-em"></i></div>`
             }

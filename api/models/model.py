@@ -16,41 +16,35 @@ class Database:
                 cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1", charset='utf8mb4')
 
                 while not cls._instance.conexao:
-                    time.sleep(1)
+                    time.sleep(0.5)
+                    print("tentando 3")
                     cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1", charset='utf8mb4')
 
                 newCursonMaxTime = cls._instance.conexao.cursor()
                 newCursonMaxTime.execute("SET max_execution_time = 30")
             return cls._instance
         except connection.Error as cExc:
-            print("abrir conexao falhou tentando novamente.")
-            print("Ocorreu a exceção", cExc)
+            print(cExc)
 
     def openConnection(self):
-        isConectou = False
-        while not isConectou:
+        while not self.conexao:
+            print("tentando 2")
             try:
                 self.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1")
-                isConectou = True
+                time.sleep(0.5)
             except connection.Error as cExc:
-                print("abrir conexao falhou tentando novamente.")
-                print("Ocorreu a exceção", cExc)
-                isConectou = False
+                print(cExc)
 
     def closeConnection(self):
-        isFechou = False
         return
-        while not isFechou:
+        while self.conexao:
+            print("tentando 1", self.conexao)
             try:
-                if self.conexao:
-                    self.conexao.close()
-                isFechou = True
+                self.conexao.close()
+                print("tentando 1", self.conexao)
+                time.sleep(15.5)
             except connection.Error as cExc:
-                print("fechar conexao falhou tentando novamente.")
-                print("Ocorreu a exceção", cExc)
-                isFechou = False
-
-
+                print( cExc)
 
     def commit(self):
         self.conexao.commit()
@@ -85,6 +79,7 @@ class Database:
 
 
     def executeModifyQuery(self, query: str, params: list = [], isCommit: bool = True) -> list[int, int]:
+        self.openConnection()
         with self.conexao.cursor() as cursor:
             cursor.execute(query, params)
 
