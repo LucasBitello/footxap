@@ -343,7 +343,7 @@ class RNN:
         nEpocas = nEpocas
         qtdeDados = datasetRNN.quantia_dados
         qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
-        qtdeNeuroniosPrimeiraCamada = 150
+        qtdeNeuroniosPrimeiraCamada = 200
         taxaAprendizado = txAprendizado
 
         print("N neuronios entrada:", qtdeNeuroniosEntrada)
@@ -351,7 +351,7 @@ class RNN:
         print("Qtde dados:", qtdeDados, ", TxAprendizado: ", taxaAprendizado)
 
         self.__init__(nNeuroniosEntrada=qtdeNeuroniosEntrada,
-                      nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0), int(qtdeNeuroniosPrimeiraCamada * 0.7)],
+                      nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0)],
                       arrCamadasSaida=datasetRNN.arr_camadas_saidas)
 
         loss = self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_camadas_saidas,
