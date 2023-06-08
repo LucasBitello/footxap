@@ -18,13 +18,13 @@ from django.urls import path
 from web.views.home import index
 #from api.views.tests import urlTesteMetodos
 from api.views.api import obterCountries, obterLeagues, obterSeasons, searchTeams, \
-    obterPrevisaoPartida, obterTabelaPontuacao, obterTabelaJogos, obterPrevisaoTeam, obterEstatisticas
+    obterPrevisaoPartida, obterTabelaPontuacao, obterTabelaJogos, obterPrevisaoTeam, obterEstatisticas, urlTesteMetodos
 
 nivelAPIatual = "api/v1"
 
 urlpatterns = [
     #Somente para testes
-    #path('test/', urlTesteMetodos),
+    path('test/', urlTesteMetodos),
 
     path('admin/', admin.site.urls),
     path('home/', index),

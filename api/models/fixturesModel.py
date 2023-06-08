@@ -216,13 +216,13 @@ class FixturesModel(Model):
                                                                            isApenasConcluidas=True,
                                                                            isApenasComStatistics=True)
 
-                for fixture in arrFixturesForStatistics:
-                    seasonFixture: Season = self.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
-                    if fixture.last_get_statistics_api is None and seasonFixture.has_statistics_fixtures == 1:
-                        self.fixturesTeamsStatisticsModel.atualizarDados(id_fixture=fixture.id)
+                #for fixture in arrFixturesForStatistics:
+                    #seasonFixture: Season = self.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
+                    #if fixture.last_get_statistics_api is None and seasonFixture.has_statistics_fixtures == 1:
+                        #self.fixturesTeamsStatisticsModel.atualizarDados(id_fixture=fixture.id)
 
-                        fixture.last_get_statistics_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
-                        self.salvar(data=[fixture])
+                        #fixture.last_get_statistics_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
+                        #self.salvar(data=[fixture])
 
     def obterFixturesOrderDataBy(self, id_season: int = None, id_team: int = None, isASC: bool = True, limit: int = None,
                                  isApenasConcluidas: bool = True, isApenasComStatistics: bool = False, isApenasEmAberto: bool = False) -> list[Fixture]:

@@ -18,10 +18,9 @@ from api.regras.iaRegras import IARegras
 
 class TeamsPlaysSaidaPartida:
     def __init__(self):
-        self.is_winner_home: int = None
-        self.is_winner_away: int = None
         self.probabilidades_home: int = None
         self.probabilidades_away: int = None
+        self.probabilidades_partida: int = None
         self.qtde_gols_marcados_home: int = None
         self.qtde_gols_marcados_away: int = None
 
@@ -34,6 +33,7 @@ class TeamsPlaysEntrada:
         #self.other_team_winner_opponent: int = None
 
         self.name_team_home: str = None
+        self.is_playing_home_home: str = None
         self.id_country_team_home: int = None
         self.id_team_home: int = None
         self.qtde_pontos_season_home: int = None
@@ -54,6 +54,7 @@ class TeamsPlaysEntrada:
 
 
         self.name_team_away: str = None
+        self.is_playing_home_away: str = None
         self.id_country_team_away: int = None
         self.id_team_away: int = None
         self.qtde_pontos_season_away: int = None
@@ -78,6 +79,25 @@ class TeamsPlaysEntrada:
         attr = self.__getattribute__(name_atribute)
         return attr
 
+class TeamsPlaysDataset:
+    def __init__(self):
+        self.data_previsao: str = None
+        self.arr_name_coluns_entrada: list[str] = []
+        self.max_value_entrada: list = []
+        self.min_value_entrada: list = []
+        self.arr_dados_entrada_original: list[list] = []
+        self.arr_dados_entrada: list[list] = []
+
+        self.arr_dados_prever_original: list[list] = []
+        self.arr_dados_prever: list[list] = []
+
+        self.arr_name_coluns_rotulos: list[str] = []
+        self.max_value_rotulos: list = []
+        self.min_value_rotulos: list = []
+        self.arr_dados_rotulos_original: list[list[list]] = []
+        self.arr_dados_rotulos_in_camadas: list[list[list]] = []
+        self.arr_dados_rotulos_in_camadas_normalizados: list[list[list]] = []
+
 class StatisticsRegras:
     def __init__(self):
         self.iaRegras = IARegras()
@@ -85,17 +105,9 @@ class StatisticsRegras:
         self.seasonRegras = SeasonsRegras()
         self.fixturesRegras = FixturesRegras()
 
-    def obter(self, id_season: int = None, id_team: int = None) -> list:
-        if id_season is None and id_team is None and id_team_away is None:
-            raise "Id_team ou id_season é obrigátorio para as estatisticas."
-
-        arrTeams: list[Team] = self.teamsRegras.obter(id=id_team, id_season=id_season)
-        arrTeamPontuacao: list = []
-        qtdeUltimosJogosGols = 10
-        for team in arrTeams:
-            arrFixtures = self.fixturesRegras.obter(id_season=id_season, id_team=team.id)
-
-    def obterAllFixturesByIdTeams(self, idTeamPrincipal: int, idTeamAdversario: int = None, id_season: int = None) -> list[TeamsPlaysEntrada]:
+    def obterAllFixturesByIdTeams(self, idTeamPrincipal: int, idTeamAdversario: int = None, id_season: int = None,
+                                  isFiltrarTeams: bool = True, qtdeDados: int = 40,
+                                  qtdeJogosAnterioresPrever: int = None) -> list[TeamsPlaysEntrada]:
         arrKeysFinished = ['FT', 'AET', 'PEN', 'CANC']
         arrFixtures: list[Fixture] = self.fixturesRegras.obterTodasASFixturesSeasonAllTeamsByIdTeam(
             idTeamHome=idTeamPrincipal,
@@ -118,7 +130,10 @@ class StatisticsRegras:
             fixture.teams: list[FixtureTeams] = fixture.teams
             indexOutherTeam = 1
 
-            arrIdsHomeAway = [idTeamPrincipal, idTeamAdversario]
+            arrIdsHomeAway = [idTeamPrincipal]
+            if idTeamAdversario is not None:
+                arrIdsHomeAway.append(idTeamAdversario)
+
             isFixtureTreino = False
             if fixture.teams[0].id_team in arrIdsHomeAway or fixture.teams[1].id_team in arrIdsHomeAway:
                 isFixtureTreino = True
@@ -128,12 +143,13 @@ class StatisticsRegras:
                 dateFutura = (datetime.now() + timedelta(days=2.0)).strftime("%Y-%m-%d")
 
                 if fixture.date.strftime("%Y-%m-%d") < datetime.now().strftime("%Y-%m-%d"):
-                    raise "Erro sem fixture"
+                    #raise "Erro sem fixture"
+                    pass
 
             for team in fixture.teams:
                 #if team.id_team == idTeamHome or (team.id_team != idTeamAway and fixture.teams[indexOutherTeam].id_team != idTeamHome):
                 if team.is_home == 1:
-
+                    newTeamPlays.is_playing_home_home = 1
                     newTeamPlays.id_team_home = team.id_team
                     dataTeamHome: Team = self.teamsRegras.teamsModel.obterByColumnsID(arrDados=[team.id_team])[0]
                     newTeamPlays.name_team_home = dataTeamHome.name
@@ -141,13 +157,13 @@ class StatisticsRegras:
 
                     if team.is_winner == 0:
                         newTeamPlays.saida_prevista_partida.probabilidades_home = 0
-                        newTeamPlays.saida_prevista_partida.is_winner_home = 0
+                        newTeamPlays.saida_prevista_partida.probabilidades_partida = 2
                     elif team.is_winner is None:
-                        newTeamPlays.saida_prevista_partida.is_winner_home = 0
                         newTeamPlays.saida_prevista_partida.probabilidades_home = 1
+                        newTeamPlays.saida_prevista_partida.probabilidades_partida = 1
                     elif team.is_winner == 1:
-                        newTeamPlays.saida_prevista_partida.is_winner_home = 1
                         newTeamPlays.saida_prevista_partida.probabilidades_home = 2
+                        newTeamPlays.saida_prevista_partida.probabilidades_partida = 0
 
                     newTeamPlays.qtde_gols_marcados_home = team.goals
                     newTeamPlays.saida_prevista_partida.qtde_gols_marcados_home += team.goals
@@ -184,6 +200,7 @@ class StatisticsRegras:
 
                 else:
                     newTeamPlays.id_team_away = team.id_team
+                    newTeamPlays.is_playing_home_away = 0
                     dataTeamAway: Team = self.teamsRegras.teamsModel.obterByColumnsID(arrDados=[team.id_team])[0]
                     newTeamPlays.name_team_away = dataTeamAway.name
                     newTeamPlays.id_country_team_away = dataTeamAway.id_country
@@ -191,14 +208,13 @@ class StatisticsRegras:
                     ## Is winner está sendo sobreposto verificar URGENTE>
                     if team.is_winner == 0:
                         newTeamPlays.saida_prevista_partida.probabilidades_away = 0
-                        newTeamPlays.saida_prevista_partida.is_winner_away = 0
+                        newTeamPlays.saida_prevista_partida.probabilidades_partida = 0
                     elif team.is_winner is None:
                         newTeamPlays.saida_prevista_partida.probabilidades_away = 1
-                        newTeamPlays.saida_prevista_partida.is_winner_away = 1
+                        newTeamPlays.saida_prevista_partida.probabilidades_partida = 1
                     elif team.is_winner == 1:
                         newTeamPlays.saida_prevista_partida.probabilidades_away = 2
-                        newTeamPlays.saida_prevista_partida.is_winner_away = 1
-
+                        newTeamPlays.saida_prevista_partida.probabilidades_partida = 2
 
                     newTeamPlays.qtde_gols_marcados_away = team.goals
                     newTeamPlays.saida_prevista_partida.qtde_gols_marcados_away += team.goals
@@ -236,23 +252,52 @@ class StatisticsRegras:
                 indexOutherTeam = 0
 
             arrTeamsPlays.append(newTeamPlays)
-        return arrTeamsPlays
+
+        arrTeamsPlaysFiltrado = []
+        qtdeDadosTeamPrincipal = 0
+        qtdeDadosTeamAdversario = 0
+
+        if isFiltrarTeams:
+            for team in list(reversed(arrTeamsPlays)):
+                if team.id_team_away not in arrIdsHomeAway and team.id_team_home not in arrIdsHomeAway:
+                    continue
+
+                if (team.id_team_home == arrIdsHomeAway[0] or team.id_team_away == arrIdsHomeAway[0]) and \
+                        qtdeDadosTeamPrincipal < qtdeDados:
+                    qtdeDadosTeamPrincipal += 1
+                    arrTeamsPlaysFiltrado.insert(0, team)
 
 
-    def normalizarDadosTeamsPlayDataset(self, arrTeamsPlays: list[TeamsPlaysEntrada], arrIdsTeamPrever: list[int],
-                                        qtdeDados: int, isFiltrarTeams: bool = False, isPartida: bool = True) -> DatasetRNN:
+                elif len(arrIdsHomeAway) == 2:
+                    if (team.id_team_home == arrIdsHomeAway[1] or team.id_team_away == arrIdsHomeAway[1]) and \
+                            qtdeDadosTeamAdversario < qtdeDados:
+                        qtdeDadosTeamAdversario += 1
+                        arrTeamsPlaysFiltrado.insert(0, team)
+        else:
+            arrTeamsPlaysFiltrado = arrTeamsPlays
+
+
+        if qtdeJogosAnterioresPrever is not None:
+            for indexTeam in range(len(arrTeamsPlaysFiltrado)):
+                if arrTeamsPlaysFiltrado[indexTeam].is_prever == 1:
+                    continue
+                else:
+                    if indexTeam <= qtdeJogosAnterioresPrever:
+                        arrTeamsPlaysFiltrado[indexTeam].is_prever = 1
+
+        return arrTeamsPlaysFiltrado
+
+
+    def normalizarDadosTeamsPlayDataset(self, arrTeamsPlays: list[TeamsPlaysEntrada],
+                                        arrIdsTeamPrever: list[int]) -> TeamsPlaysDataset:
+
         arrKeysIgnorarDadosEntrada: list = ["data_fixture", "is_prever", "name_team_home", "name_team_away",
                                             "saida_prevista_partida", "qtde_gols_marcados_away",
-                                            "qtde_gols_marcados_home", "qtde_gols_marcados"]
+                                            "qtde_gols_marcados_home", "qtde_gols_marcados", "id_country_team_home",
+                                            "id_country_team_away", "id_league"]
 
-        arrKeysIgnorarDadosEsperados: list = ["qtde_gols_marcados", "qtde_gols_marcados_away", "qtde_gols_marcados_home"]
-
-        if isPartida:
-            arrKeysIgnorarDadosEsperados.append("is_winner_away")
-            arrKeysIgnorarDadosEsperados.append("is_winner_home")
-        else:
-            arrKeysIgnorarDadosEsperados.append("probabilidades_away")
-            arrKeysIgnorarDadosEsperados.append("probabilidades_home")
+        arrKeysIgnorarDadosEsperados: list = ["qtde_gols_marcados", "qtde_gols_marcados_away",
+                                              "qtde_gols_marcados_home", "probabilidades_partida"]
 
         arrDadosEntrada: list = []
         arrDadosEsperadosPartida: list = []
@@ -262,40 +307,9 @@ class StatisticsRegras:
         ordemNameValuesSaidaPartida: list[str] = []
 
         isSalvouOrdem = False
+        data_previsao = None
 
-        qtdeDadosTeamPrincipal = 0
-        qtdeDadosTeamAdversario = 0
-        qtdeDadosLevadosEmConsideracao = 0
-
-        for team in list(reversed(arrTeamsPlays)):
-            qtdeDadosLevadosEmConsideracao += 1
-            if isFiltrarTeams:
-                if team.id_team_away not in arrIdsTeamPrever and team.id_team_home not in arrIdsTeamPrever:
-                    continue
-
-                if len(arrIdsTeamPrever) == 1:
-                    if (team.id_team_home == arrIdsTeamPrever[0] or team.id_team_away == arrIdsTeamPrever[0]):
-                        if qtdeDadosTeamPrincipal <= qtdeDados:
-                            qtdeDadosTeamPrincipal += 1
-
-                        if qtdeDadosTeamPrincipal > qtdeDados:
-                            continue
-
-                if len(arrIdsTeamPrever) == 2:
-                    if (team.id_team_home == arrIdsTeamPrever[0] or team.id_team_away == arrIdsTeamPrever[0]):
-                        if qtdeDadosTeamPrincipal <= qtdeDados:
-                            qtdeDadosTeamPrincipal += 1
-
-                        if qtdeDadosTeamPrincipal > qtdeDados:
-                            continue
-
-                    if (team.id_team_home == arrIdsTeamPrever[1] or team.id_team_away == arrIdsTeamPrever[1]):
-                        if qtdeDadosTeamAdversario <= qtdeDados:
-                            qtdeDadosTeamAdversario += 1
-
-                        if qtdeDadosTeamAdversario > qtdeDados:
-                            continue
-
+        for team in arrTeamsPlays:
             teamEntradaDict = team.__dict__
             teamSaidaPartidaDict = team.saida_prevista_partida.__dict__
 
@@ -322,41 +336,210 @@ class StatisticsRegras:
             isSalvouOrdem = True
 
             if team.is_prever == 1:
-                arrDadosPrever.insert(0, newDadosEntradas)
+                data_previsao = (team.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
+                arrDadosPrever.append(newDadosEntradas)
             else:
-                arrDadosEntrada.insert(0, newDadosEntradas)
-                arrDadosEsperadosPartida.insert(0, newDadosEsperadosPartida)
+                arrDadosEntrada.append(newDadosEntradas)
+                arrDadosEsperadosPartida.append(newDadosEsperadosPartida)
 
 
         arrDadosEntradaNormalizados, max_valor, min_valor = self.iaRegras.normalizar_dataset(dataset=arrDadosEntrada)
         arrDadosPreverNormalizados = self.iaRegras.normalizar_dataset(dataset=arrDadosPrever, max_valor=max_valor, min_valor=min_valor)[0]
-        dados_normalizados, max_value_esperado_partida, min_value_esperado_partida = self.iaRegras.normalizar_dataset(dataset=arrDadosEsperadosPartida)
+        arrDadosRotulosNormalizados, max_value_esperado_partida, min_value_esperado_partida = self.iaRegras.normalizar_dataset(dataset=arrDadosEsperadosPartida)
 
-        arrCamadasSaidasPartida = [CamadaSaidaRNN("softmax", [], maxValue + 1) for maxValue in max_value_esperado_partida]
-        for dadoEsperadosPartida in arrDadosEsperadosPartida:
-            for indexDadoEsperados in range(len(dadoEsperadosPartida)):
-                camadasSaidasPartida = numpy.zeros(max_value_esperado_partida[indexDadoEsperados] + 1, dtype=numpy.int32)
-                camadasSaidasPartida[dadoEsperadosPartida[indexDadoEsperados]] = 1
-                arrCamadasSaidasPartida[indexDadoEsperados].arr_saidas_esperas.append(camadasSaidasPartida)
+        arrDadosRotulosInCamadas = []
+        for rotulo in arrDadosEsperadosPartida:
+            camadas_saida = []
+            for index_val_rotulo in range(len(rotulo)):
+                camada_saida = [rotulo[index_val_rotulo]]
+                camadas_saida.append(camada_saida)
+            arrDadosRotulosInCamadas.append(camadas_saida)
 
-        newDatasetNormalizado = DatasetRNN()
-        newDatasetNormalizado.arr_entradas_treino = arrDadosEntradaNormalizados
-        newDatasetNormalizado.arr_prevevisao = arrDadosPreverNormalizados
-        newDatasetNormalizado.max_value_entradas = list(max_valor)
-        newDatasetNormalizado.min_value_entradas = list(min_valor)
-        newDatasetNormalizado.max_value_esperados = list(max_value_esperado_partida)
-        newDatasetNormalizado.min_value_esperados = list(min_value_esperado_partida)
-        newDatasetNormalizado.arr_name_values_entrada = ordemNameValuesEntrada
-        newDatasetNormalizado.dado_exemplo = arrDadosPrever
-        newDatasetNormalizado.quantia_dados = len(arrDadosEntradaNormalizados)
-        newDatasetNormalizado.quantia_neuronios_entrada = len(arrDadosEntradaNormalizados[0])
+        arrDadosRotulosInCamadasNormalizado = []
+        for rotulo in arrDadosRotulosNormalizados:
+            camadas_saida = []
+            for index_val_rotulo in range(len(rotulo)):
+                camada_saida = [rotulo[index_val_rotulo]]
+                camadas_saida.append(camada_saida)
+            arrDadosRotulosInCamadasNormalizado.append(camadas_saida)
 
-        newDatasetNormalizado.arr_camadas_saidas = arrCamadasSaidasPartida
-        newDatasetNormalizado.arr_name_values_saida = ordemNameValuesSaidaPartida
+        newTeamsPlaysDataset  = TeamsPlaysDataset()
+        newTeamsPlaysDataset.data_previsao = data_previsao
+        newTeamsPlaysDataset.arr_name_coluns_entrada = ordemNameValuesEntrada
+        newTeamsPlaysDataset.arr_dados_entrada_original = arrDadosEntrada
+        newTeamsPlaysDataset.arr_dados_entrada = arrDadosEntradaNormalizados
+        newTeamsPlaysDataset.max_value_entrada = max_valor
+        newTeamsPlaysDataset.min_value_entrada = min_valor
+        newTeamsPlaysDataset.arr_dados_prever_original = arrDadosPrever
+        newTeamsPlaysDataset.arr_dados_prever = arrDadosPreverNormalizados
+        newTeamsPlaysDataset.arr_dados_rotulos_original = arrDadosEsperadosPartida
+        newTeamsPlaysDataset.arr_name_coluns_rotulos = ordemNameValuesSaidaPartida
+        newTeamsPlaysDataset.arr_dados_rotulos_in_camadas = arrDadosRotulosInCamadas
+        newTeamsPlaysDataset.arr_dados_rotulos_in_camadas_normalizados = arrDadosRotulosInCamadasNormalizado
+        newTeamsPlaysDataset.max_value_rotulos = max_value_esperado_partida
+        newTeamsPlaysDataset.min_value_rotulos = min_value_esperado_partida
 
+        return newTeamsPlaysDataset
 
-        return newDatasetNormalizado, qtdeDadosLevadosEmConsideracao, qtdeDadosTeamPrincipal, qtdeDadosTeamAdversario
+    def obterDatasetNormalizadoUnicoPlaysTeam(self, arrTeamsPlays: list[TeamsPlaysEntrada], idTeam: int) -> TeamsPlaysDataset:
+        arrNameDadosEntrada: list[str] = []
+        arrNameDadosEsperados: list[str] = []
+        arrDadosEntrada: list = []
+        arrDadosEsperados: list = []
+        arrDadosPrever: list = []
+        isSalvouNomesEntrada = False
+        isSalvouNomesSaida = False
+        data_previsao = None
 
+        for team in arrTeamsPlays:
+            arrNameDadosEntrada = []
+            arrNameDadosEsperados = []
+            teamDict = team.__dict__
+            saidaDict = team.saida_prevista_partida.__dict__
+            arrDadosEntradaTeam = []
+            arrDadosEsperadosTeam = []
+            arrDadosPreverTeam = []
+            keyFilterTeam = None
+            keyFilterOutr = None
+
+            if team.id_team_home == idTeam:
+                keyFilterTeam = "_home"
+                keyFilterOutr = "_away"
+            else:
+                keyFilterTeam = "_away"
+                keyFilterOutr = "_home"
+
+            arrKeysComunsGetData: list[str] = ["id_season"]
+            arrKeysAbrevGetData: list[str] = ["is_playing_home", "id_team", "qtde_pontos_season", "qtde_saldo_gols",
+                                              "media_gols_marcados", "media_gols_sofridos", "qtde_gols_marcados",
+                                              "media_vitorias", "is_decline_media_vitorias", "qtde_vitorias",
+                                              "media_derrotas", "is_decline_media_derrotas", "qtde_derrotas",
+                                              "media_empates", "is_decline_media_empates", "qtde_empates"]
+
+            arrKeysIgnorGetData: list[str] = ["data_fixture", "is_prever", "name_team", "saida_prevista_partida",
+                                              "qtde_gols_marcados", "id_country_team_home", "id_league", "id_country_team_away"]
+
+            arrKeysAbreSaida: list[str] = ["probabilidades"]
+
+            keysEntradaDict = teamDict.keys()
+            keysSaidaDict = saidaDict.keys()
+
+            for keyComuns in arrKeysComunsGetData:
+                for key in keysEntradaDict:
+                    if keyComuns == key:
+                        if team.is_prever == 1:
+                            arrDadosPreverTeam.append(teamDict[keyComuns])
+                        elif team.is_prever == 0:
+                            arrDadosEntradaTeam.append(teamDict[keyComuns])
+
+                        if not isSalvouNomesEntrada:
+                            arrNameDadosEntrada.append(keyComuns)
+
+            for keyAbrev in arrKeysAbrevGetData:
+                for key in keysEntradaDict:
+                    nameKey = keyAbrev + keyFilterTeam
+                    if nameKey == key:
+                        if team.is_prever == 1:
+                            arrDadosPreverTeam.append(teamDict[nameKey])
+                        elif team.is_prever == 0:
+                            arrDadosEntradaTeam.append(teamDict[nameKey])
+
+                        if not isSalvouNomesEntrada:
+                            arrNameDadosEntrada.append(nameKey)
+
+            for keyAbrev in arrKeysAbrevGetData:
+                for key in keysEntradaDict:
+                    nameKey = keyAbrev + keyFilterOutr
+                    if nameKey == key:
+                        if team.is_prever == 1:
+                            arrDadosPreverTeam.append(teamDict[nameKey])
+                        elif team.is_prever == 0:
+                            arrDadosEntradaTeam.append(teamDict[nameKey])
+
+                        if not isSalvouNomesEntrada:
+                            arrNameDadosEntrada.append(nameKey)
+
+            for keyAbrev in arrKeysAbreSaida:
+                for key in keysSaidaDict:
+                    nameKey = keyAbrev + keyFilterTeam
+                    if nameKey == key:
+                        if team.is_prever == 0:
+                            arrDadosEsperadosTeam.append(saidaDict[nameKey])
+
+                        if not isSalvouNomesSaida:
+                            arrNameDadosEsperados.append(nameKey)
+
+            if team.is_prever == 1:
+                arrDadosPrever.append(arrDadosPreverTeam)
+            elif team.is_prever == 0:
+                arrDadosEntrada.append(arrDadosEntradaTeam)
+                arrDadosEsperados.append(arrDadosEsperadosTeam)
+
+            if team.is_prever == 1:
+                data_previsao = (team.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
+                isSalvouNomesEntrada = True
+
+        arrDadosEntradaNormalizados, max_valor, min_valor = self.iaRegras.normalizar_dataset(dataset=arrDadosEntrada)
+        arrDadosPreverNormalizados = self.iaRegras.normalizar_dataset(dataset=arrDadosPrever, max_valor=max_valor, min_valor=min_valor)[0]
+        arrDadosRotulosNormalizados, max_value_esperado_partida, min_value_esperado_partida = self.iaRegras.normalizar_dataset(dataset=arrDadosEsperados)
+
+        arrDadosRotulosInCamadas = []
+        for rotulo in arrDadosEsperados:
+            camadas_saida = []
+            for index_val_rotulo in range(len(rotulo)):
+                camada_saida = [rotulo[index_val_rotulo]]
+                camadas_saida.append(camada_saida)
+            arrDadosRotulosInCamadas.append(camadas_saida)
+
+        arrDadosRotulosInCamadasNormalizado = []
+        for rotulo in arrDadosRotulosNormalizados:
+            camadas_saida = []
+            for index_val_rotulo in range(len(rotulo)):
+                camada_saida = [rotulo[index_val_rotulo]]
+                camadas_saida.append(camada_saida)
+            arrDadosRotulosInCamadasNormalizado.append(camadas_saida)
+
+        newTeamPlaysDataset = TeamsPlaysDataset()
+        newTeamPlaysDataset.data_previsao = data_previsao
+        newTeamPlaysDataset.arr_name_coluns_entrada = arrNameDadosEntrada
+        newTeamPlaysDataset.arr_dados_entrada_original = arrDadosEntrada
+        newTeamPlaysDataset.arr_dados_prever_original = arrDadosPrever
+        newTeamPlaysDataset.max_value_entrada = max_valor
+        newTeamPlaysDataset.min_value_entrada = min_valor
+        newTeamPlaysDataset.arr_name_coluns_rotulos = arrNameDadosEsperados
+        newTeamPlaysDataset.arr_dados_rotulos_original = arrDadosEsperados
+        newTeamPlaysDataset.max_value_rotulos = max_value_esperado_partida
+        newTeamPlaysDataset.min_value_rotulos = min_value_esperado_partida
+
+        newTeamPlaysDataset.arr_dados_entrada = arrDadosEntradaNormalizados
+        newTeamPlaysDataset.arr_dados_prever = arrDadosPreverNormalizados
+        newTeamPlaysDataset.arr_dados_rotulos_in_camadas = arrDadosRotulosInCamadas
+        newTeamPlaysDataset.arr_dados_rotulos_in_camadas_normalizados = arrDadosRotulosInCamadasNormalizado
+
+        return newTeamPlaysDataset
+
+    def obterDatasetNormalizadoTeamsPlays(self, id_team_home: int = None, id_team_away: int = None, id_season: int = None,
+                                          qtdeDados=40, isFiltrarTeams=True, isPartida=False) -> TeamsPlaysDataset:
+        if id_team_home is None and id_team_away is None:
+            raise "Passar pelo menos id_team_home ou id_team_away"
+
+        arrTeamsPlays = self.obterAllFixturesByIdTeams(idTeamPrincipal=id_team_home, idTeamAdversario=id_team_away,
+                                                       id_season=id_season, isFiltrarTeams=isFiltrarTeams, qtdeDados=qtdeDados)
+
+        if isPartida:
+            arrIdsTeam = []
+            arrIdsTeam.append(id_team_home) if id_team_home is not None else None
+            arrIdsTeam.append(id_team_away) if id_team_away is not None else None
+            teamsPlaysDataset = self.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlays,
+                                                                     arrIdsTeamPrever=arrIdsTeam)
+        else:
+            if id_team_home is not None and id_team_away is not None:
+                raise "Passar somente id_team_home ou id_team_away"
+
+            id_team = id_team_home if id_team_home is not None else id_team_away
+            teamsPlaysDataset = self.obterDatasetNormalizadoUnicoPlaysTeam(arrTeamsPlays=arrTeamsPlays, idTeam=id_team)
+
+        return teamsPlaysDataset
 
     def obterUltimaTeamPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int, id_season: int = None) -> TeamsPlaysEntrada:
         for teamsPlay in list(reversed(arrTeamsPlaysEntrada)):
@@ -449,7 +632,7 @@ class StatisticsRegras:
         return saldoGols
 
     def calcularMediaVDETeamsPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int, is_home: bool,
-                                   id_season: int = None, nUltimosJogos: int = 6, typeInfo: str = None) -> list[int, int]:
+                                   id_season: int = None, nUltimosJogos: int = 5, typeInfo: str = None) -> list[int, int]:
         """
             type info qtde: V, D ou E
         """

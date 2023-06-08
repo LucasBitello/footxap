@@ -1,4 +1,6 @@
 import numpy
+import random
+from copy import  deepcopy
 from datetime import datetime, timedelta
 from json import loads, JSONDecoder, JSONEncoder, dumps
 from django.shortcuts import render
@@ -10,13 +12,15 @@ from api.regras.leaguesSeasonsRegras import LeaguesRegras, SeasonsRegras
 from api.regras.teamsRegras import TeamsRegras
 from api.regras.uteisRegras import UteisRegras
 from api.regras.statisticsRegras import StatisticsRegras
-from api.regras.iaRNNRegras import RNN
+from api.regras.iaRNNRegras import RNN, DatasetRNN
 from api.regras.iaDBNRegras import DBN
 from api.regras.iaRegras import IARegras
 from api.regras.tabelaJogosRegras import TabelaJogosRegras
 from api.regras.tabelaPontuacaoRegras import TabelaPontuacaoRegras
 from api.regras.fixturesRegras import FixturesRegras
 from api.regras.datasetFixturesRegras import DatasetFixtureRegras
+from api.regras.iaAprendizado import RedeLTSM, ModelPrevisao
+
 # Create your views here.
 
 from api.models.countriesModel import Country
@@ -82,7 +86,7 @@ def searchTeams(request):
 
 def obterPrevisaoPartida(request):
     iaRegras = IARegras()
-    rnnPartida = RNN(1, [1], [])
+    iaLTSM = RedeLTSM()
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
     fixturesRegras = FixturesRegras()
@@ -93,9 +97,6 @@ def obterPrevisaoPartida(request):
     if idSeason is None and idTeamHome is None:
         raise "É necessário passar o prametro id_season ou id_team"
 
-    isTreinarPartidas = True
-
-    print("############## new Request #######################")
     idSeason = int(idSeason)
     idTeamHome = int(idTeamHome)
     idTeamAway = int(idTeamAway) if idTeamAway is not None else None
@@ -104,62 +105,46 @@ def obterPrevisaoPartida(request):
     fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeamHome, idTeamAway])
 
     try:
-        arrTeamsPlayPartida = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeamHome,
-                                                                         idTeamAdversario=idTeamAway,
-                                                                         id_season=idSeason)
-    except:
+        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
+                                                       isPartida=True, qtdeDados=20)
+    except Exception as exc:
+        print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
                                      " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
-    datasetTeamsPlayPartida, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlayPartida,
-                                                                       arrIdsTeamPrever=[idTeamHome, idTeamAway],
-                                                                       qtdeDados=25, isFiltrarTeams=True, isPartida=False)
-    arrPrevTreino = []
-    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlayPartida,
-                                                 nNeuroniosPrimeiraCamada=int((qtdeDadosHome + qtdeDadosAway)),
-                                                 nEpocas=1250, txAprendizado=0.005)
-    data_jogo_prevista = None
-
-    for teamsPlay in arrTeamsPlayPartida:
-        if teamsPlay.is_prever == 1:
-            data_jogo_prevista = (teamsPlay.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
-            break
-
     dictPrevPartida = {
         "v_ia": "0.35.1",
-        "erro": loss,
-        "qtde_dados_home": qtdeDadosHome,
-        "qtde_dados_away": qtdeDadosAway,
-        "data_jogo_previsto": data_jogo_prevista
+        "erro": previsao.msg_erro,
+        "qtde_dados_home": previsao.qtde_dados_entrada,
+        "qtde_dados_away": previsao.qtde_dados_entrada,
+        "data_jogo_previsto": previsao.data_previsao
     }
 
-    for i in range(len(datasetTeamsPlayPartida.arr_name_values_saida)):
-        name_chave_prob = datasetTeamsPlayPartida.arr_name_values_saida[i]
-        dictPrevPartida[name_chave_prob] = {}
-        dictPrevPartida[name_chave_prob] = {
-            "vitoria": arrPrevPartida[0][i][1],
-            "empate": 0,
-            "derrota": arrPrevPartida[0][i][0]
-        }
+    dictPrevPartida["previsao_home"] = {
+        "vitoria": f"{previsao.previsao[0][0][2] * 100:.2f}%",
+        "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%",
+        "derrota": f"{previsao.previsao[0][0][0] * 100:.2f}%"
+    }
 
-    arrPrevTreino.append(datasetTeamsPlayPartida.arr_name_values_saida)
-    arrPrevTreino.append(str("Previsoes Partida: \n" + ",".join(list(map(str, arrPrevPartida)))))
+    dictPrevPartida["previsao_away"] = {
+        "vitoria": f"{previsao.previsao[0][1][2] * 100:.2f}%",
+        "empate": f"{previsao.previsao[0][1][1] * 100:.2f}%",
+        "derrota": f"{previsao.previsao[0][1][0] * 100:.2f}%"
+    }
 
 
     print("######### Previsões ##########")
     name_team_home = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0].name
     name_team_away = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0].name
-    print("Team home: ", name_team_home, "Team away: ", name_team_away)
-    for prev in arrPrevTreino:
-        print(prev)
-
+    #print("Team home: ", name_team_home, "Team away: ", name_team_away)
+    print(dictPrevPartida["previsao_home"], dictPrevPartida["previsao_away"])
     database.closeConnection()
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
 def obterPrevisaoTeam(request):
+    pass
     iaRegras = IARegras()
-    rnnPartida = RNN(1, [1], [])
-    rbm = DBN(25, 25, 0.01)
+    iaLTSM = RedeLTSM()
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
     fixturesRegras = FixturesRegras()
@@ -177,58 +162,29 @@ def obterPrevisaoTeam(request):
 
     print("######### Treinando Team ##########")
     try:
-        arrTeamsPlay = statisticsRegras.obterAllFixturesByIdTeams(idTeamPrincipal=idTeam, id_season=idSeason)
+        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeam, id_season=idSeason, qtdeDados=20)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
                                      " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
-    datasetTeamsPlay, qtdeAllDados, qtdeDadosHome, qtdeDadosAway = statisticsRegras.normalizarDadosTeamsPlayDataset(arrTeamsPlays=arrTeamsPlay,
-                                                                                        arrIdsTeamPrever=[idTeam],
-                                                                                        qtdeDados=25,
-                                                                                        isFiltrarTeams=True,
-                                                                                        isPartida=False)
-    arrPrevTreino = []
-    arrPrevPartida, loss = rnnPartida.treinarRNN(datasetRNN=datasetTeamsPlay,
-                                                 nNeuroniosPrimeiraCamada=int(qtdeDadosHome * 2),
-                                                 nEpocas=750, txAprendizado=0.001)
-    data_jogo_prevista = None
-    is_home = None
-
-    for teamsPlay in arrTeamsPlay:
-        if teamsPlay.is_prever == 1:
-            data_jogo_prevista = (teamsPlay.data_fixture - timedelta(hours=3.0)).strftime("%Y-%m-%d %H:%M:%S")
-            is_home = teamsPlay.id_team_home == idTeam
-            break
-
     dictPrevPartida = {
         "v_ia": "0.35.1",
-        "erro": loss,
-        "qtde_dados_home": qtdeDadosHome,
-        "qtde_dados_away": qtdeDadosAway,
-        "data_jogo_previsto": data_jogo_prevista
+        "erro": previsao.msg_erro,
+        "qtde_dados": previsao.qtde_dados_entrada,
+        "data_jogo_previsto": previsao.data_previsao
     }
 
-    key_chave = "is_winner_home" if is_home else "is_winner_away"
-    for i in range(len(datasetTeamsPlay.arr_name_values_saida)):
-        if datasetTeamsPlay.arr_name_values_saida[i] == key_chave:
-            name_chave_prob = datasetTeamsPlay.arr_name_values_saida[i]
-            dictPrevPartida[name_chave_prob] = {}
-            dictPrevPartida[name_chave_prob] = {
-                "vitoria": arrPrevPartida[0][i][1],
-                "empate": 0,
-                "derrota": arrPrevPartida[0][i][0]
-            }
-
-    arrPrevTreino.append(datasetTeamsPlay.arr_name_values_saida)
-    arrPrevTreino.append(str("Previsoes Partida: \n" + ",".join(list(map(str, arrPrevPartida)))))
-
+    dictPrevPartida["previsao"] = {
+        "vitoria": f"{previsao.previsao[0][0][2] * 100:.2f}%",
+        "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%",
+        "derrota": f"{previsao.previsao[0][0][0] * 100:.2f}%"
+    }
 
     print("######### Previsões ##########")
     name_team_home = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeam])[0].name
-    print("Team home: ", name_team_home)
-    for prev in arrPrevTreino:
-        print(prev)
+    #print("Team home: ", name_team_home)
+    print(dictPrevPartida["previsao"])
     database.closeConnection()
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
@@ -277,3 +233,11 @@ def obterEstatisticas(request):
     arrRetorno = datasetFixtureRegras.criarDatasetFixture(arr_ids_team=[int(id_team)], isFiltrarApenasTeams=True)
     arrRetornoNormalizado = uteisRegras.normalizarDadosForView(arrDados=arrRetorno)
     return JsonResponse({"response": arrRetornoNormalizado}, safe=False)
+
+
+def urlTesteMetodos(request):
+    iaAprendizadoLTSM = RedeLTSM()
+
+    previstos = RedeLTSM.prever()
+
+    return JsonResponse({"sfdsf": "sdfds"}, safe=False)

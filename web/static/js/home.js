@@ -323,20 +323,20 @@ async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_te
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
-            <label>Foi usado os ultimos ${probsIA["qtde_dados_home"]} jogos desse time. </label><br>
+            <label>Foi usado os ultimos ${probsIA["qtde_dados"]} jogos desse time. </label><br>
             <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
             <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br><br>
             <label><b>Previsão com base no histórico dos dois times:</b></label>
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
-                <label>Vitória: ${probsIA["is_winner_home"]["vitoria"]}</label><br>
+                <label>Vitória: ${probsIA["previsao_home"]["vitoria"]}</label><br>
             </div>
             <div class="div-estatisticas-team-empate">
-                <label>Empate: ${probsIA["is_winner_home"]["empate"]}</label><br>
+                <label>Empate: ${probsIA["previsao_home"]["empate"]}</label><br>
             </div>
             <div class="div-estatisticas-team-derrota">
-                <label>Derrota: ${probsIA["is_winner_home"]["derrota"]}</label><br>
+                <label>Derrota: ${probsIA["previsao_home"]["derrota"]}</label><br>
             </div>
         </div>
     `
@@ -345,20 +345,20 @@ async function fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_te
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
-            <label>Foi usado os ultimos ${probsIA["qtde_dados_away"]} jogos desse time. </label><br>
+            <label>Foi usado os ultimos ${probsIA["qtde_dados"]} jogos desse time. </label><br>
             <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
             <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br><br>
             <label><b>Previsão com base no histórico dos dois times:</b></label>
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
-                <label>Vitória: ${probsIA["is_winner_away"]["vitoria"]}</label><br>
+                <label>Vitória: ${probsIA["previsao_away"]["vitoria"]}</label><br>
             </div>
             <div class="div-estatisticas-team-empate">
-                <label>Empate: ${probsIA["is_winner_away"]["empate"]}</label><br>
+                <label>Empate: ${probsIA["previsao_away"]["empate"]}</label><br>
             </div>
             <div class="div-estatisticas-team-derrota">
-                <label>Derrota: ${probsIA["is_winner_away"]["derrota"]}</label><br>
+                <label>Derrota: ${probsIA["previsao_away"]["derrota"]}</label><br>
             </div>
         </div>
     `
@@ -368,29 +368,25 @@ async function fazerRequisicaoParaIAPreverTime(name_id_div, id_season, id_team, 
     let div_previsao_team = document.getElementById(name_id_div);
     let params = "/previsao-team?id_season="+id_season+"&id_team="+id_team
     let probsIA = await callGETAPI(params, true, true)
-    let chave_home_away = is_home ? "is_winner_home" : "is_winner_away"
 
-    console.log(probsIA)
-    console.log(chave_home_away)
-    console.log(probsIA[chave_home_away])
     div_previsao_team.innerHTML = `
         <div class="div-info-resultados-ia">
             <label>Previsões geradas pela IA versão: ${probsIA["v_ia"]} </label><br>
             <label>Erro da rede ficou em: ${probsIA["erro"]} </label><br>
-            <label>Foi usado os ultimos ${probsIA[`qtde_dados_home`]} jogos desse time. </label><br>
+            <label>Foi usado os ultimos ${probsIA[`qtde_dados`]} jogos desse time. </label><br>
             <label>Previsão pra o jogo do dia: ${probsIA["data_jogo_previsto"]}</label><br><br>
             <label>As previsões desta IA ainda não podem ser consideradas como certas, ela ainda está em desenvolvimento.</label><br><br>
             <label><b>Previsão com base no histórico desse único time:</b></label>
         </div>
         <div class="div-estatisticas-team">
             <div class="div-estatisticas-team-winner">
-                <label>Vitória: ${probsIA[chave_home_away]["vitoria"]}</label><br>
+                <label>Vitória: ${probsIA["previsao"]["vitoria"]}</label><br>
             </div>
             <div class="div-estatisticas-team-empate">
-                <label>Empate: ${probsIA[chave_home_away]["empate"]}</label><br>
+                <label>Empate: ${probsIA["previsao"]["empate"]}</label><br>
             </div>
             <div class="div-estatisticas-team-derrota">
-                <label>Derrota: ${probsIA[chave_home_away]["derrota"]}</label><br>
+                <label>Derrota: ${probsIA["previsao"]["derrota"]}</label><br>
             </div>
         </div>
     `
