@@ -34,27 +34,27 @@ class RedeLTSM:
 
         modelDataLTSM = ModelDataLTSM(arrEntradas=dataset.arr_dados_entrada, arrRotulos=arrRotulosNormalizados,
                                       arrRotulosOriginais=dataset.arr_dados_rotulos_original,
-                                      arrDadosPrever=None, arrNameFuncAtivacaoCadaSaida=["softmax"])
+                                      arrDadosPrever=None, arrNameFuncAtivacaoCadaSaida=["sigmoid"])
 
 
         arrLTSMs = []
-        for i in range(5):
+        for i in range(10):
             arrDictsLTSM = {
                 "id": i
             }
 
             if isPartida:
                 nroCamadasOcultas = random.randint(1, 1)
-                randA = 150 + qtdeDados
-                randB = 400 + qtdeDados
-                arrDictsLTSM["taxa_aprendizado"] = random.uniform(0.001, 0.0001)
-                arrDictsLTSM["taxa_regularização_l2"] = random.uniform(0.01, 0.001)
+                randA = 110
+                randB = 140
+                arrDictsLTSM["taxa_aprendizado"] = random.uniform(0.02, 0.008)
+                arrDictsLTSM["taxa_regularização_l2"] = random.uniform(0.0001, 0.0005)
             else:
                 nroCamadasOcultas = random.randint(1, 1)
-                randA = 150 + qtdeDados
-                randB = 300 + qtdeDados
-                arrDictsLTSM["taxa_aprendizado"] = random.uniform(0.001, 0.0001)
-                arrDictsLTSM["taxa_regularização_l2"] = random.uniform(0.01, 0.001)
+                randA = 100
+                randB = 130
+                arrDictsLTSM["taxa_aprendizado"] = random.uniform(0.02, 0.008)
+                arrDictsLTSM["taxa_regularização_l2"] = random.uniform(0.0001, 0.0005)
 
             arr_n_camadas = []
             for j in range(nroCamadasOcultas):
@@ -71,7 +71,7 @@ class RedeLTSM:
             newModelData.arr_n_camada_oculta = arrDictsLTSM["arr_n_camada_oculta"]
             newModelData.taxa_aprendizado = arrDictsLTSM["taxa_aprendizado"]
             newModelData.taxa_regularização_l2 = arrDictsLTSM["taxa_regularização_l2"]
-            newModelData.n_epocas = 100 if not isPartida else 150
+            newModelData.n_epocas = 150
 
             newLTSM = LSTM(modelDataLTSM=newModelData)
             arrDictsLTSM["media_entropy"], arrDictsLTSM["media_accuracy"] = newLTSM.treinar()
@@ -84,7 +84,7 @@ class RedeLTSM:
             print(i)
 
         paramEscolhidos = arrLTSMs[0]
-        modelDataLTSM.n_epocas = 350
+        modelDataLTSM.n_epocas = 750
         modelDataLTSM.arr_n_camada_oculta = paramEscolhidos["arr_n_camada_oculta"]
         modelDataLTSM.taxa_regularização_l2 = paramEscolhidos["taxa_regularização_l2"]
         modelDataLTSM.taxa_aprendizado = paramEscolhidos["taxa_aprendizado"]

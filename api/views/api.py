@@ -162,7 +162,7 @@ def obterPrevisaoTeam(request):
 
     print("######### Treinando Team ##########")
     try:
-        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeam, id_season=idSeason, qtdeDados=20)
+        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeam, id_season=idSeason, qtdeDados=30)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
