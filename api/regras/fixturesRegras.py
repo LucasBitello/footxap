@@ -89,6 +89,54 @@ class FixturesRegras:
 
         return arrFixtures
 
+    def obterFixturesByIdsTeam(self, arrIdsTeam: list[int]) -> list[Fixture]:
+        arrIdsSeason = []
+        for idTeam in arrIdsTeam:
+            arrTeamsSeasons: list[TeamSeason] = self.teamsModel.teamsSeasonsModel.obterByColumns(
+                arrNameColuns=["id_team"],
+                arrDados=[idTeam])
+
+            for teamSeason in arrTeamsSeasons:
+                if teamSeason.id_season not in arrIdsSeason:
+                    arrIdsSeason.append(teamSeason.id_season)
+
+        arrFixtures = self.fixturesModel.obterAllFixturesByIdsSeasons(arrIds=arrIdsSeason)
+
+        for fixture in arrFixtures:
+            fixture.teams: list[FixtureTeams] = self.fixturesModel.fixturesTeamsModel.obterByColumns(arrNameColuns=["id_fixture"],
+                                                                                 arrDados=[fixture.id])
+
+            fixture.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
+
+
+        arrIdsFixtureIgnorar = []
+        arrIdsTeamIgnorar = []
+
+        for idteam in arrIdsTeam:
+            isEncontrouNextPartida = False
+
+            if idteam in arrIdsTeamIgnorar:
+                continue
+
+            while not isEncontrouNextPartida:
+                nextFixtureTeam = self.fixturesModel.obterNextFixtureByidSeasonTeam(
+                    id_team=idteam, arrIdsFixtureIgnorar=arrIdsFixtureIgnorar)[0]
+
+                nextFixtureTeam.teams: list[FixtureTeams] = self.fixturesModel.fixturesTeamsModel.obterByColumns(
+                    arrNameColuns=["id_fixture"], arrDados=[nextFixtureTeam.id])
+
+                for fixtureTeam in nextFixtureTeam.teams:
+                    arrIdsTeamIgnorar.append(fixtureTeam.id_team)
+
+                nextFixtureTeam.season: Season = self.teamsModel.seasonsModel.obterByColumnsID(
+                    arrDados=[nextFixtureTeam.id_season])[0]
+
+                arrIdsFixtureIgnorar.append(nextFixtureTeam.id)
+                arrFixtures.append(nextFixtureTeam)
+                isEncontrouNextPartida = True
+
+        return arrFixtures
+
     def obterFixtureEstatisticasByIdFixtureIdTeam(self, id_fixture: int, id_team: int) -> list[FixtureTeamStatistic]:
         arrFixturesEstatisticas: list[FixtureTeamStatistic] = \
             self.fixturesModel.fixturesTeamsStatisticsModel.obterByColumns(arrNameColuns=["id_fixture", "id_team"],

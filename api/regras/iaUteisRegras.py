@@ -5,7 +5,7 @@ import numpy
 
 from matplotlib import pyplot
 
-class IARegras:
+class IAUteisRegras:
     def normalizar_dataset(self, dataset, max_valor: list = None, min_valor: list = None) -> tuple[list, list, list]:
         dataset = numpy.asarray(dataset)
         max_valor = numpy.amax(dataset, axis=0) if max_valor is None else max_valor
@@ -19,8 +19,12 @@ class IARegras:
             else:
                 dividendos.append(1)
 
-        dataset_normalizado: list[list] = (dataset - min_valor) / dividendos
-        return dataset_normalizado, max_valor, min_valor
+        dataset_normalizado: numpy.ndarray[numpy.ndarray] = (dataset - min_valor) / dividendos
+        return dataset_normalizado.tolist(), max_valor.tolist(), min_valor.tolist()
+
+    def  desnormalizarValue(self, value_normalizado, max_value, min_value):
+        x = value_normalizado * (max_value - min_value) + min_value
+        return x
 
 
     def obter_k_folds_temporal(self, arrDados: list, n_folds: int):
@@ -46,8 +50,8 @@ class IARegras:
         return new_k_arr_dados
 
     def softmax(self, x):
-        exp_puntuacao = numpy.exp(x - numpy.max(x))
-        soft = exp_puntuacao / numpy.sum(exp_puntuacao)
+        exp_puntuacao = numpy.exp(x - numpy.max(x, axis=0, keepdims=True))
+        soft = exp_puntuacao / numpy.sum(exp_puntuacao, axis=0, keepdims=True)
         return soft
 
     def normalizarRotulosEmClasses(self, arrRotulosOriginais: list[list[list]], max_value_rotulos: list) -> list[list[list]]:
@@ -68,11 +72,7 @@ class IARegras:
         return deriv
 
     def derivada_softmax(self, x):
-        m, n = x.shape
-        dydx = numpy.zeros((m, n))
-        for j in range(n):
-            dydx[:, j] = numpy.diagonal(self.derivada_softmax_matriz(x[:, j]))
-        return dydx
+        return x * (1 - x)
 
     def tanh(self, x):
         return numpy.tanh(x)
@@ -83,7 +83,7 @@ class IARegras:
 
     def sigmoid(self, x) -> list | float:
         #sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64))
-        sig = expit(x)
+        sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64)) + 1e-7
         return sig
 
     def derivada_sigmoid(self, x):

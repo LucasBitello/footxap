@@ -12,14 +12,15 @@ from api.regras.leaguesSeasonsRegras import LeaguesRegras, SeasonsRegras
 from api.regras.teamsRegras import TeamsRegras
 from api.regras.uteisRegras import UteisRegras
 from api.regras.statisticsRegras import StatisticsRegras
-from api.regras.iaRNNRegras import RNN, DatasetRNN
+from api.regras.iaRNNRegras import RNN
 from api.regras.iaDBNRegras import DBN
-from api.regras.iaRegras import IARegras
+from api.regras.iaUteisRegras import IAUteisRegras
 from api.regras.tabelaJogosRegras import TabelaJogosRegras
 from api.regras.tabelaPontuacaoRegras import TabelaPontuacaoRegras
 from api.regras.fixturesRegras import FixturesRegras
 from api.regras.datasetFixturesRegras import DatasetFixtureRegras
 from api.regras.iaAprendizado import RedeLTSM, ModelPrevisao
+from api.regras.datasetPartidasRegras import DatasetPartidasRegras, DatasetPartidaEntrada
 
 # Create your views here.
 
@@ -85,7 +86,7 @@ def searchTeams(request):
 
 
 def obterPrevisaoPartida(request):
-    iaRegras = IARegras()
+    iaRegras = IAUteisRegras()
     iaLTSM = RedeLTSM()
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
@@ -106,7 +107,7 @@ def obterPrevisaoPartida(request):
 
     try:
         previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
-                                                       isPartida=True, qtdeDados=20)
+                                                       isPartida=True, qtdeDados=25)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
@@ -121,9 +122,9 @@ def obterPrevisaoPartida(request):
     }
 
     dictPrevPartida["previsao_home"] = {
-        "vitoria": f"{previsao.previsao[0][0][2] * 100:.2f}%",
+        "vitoria": f"{previsao.previsao[0][0][0] * 100:.2f}%",
         "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%",
-        "derrota": f"{previsao.previsao[0][0][0] * 100:.2f}%"
+        "derrota": f"{previsao.previsao[0][0][2] * 100:.2f}%"
     }
 
     dictPrevPartida["previsao_away"] = {
@@ -143,7 +144,7 @@ def obterPrevisaoPartida(request):
 
 def obterPrevisaoTeam(request):
     pass
-    iaRegras = IARegras()
+    iaRegras = IAUteisRegras()
     iaLTSM = RedeLTSM()
     uteisRegras = UteisRegras()
     statisticsRegras = StatisticsRegras()
@@ -162,7 +163,7 @@ def obterPrevisaoTeam(request):
 
     print("######### Treinando Team ##########")
     try:
-        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeam, id_season=idSeason, qtdeDados=30)
+        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeam, id_season=idSeason, qtdeDados=35)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
@@ -176,9 +177,9 @@ def obterPrevisaoTeam(request):
     }
 
     dictPrevPartida["previsao"] = {
-        "vitoria": f"{previsao.previsao[0][0][2] * 100:.2f}%",
-        "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%",
-        "derrota": f"{previsao.previsao[0][0][0] * 100:.2f}%"
+        "vitoria": f"{previsao.previsao[0][0][2] * 100:.2f}%" if previsao.previsao[0][0][2] > 0  else 0,
+        "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%" if previsao.previsao[0][0][1] > 0  else 0,
+        "derrota": f"{previsao.previsao[0][0][0] * 100:.2f}%" if previsao.previsao[0][0][0] > 0  else 0
     }
 
     print("######### Previsões ##########")

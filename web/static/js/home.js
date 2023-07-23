@@ -307,8 +307,8 @@ async function fazerRequisicaoParaIA(id_season, id_team_home, id_team_away){
 
     await fazerRequisicaoEstatisticas("div-estatisticas-team-home", id_season, id_team_home, true)
     await fazerRequisicaoEstatisticas("div-estatisticas-team-away", id_season, id_team_away, false)
-    await fazerRequisicaoParaIAPreverTime("div-previsao-team-home", id_season, id_team_home, true)
-    await fazerRequisicaoParaIAPreverTime("div-previsao-team-away", id_season, id_team_away, false)
+    //await fazerRequisicaoParaIAPreverTime("div-previsao-team-home", id_season, id_team_home, true)
+    //await fazerRequisicaoParaIAPreverTime("div-previsao-team-away", id_season, id_team_away, false)
     await fazerRequisicaoParaIAPreverPartida(id_season, id_team_home, id_team_away)
 }
 

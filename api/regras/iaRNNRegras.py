@@ -3,366 +3,428 @@ from __future__ import annotations
 import math
 import numpy
 
+from copy import deepcopy
 from matplotlib import pyplot
+from api.regras.iaUteisRegras import IAUteisRegras
 
-from api.regras.iaRegras import IARegras
+class ModelDataRNN:
+    def __init__(self, arrEntradas: list[list], arrRotulos: list[list[list]],
+                 arrDadosPrever: list[list[list]] = None, arrNameFuncAtivacaoCadaOculta: list[str] = [],
+                 arrNameFuncAtivacaoCadaSaida: list[str] = []):
 
-class CamadaSaidaRNN:
-    def __init__(self, name_funcAtivacao: str, arr_saidas_esperas: list[list], qtde_neuronios: int):
-        self.name_funcAtivacao = name_funcAtivacao
-        self.funcAtivacao = None
-        self.derivFuncAtivaccao = None
-        self.arr_saidas_esperas: list[list] = arr_saidas_esperas
-        self.qtde_neuronios: int = qtde_neuronios
+        if len(arrRotulos[0][0]) == 0:
+            raise "reveja os rótulos nao é uma list[list[list]]"
 
-        if self.name_funcAtivacao == "softmax":
-            self.funcAtivacao = self.softmax
-            self.derivFuncAtivaccao = self.derivada_softmax
-        elif self.name_funcAtivacao == "sigmoid":
-            self.funcAtivacao = self.sigmoid
-            self.derivFuncAtivaccao = self.derivada_sigmoid
-        elif self.name_funcAtivacao == "relu":
-            self.funcAtivacao = self.relu
-            self.funcAtivacao = self.derivada_relu
-        else:
-            raise "Renhuma função de ativação disponivel com esse nome: " + name_funcAtivacao
-    def sigmoid(self, x):
-        sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64))
-        return sig
+        self.iaRegras = IAUteisRegras()
+        self.n_epocas: int = 25000
+        self.taxa_aprendizado: float = 0.1
+        self.taxa_regularização_l2: float = 0.001
 
-    def derivada_sigmoid(self, x):
-        dsig = x * (1 - x)
-        return dsig
+        self.arr_n_camada_oculta: list[int] = [len(arrEntradas[0])]
+        self.nNeuroniosEntrada: int = len(arrEntradas[0])
+        self.arrCamadasSaida: list[int] = [len(saida) for saida in arrRotulos[0]]
 
-    def softmax(self, x):
-        exp_puntuacao = numpy.exp(x - numpy.max(x))
-        soft = exp_puntuacao / numpy.sum(exp_puntuacao)
-        return soft
+        self.arr_entradas: list[list] = arrEntradas
+        # Lista de dados com os dados divididos em camadas lista rotulos com lista de camada
+        self.arr_rotulos: list[list[list]] = arrRotulos
+        self.arr_dados_prever: list[list[list]] = arrDadosPrever
+        self.arrFuncAtivacaoCadaSaida: list[list[any, any]] = []
+        self.arrFuncAtivacaoCamadaOculta: list[list[any, any]] = []
 
-    def derivada_softmax(self, x):
-        s = x  # self.softmax(x)
-        deriv = numpy.diag(s) - numpy.outer(s, numpy.transpose(s))
-        return deriv
+        if len(arrNameFuncAtivacaoCadaSaida) == 0:
+            for camadaSaida in self.arr_rotulos[0]:
+                arrNameFuncAtivacaoCadaSaida.append("sigmoid")
 
-    def derivada_softmax_matriz(self, x):
-        m, n = x.shape
-        dydx = numpy.zeros((m, n))
-        for j in range(n):
-            dydx[:, j] = numpy.diagonal(self.derivada_softmax(x[:, j]))
-        return dydx
+        if len(arrNameFuncAtivacaoCadaSaida) == 1 and len(self.arrCamadasSaida) >= 2:
+            for indexCamadaSaida in range(len(self.arrCamadasSaida)):
+                if indexCamadaSaida >= 1:
+                    arrNameFuncAtivacaoCadaSaida.append(arrNameFuncAtivacaoCadaSaida[0])
 
-    def relu(self, x):
-        saida = numpy.maximum(0, x)
-        return saida
+        for name in arrNameFuncAtivacaoCadaSaida:
+            arrFunctActivDeriv = []
+            if name == "softmax":
+                arrFunctActivDeriv = [self.iaRegras.softmax, self.iaRegras.derivada_softmax]
+                self.arrFuncAtivacaoCadaSaida.append(arrFunctActivDeriv)
+            elif name == "sigmoid":
+                arrFunctActivDeriv = [self.iaRegras.sigmoid, self.iaRegras.derivada_sigmoid]
+                self.arrFuncAtivacaoCadaSaida.append(arrFunctActivDeriv)
+            else:
+                raise "Functions de ativação nao edfinidos"
 
-    def derivada_relu(self, x):
-        saida = numpy.where(x > 0, 1, 0)
-        return saida
+        if len(arrNameFuncAtivacaoCadaOculta) == 0:
+            for camadaSaida in self.arr_n_camada_oculta:
+                arrNameFuncAtivacaoCadaOculta.append("sigmoid")
 
+        if len(arrNameFuncAtivacaoCadaOculta) == 1 and len(self.arr_n_camada_oculta) >= 2:
+            for indexCamada in range(len(self.arr_n_camada_oculta)):
+                if indexCamada >= 1:
+                    arrNameFuncAtivacaoCadaOculta.append(arrNameFuncAtivacaoCadaOculta[0])
 
-class DatasetRNN:
-    def __init__(self):
-        self.arr_prevevisao: list[list] = [[]]
-        self.arr_entradas_treino: list[list] = [[]]
-        self.arr_camadas_saidas: list[DatasetCamadaSaidaRNN] = [[]]
+        for name in arrNameFuncAtivacaoCadaOculta:
+            arrFunctActivDeriv = []
+            if name == "tanh":
+                arrFunctActivDeriv = [self.iaRegras.tanh, self.iaRegras.derivada_tanh]
+                self.arrFuncAtivacaoCamadaOculta.append(arrFunctActivDeriv)
+            elif name == "sigmoid":
+                arrFunctActivDeriv = [self.iaRegras.sigmoid, self.iaRegras.derivada_sigmoid]
+                self.arrFuncAtivacaoCamadaOculta.append(arrFunctActivDeriv)
+            else:
+                raise "Functions de ativação nao edfinidos"
 
-        self.max_value_entradas: list = []
-        self.min_value_entradas: list = []
-
-        self.max_value_esperados: list = []
-        self.min_value_esperados: list = []
-
-        self.arr_name_values_entrada: list[str] = []
-        self.arr_name_values_saida: list[str] = []
-
-        self.dado_exemplo: any = None
-        self.quantia_dados: int = None
-        self.quantia_neuronios_entrada: int = None
-        self.quantia_neuronios_saida: int = None
-
-
-        if (self.arr_camadas_saidas is not None and self.arr_entradas_treino is not None) and\
-                len(self.arr_entradas_treino) != len(self.arr_camadas_saidas):
-            raise "Datasets incompletos"
 
 class RNN:
-    def __init__(self, nNeuroniosEntrada: int, nNeuroniosCamadaOculta: list[int],
-                 arrCamadasSaida: list[CamadaSaidaRNN], txAprendizado: float = None):
-        self.iaRegras = IARegras()
-        self.nNeuroniosEntrada = nNeuroniosEntrada
-        self.nNeuroniosCamadaOculta = nNeuroniosCamadaOculta
-        self.arrCamadasSaida = arrCamadasSaida
-        self.txAprendizado = txAprendizado
-        self.funcAtivacaoCamadasOcultas = numpy.tanh
-        self.derivFuncAtivacaoCamadasOcultas = self.derivada_tanh
-
-        self.qtdeNeuroniosSaida = sum([camadaSaida.qtde_neuronios for camadaSaida in arrCamadasSaida])
+    def __init__(self, modelDataRNN: ModelDataRNN):
+        self.iaRegras = IAUteisRegras()
+        self.modelDataRNN = modelDataRNN
+        self.nNeuroniosEntrada = modelDataRNN.nNeuroniosEntrada
+        self.arrNCamadasOcultas = modelDataRNN.arr_n_camada_oculta
+        self.arrCamadasSaida = modelDataRNN.arrCamadasSaida
+        self.txAprendizado = modelDataRNN.taxa_aprendizado
+        self.taxa_regularizacao = modelDataRNN.taxa_regularização_l2
+        self.nEpocas = modelDataRNN.n_epocas
+        self.media_entropy = 0
+        self.media_accuracy = 0
 
         self.matriz_U: list[numpy.ndarray] = []
         self.matriz_W: list[numpy.ndarray] = []
         self.matriz_V: list[numpy.ndarray] = []
-        self.matriz_B: list[numpy.ndarray] = []
-        self.matriz_B_saida: list[numpy.ndarray] = []
+
+        self.matriz_Ub: list[numpy.ndarray] = []
+        self.matriz_Wb: list[numpy.ndarray] = []
+        self.matriz_Vb: list[numpy.ndarray] = []
 
 
         self.matriz_adagrad_U: list[numpy.ndarray] = []
         self.matriz_adagrad_W: list[numpy.ndarray] = []
         self.matriz_adagrad_V: list[numpy.ndarray] = []
-        self.matriz_adagrad_B: list[numpy.ndarray] = []
-        self.matriz_adagrad_B_saida: list[numpy.ndarray] = []
+
+        self.matriz_adagrad_Ub: list[numpy.ndarray] = []
+        self.matriz_adagrad_Wb: list[numpy.ndarray] = []
+        self.matriz_adagrad_Vb: list[numpy.ndarray] = []
 
 
-        for indexnNeuroniosOcultos in range(len(nNeuroniosCamadaOculta)):
-            W = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                     numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                     (nNeuroniosCamadaOculta[indexnNeuroniosOcultos],
-                                      nNeuroniosCamadaOculta[indexnNeuroniosOcultos]))
+        for indexnNeuroniosOcultos in range(len(self.arrNCamadasOcultas)):
+            nNeuroniosCmdAtual = self.arrNCamadasOcultas[indexnNeuroniosOcultos]
+            nNeuroniosCmdAnterior = self.nNeuroniosEntrada if indexnNeuroniosOcultos == 0 else \
+                self.arrNCamadasOcultas[indexnNeuroniosOcultos - 1]
 
-            if indexnNeuroniosOcultos == 0:
-                U = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                         (nNeuroniosCamadaOculta[0], nNeuroniosEntrada))
-            else:
-                U = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                         numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                         (nNeuroniosCamadaOculta[indexnNeuroniosOcultos],
-                                          nNeuroniosCamadaOculta[indexnNeuroniosOcultos - 1]))
+
+            W = self.inicalizarPesosXavier((nNeuroniosCmdAtual),
+                                           (nNeuroniosCmdAtual, nNeuroniosCmdAnterior))
+
+            Wb = self.inicalizarPesosXavier((nNeuroniosCmdAtual),
+                                           (nNeuroniosCmdAtual, nNeuroniosCmdAnterior), isReturnMatriz=False)
+
+            U = self.inicalizarPesosXavier((nNeuroniosCmdAtual),
+                                           (nNeuroniosCmdAtual, nNeuroniosCmdAtual))
+
+            Ub = self.inicalizarPesosXavier((nNeuroniosCmdAtual),
+                                           (nNeuroniosCmdAtual, nNeuroniosCmdAnterior), isReturnMatriz=False)
 
             self.matriz_adagrad_W.append(numpy.zeros_like(W))
             self.matriz_adagrad_U.append(numpy.zeros_like(U))
+            self.matriz_adagrad_Wb.append(numpy.zeros_like(Wb))
+            self.matriz_adagrad_Ub.append(numpy.zeros_like(Ub))
 
-            #B = numpy.zeros((nNeuroniosCamadaOculta[indexnNeuroniosOcultos], 1))
-
-            B = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                     numpy.sqrt(2 / (self.nNeuroniosEntrada + self.qtdeNeuroniosSaida)),
-                                     nNeuroniosCamadaOculta[indexnNeuroniosOcultos])
-
-            self.matriz_adagrad_B.append(numpy.zeros_like(B))
-
-            self.matriz_B.append(B)
-            self.matriz_U.append(U)
             self.matriz_W.append(W)
+            self.matriz_U.append(U)
+            self.matriz_Wb.append(Wb)
+            self.matriz_Ub.append(Ub)
 
-            if indexnNeuroniosOcultos == len(nNeuroniosCamadaOculta) - 1:
-                arr_matriz_B_saida = []
-                arr_matriz_adagrad_B_saida = []
-                for camadaSaida in arrCamadasSaida:
-                    V = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + camadaSaida.qtde_neuronios)),
-                                             numpy.sqrt(2 / (self.nNeuroniosEntrada + camadaSaida.qtde_neuronios)),
-                                             (camadaSaida.qtde_neuronios, nNeuroniosCamadaOculta[indexnNeuroniosOcultos]))
+        for nNeuroniosSaida in self.arrCamadasSaida:
+            V = self.inicalizarPesosXavier((nNeuroniosSaida),
+                                           (nNeuroniosSaida, self.arrNCamadasOcultas[-1]))
 
-                    self.matriz_V.append(V)
-                    self.matriz_adagrad_V.append(numpy.zeros_like(V))
+            Vb = self.inicalizarPesosXavier((nNeuroniosSaida),
+                                            (nNeuroniosSaida, self.arrNCamadasOcultas[-1]), isReturnMatriz=False)
 
-                    B_saida = numpy.random.uniform(-numpy.sqrt(2 / (self.nNeuroniosEntrada + camadaSaida.qtde_neuronios)),
-                                                   numpy.sqrt(2 / (self.nNeuroniosEntrada + camadaSaida.qtde_neuronios)),
-                                                   camadaSaida.qtde_neuronios)
+            self.matriz_adagrad_V.append(numpy.zeros_like(V))
+            self.matriz_adagrad_Vb.append(numpy.zeros_like(Vb))
 
-                    self.matriz_B_saida.append(B_saida)
-                    self.matriz_adagrad_B_saida.append(numpy.zeros_like(B_saida))
+            self.matriz_V.append(V)
+            self.matriz_Vb.append(Vb)
 
-    def derivada_tanh(self, estado_oculto: numpy.ndarray) -> numpy.ndarray:
-        derivada_tanh = 1 - estado_oculto ** 2
-        return derivada_tanh
+    def inicalizarPesosXavier(self, nItens: int, tupleDim: tuple, isScalaMenorZero: bool = False,
+                              isReturnMatriz: bool = True) -> list:
+        initScale = -1 if isScalaMenorZero else 0
+        endScale = 1
 
-    def forward(self, entradas: list[numpy.ndarray]):
+        if isReturnMatriz:
+            arrXavier = numpy.random.uniform(initScale, endScale, tupleDim)
+        else:
+            arrXavier = numpy.random.uniform(initScale, endScale, tupleDim[0])
+
+        return arrXavier
+
+    def forward(self, entradas: list[numpy.ndarray], estado_oculto_anterior: list = None):
         arrSaidas = []
         arrEstadosOcultos = []
-        for i in range(len(entradas)):
-            arrEstadosOcultosEntrada = []
-            for j in range(len(self.nNeuroniosCamadaOculta)):
-                arrEstadosOcultosEntrada.append(numpy.zeros(self.nNeuroniosCamadaOculta[j]))
-            arrEstadosOcultos.append(arrEstadosOcultosEntrada)
 
         for indexEntrada in range(len(entradas)):
             entrada = entradas[indexEntrada]
-            entrada_t = entrada
+            entrada_t = numpy.transpose([entrada])
+            arrEstadosOcultos.append([])
 
-            for indexCamadaOculta in range(len(self.nNeuroniosCamadaOculta)):
+            for indexCamadaOculta in range(len(self.arrNCamadasOcultas)):
+                funcAtivacaoOculta = self.modelDataRNN.arrFuncAtivacaoCamadaOculta[indexCamadaOculta][0]
+
+                if indexEntrada == 0:
+                    estado_oculto_t = numpy.transpose([numpy.zeros(self.arrNCamadasOcultas[indexCamadaOculta])]) \
+                        if estado_oculto_anterior is None else estado_oculto_anterior[indexEntrada][indexCamadaOculta]
+                else:
+                    estado_oculto_t = arrEstadosOcultos[indexEntrada - 1][indexCamadaOculta]
+
                 if indexCamadaOculta == 0:
                     entrada_t = entrada_t
-                    estado_oculto_t = numpy.zeros(self.nNeuroniosCamadaOculta[indexCamadaOculta])
                 else:
                     entrada_t = arrEstadosOcultos[indexEntrada][indexCamadaOculta - 1]
-                    estado_oculto_t = arrEstadosOcultos[indexEntrada][indexCamadaOculta]
 
-                dot_U = numpy.dot(self.matriz_U[indexCamadaOculta], entrada_t)
-                dot_W = numpy.dot(self.matriz_W[indexCamadaOculta], estado_oculto_t)
-                sum_dot_U_W = dot_U + dot_W + self.matriz_B[indexCamadaOculta]
-                estado_oculto_t = self.funcAtivacaoCamadasOcultas(sum_dot_U_W)
+                dot_W = numpy.dot(self.matriz_W[indexCamadaOculta], entrada_t)
+                dot_U = numpy.dot(self.matriz_U[indexCamadaOculta], estado_oculto_t)
 
-                arrEstadosOcultos[indexEntrada][indexCamadaOculta] = estado_oculto_t
+                sum_dot_U_W =  (dot_W) + (dot_U)
+                estado_oculto_n = funcAtivacaoOculta(sum_dot_U_W)
 
-            arrCamadasSaidas_t = []
+                arrEstadosOcultos[indexEntrada].append(estado_oculto_n)
+
+            arrSaidas_t = []
 
             for indexCamadaSaida in range(len(self.arrCamadasSaida)):
-                camadaSaida = self.arrCamadasSaida[indexCamadaSaida]
-                saida_camada_t = camadaSaida.funcAtivacao(numpy.dot(self.matriz_V[indexCamadaSaida], arrEstadosOcultos[indexEntrada][-1]) + self.matriz_B_saida[indexCamadaSaida])
-                arrCamadasSaidas_t.append(saida_camada_t)
+                funcAtivacaoSaida = self.modelDataRNN.arrFuncAtivacaoCadaSaida[indexCamadaSaida][0]
+                dot_saida = numpy.dot(self.matriz_V[indexCamadaSaida], arrEstadosOcultos[indexEntrada][-1])
+                saida_camada_t = funcAtivacaoSaida(dot_saida)
+                arrSaidas_t.append(saida_camada_t)
 
-            arrSaidas.append(arrCamadasSaidas_t)
+            arrSaidas.append(arrSaidas_t)
 
-        return arrEstadosOcultos, arrSaidas
+        return arrSaidas, arrEstadosOcultos
 
     def backward(self, entradas: list, esperado: list, saidas: list, estadosOcultos: list):
         lambda_reg = 0.01
-        delta_U = [numpy.zeros((len(u), len(u[0]))) for u in self.matriz_U]
-        delta_W = [numpy.zeros((nOculta, nOculta)) for nOculta in self.nNeuroniosCamadaOculta]
-        delta_V = [numpy.zeros((camadaSaida.qtde_neuronios, self.nNeuroniosCamadaOculta[-1])) for camadaSaida in self.arrCamadasSaida]
-        delta_B = [numpy.zeros(len(bias)) for bias in self.matriz_B]
-        delta_B_saida = [numpy.zeros(len(nBias_saida)) for nBias_saida in self.matriz_B_saida]
+        delta_W = numpy.zeros_like(self.matriz_W)
+        delta_U = numpy.zeros_like(self.matriz_U)
+        delta_V = numpy.zeros_like(self.matriz_V)
 
-        for index_entrada_t in range(len(entradas) - 1, -1, -1):
-            arr_erros_t = []
+        delta_Wb = numpy.zeros_like(self.matriz_Wb)
+        delta_Ub = numpy.zeros_like(self.matriz_Ub)
+        delta_Vb = numpy.zeros_like(self.matriz_Vb)
+
+
+
+        for index_entrada_t in reversed(range(len(entradas))):
+            delta_oculto = [numpy.zeros((i, 1)) for i in self.arrNCamadasOcultas]
             arr_deltas_ocultos = []
-            delta_oculto = numpy.zeros(len(estadosOcultos[index_entrada_t][-1]))
+            estados_ocultos_t = estadosOcultos[index_entrada_t]
+            entrada_t = numpy.transpose([entradas[index_entrada_t]])
+            rotulo_t = esperado[index_entrada_t]
+            saida_t = saidas[index_entrada_t]
+            last_estado_oculto = estadosOcultos[index_entrada_t][-1]
 
             for index_camada_saida in range(len(self.arrCamadasSaida)):
-                camadaSaida = self.arrCamadasSaida[index_camada_saida]
-                erro_t = saidas[index_entrada_t][index_camada_saida] - camadaSaida.arr_saidas_esperas[index_entrada_t]
-                arr_erros_t.append(erro_t)
+                funcDerivadaSaida = self.modelDataRNN.arrFuncAtivacaoCadaSaida[index_camada_saida][1]
+                erro_t = saida_t[index_camada_saida] - numpy.transpose([rotulo_t[index_camada_saida]])
+                delta_saida = numpy.dot(erro_t, numpy.transpose(last_estado_oculto))
 
-                #atualiza o bias da saida
-                derivda = camadaSaida.funcAtivacao(saidas[index_entrada_t][index_camada_saida])
-                delta_B_saida[index_camada_saida] += numpy.dot(erro_t.T, derivda)
-                self.matriz_adagrad_B_saida[index_camada_saida] += delta_B_saida[index_camada_saida] ** 2
-                self.matriz_B_saida[index_camada_saida] -= (self.txAprendizado * delta_B_saida[index_camada_saida]) / \
-                                                      (numpy.sqrt(self.matriz_adagrad_B_saida[index_camada_saida]) + 1e-9)
+                delta_V[index_camada_saida] += delta_saida
+                #delta_Vb[index_camada_saida] += erro_t
+                delta_oculto[-1] += numpy.dot(self.matriz_V[index_camada_saida].T, erro_t)
 
-                # delta_V += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_relu(saidas[index_entrada_t])
-                #delta_V[index_camada_saida] += numpy.dot(erro_t, estadosOcultos[index_entrada_t][-1].T) * self.derivada_sigmoid(saidas[index_entrada_t][index_camada_saida])
-                #delta_V[index_camada_saida] += numpy.dot(numpy.dot(numpy.transpose([erro_t]), [estadosOcultos[index_entrada_t][-1]]),
-                                                         #camadaSaida.derivFuncAtivaccao([saidas[index_entrada_t][index_camada_saida]]))
-                delta_V[index_camada_saida] += numpy.dot(numpy.transpose([erro_t]), [estadosOcultos[index_entrada_t][-1]])
+                #self.matriz_adagrad_Vb[index_camada_saida] += delta_Vb[index_camada_saida] ** 2
+                #self.matriz_Vb[index_camada_saida] -= self.txAprendizado * delta_Vb[index_camada_saida] / \
+                                                      #(numpy.sqrt(self.matriz_adagrad_Vb[index_camada_saida]) + 1e-9)
 
+                delta_V_regularized = delta_V[index_camada_saida] + self.taxa_regularizacao * self.matriz_V[index_camada_saida]
                 self.matriz_adagrad_V[index_camada_saida] += delta_V[index_camada_saida] ** 2
-                self.matriz_V[index_camada_saida] -= (self.txAprendizado * delta_V[index_camada_saida]) / \
-                                 (numpy.sqrt(self.matriz_adagrad_V[index_camada_saida]) + 1e-9)
+                self.matriz_V[index_camada_saida] -= (self.txAprendizado * delta_V_regularized) / \
+                                                     (numpy.sqrt(self.matriz_adagrad_V[index_camada_saida]) + 1e-9)
+
+            delta_oculto[-1] = delta_oculto[-1] * funcDerivadaSaida(last_estado_oculto)
+
+            for index_camada_oculta in reversed(range(len(self.arrNCamadasOcultas))):
+                funcDerivadaOculta = self.modelDataRNN.arrFuncAtivacaoCamadaOculta[index_camada_oculta][1]
+
+                estado_oculto_camada_anterior = numpy.transpose(entrada_t) if index_camada_oculta == 0 else \
+                    numpy.transpose(estados_ocultos_t[index_camada_oculta - 1])
 
 
-                delta_oculto += numpy.dot(self.matriz_V[index_camada_saida].T, erro_t) * self.derivFuncAtivacaoCamadasOcultas(estadosOcultos[index_entrada_t][-1])
+                estado_oculto_camada_atual = numpy.transpose(estados_ocultos_t[index_camada_oculta])
+                estado_oculto_camada_atual_t_anterior = numpy.transpose(estadosOcultos[index_entrada_t - 1][index_camada_oculta]) \
+                    if index_entrada_t >= 1 else numpy.transpose(numpy.zeros_like(estados_ocultos_t[index_camada_oculta])) #numpy.transpose(estados_ocultos_t[index_camada_oculta])
 
-            for index_camada_oculta in range(len(self.nNeuroniosCamadaOculta) - 1, -1, -1):
-                # atualiza o bias da ultima camada oculta.
-                delta_B[index_camada_oculta] += delta_oculto
+                delta_W[index_camada_oculta] += numpy.dot(delta_oculto[index_camada_oculta], estado_oculto_camada_anterior)
+                delta_U[index_camada_oculta] += numpy.dot(delta_oculto[index_camada_oculta], estado_oculto_camada_atual_t_anterior)
 
-                if index_camada_oculta == 0:
-                    delta_W[index_camada_oculta] += numpy.multiply(delta_oculto, estadosOcultos[index_entrada_t][index_camada_oculta].T)
-                    delta_U[index_camada_oculta] += numpy.dot(delta_oculto[:, numpy.newaxis], entradas[index_entrada_t][numpy.newaxis, :])
-                    delta_oculto = entradas[index_entrada_t]
+                if index_camada_oculta >= 1:
+                    dot_delta_oculto = numpy.dot(self.matriz_W[index_camada_oculta].T, delta_oculto[index_camada_oculta])
+                    deriv_delta_oculto = funcDerivadaOculta(numpy.transpose(estado_oculto_camada_anterior))
+                    delta_oculto[index_camada_oculta - 1] = dot_delta_oculto * deriv_delta_oculto
 
-                else:
-                    delta_W[index_camada_oculta] += numpy.multiply(delta_oculto, estadosOcultos[index_entrada_t][index_camada_oculta])
-                    delta_U[index_camada_oculta] += numpy.dot(delta_oculto[:, numpy.newaxis], estadosOcultos[index_entrada_t][index_camada_oculta - 1][numpy.newaxis, :])
-                    delta_oculto = numpy.dot(self.matriz_U[index_camada_oculta].T, delta_oculto) * \
-                                   self.derivFuncAtivacaoCamadasOcultas(estado_oculto=estadosOcultos[index_entrada_t][index_camada_oculta - 1])
-
-                delta_W_regularized = delta_W[index_camada_oculta] + lambda_reg * self.matriz_W[index_camada_oculta]
+                delta_W_regularized = delta_W[index_camada_oculta] + self.taxa_regularizacao * self.matriz_W[index_camada_oculta]
                 self.matriz_adagrad_W[index_camada_oculta] += self.matriz_W[index_camada_oculta] ** 2
                 self.matriz_W[index_camada_oculta] -= (self.txAprendizado * delta_W_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_W[index_camada_oculta]) + 1e-9)
 
-                delta_U_regularized = delta_U[index_camada_oculta] + lambda_reg * self.matriz_U[index_camada_oculta]
+                delta_Wb_regularized = delta_Wb[index_camada_oculta] + self.taxa_regularizacao * self.matriz_Wb[index_camada_oculta]
+                self.matriz_adagrad_Wb[index_camada_oculta] += self.matriz_Wb[index_camada_oculta] ** 2
+                self.matriz_Wb[index_camada_oculta] -= (self.txAprendizado * delta_Wb_regularized) / \
+                                                      (numpy.sqrt(self.matriz_adagrad_Wb[index_camada_oculta]) + 1e-9)
+
+                delta_U_regularized = delta_U[index_camada_oculta] + self.taxa_regularizacao * self.matriz_U[index_camada_oculta]
                 self.matriz_adagrad_U[index_camada_oculta] += delta_U_regularized ** 2
                 self.matriz_U[index_camada_oculta] -= (self.txAprendizado * delta_U_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_U[index_camada_oculta]) + 1e-9)
 
-                delta_B_regularized = delta_B[index_camada_oculta] + lambda_reg * self.matriz_B[index_camada_oculta]
-                self.matriz_adagrad_B[index_camada_oculta] += self.matriz_B[index_camada_oculta] ** 2
-                self.matriz_B[index_camada_oculta] -= (self.txAprendizado * delta_B_regularized) / \
-                                                      (numpy.sqrt(self.matriz_adagrad_B[index_camada_oculta]) + 1e-9)
+                delta_Ub_regularized = delta_Ub[index_camada_oculta] + self.taxa_regularizacao * self.matriz_Ub[index_camada_oculta]
+                self.matriz_adagrad_Ub[index_camada_oculta] += self.matriz_Ub[index_camada_oculta] ** 2
+                self.matriz_Ub[index_camada_oculta] -= (self.txAprendizado * delta_Ub_regularized) / \
+                                                      (numpy.sqrt(self.matriz_adagrad_Ub[index_camada_oculta]) + 1e-9)
 
-    def treinar(self, entradas_treino: list[list], saidas_treino: list[CamadaSaidaRNN], n_epocas: int,
-                tx_aprendizado: float) -> float:
-        self.txAprendizado = tx_aprendizado
-        epoch = 0
+    def calcular_erro(self, rotulos: list[list[list]], arrPrevisoes: list[list[list[list]]], isPrintar: bool = True) -> \
+            list[list, list]:
+        arrEntropy, arrAcurracy = [], []
+
+        for index_previsoes in range(len(arrPrevisoes)):
+            previsoes = arrPrevisoes[index_previsoes]
+            entropy_for_camadas = [0 for i in self.arrCamadasSaida]
+            accuracy_for_camada = [0 for i in self.arrCamadasSaida]
+            sum_values_accuracy = [0 for i in self.arrCamadasSaida]
+
+            for indexClasseSaida in range(len(self.arrCamadasSaida)):
+                for indexDado in range(len(previsoes)):
+                    saidaCamada = numpy.reshape(previsoes[indexDado][indexClasseSaida], (1, -1))[0]
+                    rotulo = rotulos[indexDado][indexClasseSaida]
+
+                    dotEntropy = rotulo * numpy.log(saidaCamada)
+                    entropy_for_camadas[indexClasseSaida] += -numpy.sum(dotEntropy, axis=0)
+
+                    if len(saidaCamada) >= 2:
+                        maxArgSaida = numpy.argmax(saidaCamada)
+                        maxArgRotulo = numpy.argmax(rotulo)
+                        if maxArgRotulo == maxArgSaida:
+                            sum_values_accuracy[indexClasseSaida] += 1
+                    else:
+                        throbleshot = 0.5
+                        y = int(saidaCamada[0] >= throbleshot)
+                        if y == rotulo[0]:
+                            sum_values_accuracy[indexClasseSaida] += 1
+
+            msgEntropy = "Entropy for camada "
+            msgAcurracy = "Acurracy for camada "
+            for indexCamadaSaida in range(len(self.arrCamadasSaida)):
+                accuracy_for_camada[indexCamadaSaida] = sum_values_accuracy[indexCamadaSaida] / len(rotulos)
+
+                if isPrintar:
+                    #msgEntropy += f" [{indexCamadaSaida}: {entropy_for_camadas[indexCamadaSaida]:.5f}], "
+                    #msgAcurracy += f" [{indexCamadaSaida}: {accuracy_for_camada[indexCamadaSaida]:.5f}], "
+                    pass
+
+            if isPrintar:
+                #print(msgEntropy, msgAcurracy)
+                #print("######################")
+                pass
+
+            arrEntropy.append(entropy_for_camadas)
+            arrAcurracy.append(accuracy_for_camada)
+
+        mediaEntropy = numpy.sum(arrEntropy, axis=0) / len(arrEntropy)
+        mediaAcurracy = numpy.sum(arrAcurracy, axis=0) / len(arrAcurracy)
+        msgMediaEntropy = " Media entropy for camada"
+        msgMediaAcurracy = "Media acuracy for camada"
+
+        for indexCamadaSaida in range(len(self.arrCamadasSaida)):
+            accuracy_for_camada[indexCamadaSaida] = sum_values_accuracy[indexCamadaSaida] / len(rotulos)
+            msgMediaEntropy += f" [{indexCamadaSaida}: {mediaEntropy[indexCamadaSaida]:.5f}], "
+            msgMediaAcurracy += f" [{indexCamadaSaida}: {mediaAcurracy[indexCamadaSaida]:.5f}], "
+
+        if isPrintar:
+            print(msgMediaEntropy, "\n", msgMediaAcurracy)
+            print("##########")
+
+        return mediaEntropy, mediaAcurracy
+
+
+    def treinar(self, isBrekarPorEpocas: bool = True, isAtualizarPesos: bool = True, qtdeDadoValidar: int = 0,
+                n_folds: int = 5, isRecursiva: bool = False) -> list[list, list]:
+
+        nEpoca = 0
         isBrekarWhile = False
-        loss = 0
+
+        isAttLambdRegL2 = False
+        nextEpocaAttLambdRegL2 = 0
+
+        arrEntradas = deepcopy(self.modelDataRNN.arr_entradas)
+        arrRotulos = deepcopy(self.modelDataRNN.arr_rotulos)
+
+        arrArrSaidas = []
+
+        arrEntradas_t = arrEntradas
+        arrRotulos_t = arrRotulos
+
+
+        if qtdeDadoValidar >= 1:
+            arrEntradas_v = arrEntradas[-qtdeDadoValidar:]
+            arrRotulos_v = arrRotulos[-qtdeDadoValidar:]
+
+            for i in range(qtdeDadoValidar):
+                arrEntradas_t.pop()
+                arrRotulos_t.pop()
+        else:
+            arrEntradas_v = arrEntradas[-int(len(arrEntradas_t)):]
+            arrRotulos_v = arrRotulos[-int(len(arrRotulos_t)):]
+
+        isAcuraciaBoa = False
         while not isBrekarWhile:
-            epoch += 1
-            estados_ocultos, saidas = self.forward(entradas=entradas_treino)
+            nEpoca += 1
+            previsoes, estados_ocultos = self.forward(entradas=arrEntradas_t)
+            arrArrSaidas.append(previsoes)
 
-            if epoch % 10 == 0 or epoch == 1:
-                isBrekarWhile, mensagem, loss = self.obterErroSaidaRNN(rotulos_saidas=saidas_treino,
-                                                                       saidas_previstas=saidas, epoca_atual=epoch,
-                                                                       taxa_aprendizado=self.txAprendizado)
+            if True:
+                if nEpoca % 100 == 0:
+                    print(nEpoca, "de", self.nEpocas)
 
-            if epoch == n_epocas:
-                isBrekarWhile = True
+                media_entropy, media_accuracy = self.calcular_erro(rotulos=arrRotulos_t, arrPrevisoes=arrArrSaidas, isPrintar=nEpoca % 100 == 0)
+                arrArrSaidas = []
 
-            self.backward(entradas_treino, saidas_treino, saidas,estados_ocultos)
-
-        return loss
-
-    def obterErroSaidaRNN(self, rotulos_saidas: list[CamadaSaidaRNN], saidas_previstas: list, epoca_atual: int, taxa_aprendizado: float,
-                       erro_aceitavel: float = 0.01, isPrintarMensagem: bool = True) -> list[bool, str]:
-        # mean absolute error" (MAE) ou "erro médio absoluto"
-        # loss = -numpy.mean(numpy.abs(numpy.asarray(saidas) - numpy.asarray(saidas_in_k_folds[index_entrada])))
-
-        # entropia cruzada (cross-entropy)
-        loss = 0
-        for indexSaida in range(len(saidas_previstas)):
-            for indexCamadaSaida in range(len(rotulos_saidas)):
-                camadaSaida = rotulos_saidas[indexCamadaSaida]
-                loss += -numpy.mean(numpy.sum(camadaSaida.arr_saidas_esperas[indexSaida] * numpy.log(saidas_previstas[indexSaida][indexCamadaSaida]), axis=0))
-
-        # (MSE - Mean Squared Error)
-        #loss = numpy.mean(numpy.power(numpy.asarray(rotulos_saidas) - numpy.asarray(saidas_previstas), 2))
-
-        isBrekarTreino: bool = False
-
-        if loss <= erro_aceitavel:
-            isBrekarTreino = True
-
-        mensagem_loss = f"Epoch: {epoca_atual}, erro: {loss}, TxAprendizado: {taxa_aprendizado}"
-
-        if isPrintarMensagem:
-            print(mensagem_loss)
-
-        return isBrekarTreino, mensagem_loss, loss
-
-    def prever(self, entrada, isSaida = False, isNormalizarSaida = True):
-        estados_ocultos, camada_saidas_rede = self.forward(entrada)
-        saidas_formatada = []
-
-        for camada_saida in camada_saidas_rede:
-            for saida in camada_saida:
-                if isNormalizarSaida:
-                    saida_formatada = [f"{x * 100:.4f}%" for x in numpy.asarray(saida).reshape(-1)]
-                    saidas_formatada.append(saida_formatada)
+                if sum(media_accuracy) / len(media_accuracy) >= 0.93:
+                    isAcuraciaBoa = True
                 else:
-                    saidas_formatada.append([x for x in numpy.asarray(saida).reshape(-1)])
+                    isAcuraciaBoa = False
 
-        return estados_ocultos, saidas_formatada
+                if sum(media_accuracy) / len(media_accuracy) >= 1 and not isRecursiva and nEpoca >= int(self.nEpocas):
+                    print("Não foi possível encontrar um bom resultado. Chegaram a 1")
+                    return False
 
-    def treinarRNN(self, datasetRNN: DatasetRNN, isTreinar: bool = True,
-                   nNeuroniosPrimeiraCamada: int = 100, nEpocas: int = 2000, txAprendizado: float = 0.01) -> list[list]:
-        if not isTreinar:
-            return [[]]
+            if isAcuraciaBoa:
+                previsoes_v, estados_ocultos_v = self.forward(entradas=arrEntradas_v,
+                                                              estado_oculto_anterior=[estados_ocultos[-1]] if qtdeDadoValidar >= 1 else None)
 
-        nEpocas = nEpocas
-        qtdeDados = datasetRNN.quantia_dados
-        qtdeNeuroniosEntrada = datasetRNN.quantia_neuronios_entrada
-        qtdeNeuroniosPrimeiraCamada = 200
-        taxaAprendizado = txAprendizado
+                if nEpoca % 10 == 0:
+                    print("############ Validação #############")
 
-        print("N neuronios entrada:", qtdeNeuroniosEntrada)
-        print("N neuronios primeira camada oculta: ", qtdeNeuroniosPrimeiraCamada)
-        print("Qtde dados:", qtdeDados, ", TxAprendizado: ", taxaAprendizado)
+                media_entropy_v, media_accuracy_v = self.calcular_erro(rotulos=arrRotulos_v, arrPrevisoes=[previsoes_v],
+                                                                       isPrintar=nEpoca % 10 == 0)
 
-        self.__init__(nNeuroniosEntrada=qtdeNeuroniosEntrada,
-                      nNeuroniosCamadaOculta=[int(qtdeNeuroniosPrimeiraCamada * 1.0)],
-                      arrCamadasSaida=datasetRNN.arr_camadas_saidas)
+                if sum(media_accuracy_v) / len(media_accuracy_v) >= 1:
+                    if self.modelDataRNN.arr_dados_prever is not None:
 
-        loss = self.treinar(entradas_treino=datasetRNN.arr_entradas_treino, saidas_treino=datasetRNN.arr_camadas_saidas,
-                            n_epocas=nEpocas, tx_aprendizado=taxaAprendizado)
+                        previsao = self.forward(entradas=self.modelDataRNN.arr_dados_prever,
+                                                estado_oculto_anterior=[estados_ocultos_v[-1]])[0]
+                        for prev in previsao:
+                            print("Previsão: ", [a for a in prev])
 
-        print(datasetRNN.dado_exemplo)
-        print(datasetRNN.max_value_esperados, datasetRNN.min_value_esperados)
+                    break
 
-        arrPrevisoes = []
+            if isBrekarPorEpocas and nEpoca == self.nEpocas:
+                print("Não foi possível encontrar um bom resultado. 3")
+                if not isAtualizarPesos:
+                    break
+                else:
+                    return False
 
-        for dadosPrever in datasetRNN.arr_prevevisao:
-            arrPrevisoes.append(self.prever(entrada=[dadosPrever])[1])
+            if isAtualizarPesos:
+                self.backward(entradas=arrEntradas_t, esperado=arrRotulos_t, estadosOcultos=estados_ocultos, saidas=previsoes)
 
-        return arrPrevisoes, loss
+        self.media_entropy = media_entropy
+        self.media_accuracy = media_accuracy
+
+        return media_entropy, media_accuracy

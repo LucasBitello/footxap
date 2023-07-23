@@ -13,8 +13,7 @@ from api.models.fixturesTeamsModel import FixtureTeams
 from api.models.seasonsModel import Season
 from api.models.teamsModel import Team
 from api.models.teamsSeasonsModel import TeamSeason
-from api.regras.iaRNNRegras import DatasetRNN, CamadaSaidaRNN
-from api.regras.iaRegras import IARegras
+from api.regras.iaUteisRegras import IAUteisRegras
 
 class TeamsPlaysSaidaPartida:
     def __init__(self):
@@ -100,7 +99,7 @@ class TeamsPlaysDataset:
 
 class StatisticsRegras:
     def __init__(self):
-        self.iaRegras = IARegras()
+        self.iaRegras = IAUteisRegras()
         self.teamsRegras = TeamsRegras()
         self.seasonRegras = SeasonsRegras()
         self.fixturesRegras = FixturesRegras()
@@ -294,10 +293,10 @@ class StatisticsRegras:
         arrKeysIgnorarDadosEntrada: list = ["data_fixture", "is_prever", "name_team_home", "name_team_away",
                                             "saida_prevista_partida", "qtde_gols_marcados_away",
                                             "qtde_gols_marcados_home", "qtde_gols_marcados", "id_country_team_home",
-                                            "id_country_team_away", "id_league"]
+                                            "id_country_team_away", "id_league", "id_team_home", "id_team_away"]
 
         arrKeysIgnorarDadosEsperados: list = ["qtde_gols_marcados", "qtde_gols_marcados_away",
-                                              "qtde_gols_marcados_home", "probabilidades_partida"]
+                                              "qtde_gols_marcados_home", "probabilidades_home", "probabilidades_away"]
 
         arrDadosEntrada: list = []
         arrDadosEsperadosPartida: list = []
