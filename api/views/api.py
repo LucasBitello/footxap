@@ -1,6 +1,6 @@
 import numpy
 import random
-from copy import  deepcopy
+from copy import deepcopy
 from datetime import datetime, timedelta
 from json import loads, JSONDecoder, JSONEncoder, dumps
 from django.shortcuts import render
@@ -12,15 +12,12 @@ from api.regras.leaguesSeasonsRegras import LeaguesRegras, SeasonsRegras
 from api.regras.teamsRegras import TeamsRegras
 from api.regras.uteisRegras import UteisRegras
 from api.regras.statisticsRegras import StatisticsRegras
-from api.regras.iaRNNRegras import RNN
-from api.regras.iaDBNRegras import DBN
 from api.regras.iaUteisRegras import IAUteisRegras
 from api.regras.tabelaJogosRegras import TabelaJogosRegras
 from api.regras.tabelaPontuacaoRegras import TabelaPontuacaoRegras
 from api.regras.fixturesRegras import FixturesRegras
 from api.regras.datasetFixturesRegras import DatasetFixtureRegras
 from api.regras.iaAprendizado import RedeLTSM, ModelPrevisao
-from api.regras.datasetPartidasRegras import DatasetPartidasRegras, DatasetPartidaEntrada
 
 # Create your views here.
 
@@ -106,8 +103,19 @@ def obterPrevisaoPartida(request):
     fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeamHome, idTeamAway])
 
     try:
-        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
-                                                       isPartida=True, qtdeDados=25)
+
+        #previsaoFFFHome = iaLTSM.preverComFF(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
+                                             #isPartida=True)
+
+        previsaoRNNHome = iaLTSM.preverComRNN(id_team_home=idTeamHome, id_season=idSeason, isPartida=True, qtdeDados=50)
+        previsaoRNNAWAY = iaLTSM.preverComRNN(id_team_home=idTeamAway, id_season=idSeason, isPartida=True, qtdeDados=50)
+        #previsaoRNNAmbas = iaLTSM.preverComRNN(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
+                                               #isPartida=True, qtdeDados=120, isAmbas=True)
+
+        #print("Previsao FFHome", previsaoFFFHome)
+        print("Previsao RNN home", previsaoRNNHome)
+        print("Previsao RNN away", previsaoRNNAWAY)
+        #print("Previsao RNN ambas", previsaoRNNAmbas)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
@@ -163,7 +171,7 @@ def obterPrevisaoTeam(request):
 
     print("######### Treinando Team ##########")
     try:
-        previsao: ModelPrevisao = iaLTSM.preverComLTSM(id_team_home=idTeam, id_season=idSeason, qtdeDados=35)
+        previsao: ModelPrevisao = iaLTSM.preverComRNN(id_team_home=idTeam, id_season=idSeason, qtdeDados=35)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"

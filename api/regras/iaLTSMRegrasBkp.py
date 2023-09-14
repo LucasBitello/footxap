@@ -123,7 +123,7 @@ class LSTM:
 
     def inicalizarPesosXavier(self, nItens: int, tupleDim: tuple, isScalaMenorZero: bool = True,
                               isReturnMatriz: bool = True) -> list:
-        initScale = -1 if isScalaMenorZero else -1
+        initScale = -1 if isScalaMenorZero else 0
         endScale = 1 if isScalaMenorZero else 1
         if isReturnMatriz:
             arrXavier = numpy.random.uniform(initScale, endScale, tupleDim)
@@ -139,7 +139,7 @@ class LSTM:
         self.all_c = [[] for _ in range(len(self.arrNEstadosOcultos))]
 
     def forward(self, entradas: list, isPrevisao: bool = False, initNewEpoca: bool = True, celulas_prev: list = None,
-                estados_ocultos_prev: list = None) -> tuple:
+                estados_ocultos_prev: list = None) -> list[list[list]]:
         if initNewEpoca:
             self.init_new_epoca()
 
@@ -149,13 +149,15 @@ class LSTM:
         if estados_ocultos_prev is None:
             estados_ocultos_prev = [numpy.zeros((i, 1)) for i in self.arrNEstadosOcultos]
 
-        saidas_rede: list = []
+        saidas_rede = []
         celulas_rede: list = [[] for _ in self.arrNEstadosOcultos]
         estados_ocultos_rede: list = [[] for _ in self.arrNEstadosOcultos]
 
+
+
         for index_entrada_t in range(len(entradas)):
             entrada_t = numpy.transpose([entradas[index_entrada_t]])
-            # entrada_t = numpy.concatenate((entrada_t, estados_ocultos_prev[0]), axis=0)
+            # entrada_t = numpy.concatenate((estados_ocultos_prev[0], entrada_t), axis=0)
 
             for index_camada_oculta in range(len(self.arrNEstadosOcultos)):
                 if index_camada_oculta == 0:
@@ -163,21 +165,25 @@ class LSTM:
                 else:
                     estado_oculto_anterior = estados_ocultos_prev[index_camada_oculta - 1]
 
-                Wf_dot = numpy.dot(self.Wf[index_camada_oculta], estado_oculto_anterior) # + self.bf[index_camada_oculta]
-                f = self.modelDataLTSM.iaRegras.tanh(Wf_dot)
-                self.all_f[index_camada_oculta].append(f)
+                Wf_dot = numpy.dot(self.Wf[index_camada_oculta], estado_oculto_anterior) #+ self.bf[index_camada_oculta]
+                f = self.modelDataLTSM.iaRegras.sigmoid(Wf_dot)
+                if initNewEpoca:
+                    self.all_f[index_camada_oculta].append(f)
 
-                Wi_dot = numpy.dot(self.Wi[index_camada_oculta], estado_oculto_anterior) # + self.bi[index_camada_oculta]
-                i = self.modelDataLTSM.iaRegras.tanh(Wi_dot)
-                self.all_i[index_camada_oculta].append(i)
+                Wi_dot = numpy.dot(self.Wi[index_camada_oculta], estado_oculto_anterior) #+ self.bi[index_camada_oculta]
+                i = self.modelDataLTSM.iaRegras.sigmoid(Wi_dot)
+                if initNewEpoca:
+                    self.all_i[index_camada_oculta].append(i)
 
-                Wo_dot = numpy.dot(self.Wo[index_camada_oculta], estado_oculto_anterior) # + self.bo[index_camada_oculta]
-                o = self.modelDataLTSM.iaRegras.tanh(Wo_dot)
-                self.all_o[index_camada_oculta].append(o)
+                Wo_dot = numpy.dot(self.Wo[index_camada_oculta], estado_oculto_anterior) #+ self.bo[index_camada_oculta]
+                o = self.modelDataLTSM.iaRegras.sigmoid(Wo_dot)
+                if initNewEpoca:
+                    self.all_o[index_camada_oculta].append(o)
 
-                Wc_dot = numpy.dot(self.Wc[index_camada_oculta], estado_oculto_anterior) # + self.bc[index_camada_oculta]
+                Wc_dot = numpy.dot(self.Wc[index_camada_oculta], estado_oculto_anterior) #+ self.bc[index_camada_oculta]
                 c = self.modelDataLTSM.iaRegras.tanh(Wc_dot)
-                self.all_c[index_camada_oculta].append(c)
+                if initNewEpoca:
+                    self.all_c[index_camada_oculta].append(c)
 
                 c_ = f * celulas_prev[index_camada_oculta] + i * c
                 o_ = o * self.modelDataLTSM.iaRegras.tanh(c_)
@@ -193,9 +199,11 @@ class LSTM:
                 functionAtivacao = self.modelDataLTSM.arrFuncAtivacaoCadaSaida[index_camada_saida][0]
                 saida_dot = numpy.dot(self.Wv[index_camada_saida], estados_ocultos_prev[-1]) #+ self.bv[index_camada_saida]
                 saida_ativ = functionAtivacao(saida_dot)
+
                 arr_saidas.append(saida_ativ)
 
             saidas_rede.append(arr_saidas)
+
         return saidas_rede, celulas_rede, estados_ocultos_rede, celulas_prev, estados_ocultos_prev
 
     def backward(self, entradas: list, saidas: list, rotulos: list, celulas_rede: list, estados_ocultos_rede: list):
@@ -234,34 +242,37 @@ class LSTM:
 
         destado_oculto_next = [numpy.zeros((i, 1)) for i in self.arrNEstadosOcultos]
         destado_celula_next = [numpy.zeros((i, 1)) for i in self.arrNEstadosOcultos]
+        do_ = [numpy.zeros((i, 1)) for i in self.arrNEstadosOcultos]
 
         for index_entrada_t in reversed(range(len(entradas))):
             rotulo = rotulos[index_entrada_t]
             saida = saidas[index_entrada_t]
-            sum_dsaida = numpy.zeros((self.arrNEstadosOcultos[-1], 1))
 
+            dsaida_s = numpy.zeros((self.arrNEstadosOcultos[-1], 1))
             for index_camada_saida in reversed(range(len(self.arrCamadaSaida))):
-                funcDerivadaSaida = self.modelDataLTSM.arrFuncAtivacaoCadaSaida[index_camada_saida][1]
+                funcDerivada = self.modelDataLTSM.arrFuncAtivacaoCadaSaida[index_camada_saida][1]
+                funcDerivadaOculta = self.modelDataLTSM.iaRegras.derivada_tanh
+
                 estado_oculto_ultima_camada_t = estados_ocultos_rede[-1][index_entrada_t]
+                estado_celula_ultima_camada_t = celulas_rede[-1][index_entrada_t]
 
                 rotulo_st = numpy.asarray(numpy.transpose([rotulo[index_camada_saida]]))
                 saida_st = numpy.asarray(saida[index_camada_saida])
 
-                dsaida = saida_st - rotulo_st
-                dot_dsaida = numpy.dot(dsaida, estado_oculto_ultima_camada_t.T) * funcDerivadaSaida(saida_st)
+                erro = saida_st - rotulo_st
+                dsaida = erro
+                dot_dsaida = numpy.dot(dsaida, estado_oculto_ultima_camada_t.T) * funcDerivada(saida_st)
 
-                dWv[index_camada_saida] = numpy.clip(dWv[index_camada_saida] + dot_dsaida, -5, 5)
-                dbv[index_camada_saida] += dsaida
+                dWv[index_camada_saida] += dot_dsaida
+                dbv[index_camada_saida] += erro
 
-                dot_destado_oculto_next = numpy.dot(self.Wv[index_camada_saida].T, dsaida) + destado_oculto_next[-1]
-                sum_dsaida += dot_destado_oculto_next
+                dot_destado_oculto_next = numpy.dot(self.Wv[index_camada_saida].T, dsaida)
+                dsaida_s += dot_destado_oculto_next
 
-                dAdaWv[index_camada_saida] += (dWv[index_camada_saida] + self.lambdaRegAdagrad *
-                                               self.Wv[index_camada_saida])
+                dAdaWv[index_camada_saida] += dWv[index_camada_saida] + self.lambdaRegAdagrad * self.Wv[index_camada_saida]
                 self.AdaWv[index_camada_saida] += dAdaWv[index_camada_saida] ** 2
 
-                dAdabv[index_camada_saida] += (dbv[index_camada_saida] + self.lambdaRegAdagrad *
-                                               self.bv[index_camada_saida])
+                dAdabv[index_camada_saida] += dbv[index_camada_saida] + self.lambdaRegAdagrad * self.bv[index_camada_saida]
                 self.Adabv[index_camada_saida] += dAdabv[index_camada_saida] ** 2
 
                 if index_entrada_t >= 0:
@@ -270,8 +281,7 @@ class LSTM:
                     self.bv[index_camada_saida] -= (self.txAprendizado * dAdabv[index_camada_saida]) / \
                                                    (numpy.sqrt(self.Adabv[index_camada_saida]) + 1e-7)
 
-            destado_oculto_next[-1] += sum_dsaida
-
+            destado_oculto_next[-1] = dsaida_s
             for index_camada_oculta in reversed(range(len(self.arrNEstadosOcultos))):
                 f = self.all_f[index_camada_oculta][index_entrada_t]
                 i = self.all_i[index_camada_oculta][index_entrada_t]
@@ -291,13 +301,13 @@ class LSTM:
                     estado_celula_prev = numpy.zeros_like(estado_celula)
                     estado_oculto_prev = numpy.zeros_like(estado_oculto)
 
-                do = (destado_oculto_next[index_camada_oculta] * self.modelDataLTSM.iaRegras.tanh(estado_celula) *
-                      self.modelDataLTSM.iaRegras.derivada_tanh(o))
-                dc = dc_ * i * self.modelDataLTSM.iaRegras.derivada_tanh(c)
-                di = dc_ * c * self.modelDataLTSM.iaRegras.derivada_tanh(i)
-                df = dc_ * estado_celula_prev * self.modelDataLTSM.iaRegras.derivada_tanh(f)
+                do = destado_oculto_next[index_camada_oculta] * estado_oculto
 
-                destado_celula_next[index_camada_oculta] += dc_ * f
+                df = dc_ * estado_celula_prev
+
+                di = dc_ * c
+
+                dc = dc_ * i
 
                 if index_camada_oculta == 0:
                     if index_entrada_t == 0:
@@ -311,19 +321,19 @@ class LSTM:
                     input_w = estados_ocultos_rede[index_camada_oculta - 1][index_entrada_t]
 
                 dot_dWf = numpy.dot(df, numpy.transpose(input_w))
-                dWf[index_camada_oculta] = numpy.clip(dWf[index_camada_oculta] + dot_dWf, -5, 5)
+                dWf[index_camada_oculta] += dot_dWf
                 dbf[index_camada_oculta] += df
 
                 dot_dWi = numpy.dot(di, numpy.transpose(input_w))
-                dWi[index_camada_oculta] = numpy.clip(dWi[index_camada_oculta] + dot_dWi, -5, 5)
+                dWi[index_camada_oculta] += dot_dWi
                 dbi[index_camada_oculta] += di
 
                 dot_dWc = numpy.dot(dc, numpy.transpose(input_w))
-                dWc[index_camada_oculta] = numpy.clip(dWc[index_camada_oculta] + dot_dWc, -5, 5)
+                dWc[index_camada_oculta] += dot_dWc
                 dbc[index_camada_oculta] += dc
 
                 dot_dWo = numpy.dot(do, numpy.transpose(input_w))
-                dWo[index_camada_oculta] = numpy.clip(dWo[index_camada_oculta] + dot_dWo, -5, 5)
+                dWo[index_camada_oculta] += dot_dWo
                 dbo[index_camada_oculta] += do
 
                 dotWf = numpy.dot(self.Wf[index_camada_oculta].T, df)
@@ -333,61 +343,46 @@ class LSTM:
 
                 dDtos = dotWf + dotWi + dotWc + dotWo
                 if index_camada_oculta > 0:
-                    destado_oculto_next[index_camada_oculta - 1] += dDtos
+                    destado_oculto_next[index_camada_oculta - 1] = dDtos
+                destado_celula_next[index_camada_oculta] = dc_
 
-                dAdaWf[index_camada_oculta] += (dWf[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.Wf[index_camada_oculta])
+                dAdaWf[index_camada_oculta] += dWf[index_camada_oculta] + self.lambdaRegAdagrad * self.Wf[index_camada_oculta]
                 self.AdaWf[index_camada_oculta] += dAdaWf[index_camada_oculta] ** 2
 
-                dAdabf[index_camada_oculta] += (dbf[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.bf[index_camada_oculta])
+                dAdabf[index_camada_oculta] += dbf[index_camada_oculta] + self.lambdaRegAdagrad * self.bf[index_camada_oculta]
                 self.Adabf[index_camada_oculta] += dAdabf[index_camada_oculta] ** 2
 
-                dAdaWi[index_camada_oculta] += (dWi[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.Wi[index_camada_oculta])
+                dAdaWi[index_camada_oculta] += dWi[index_camada_oculta] + self.lambdaRegAdagrad * self.Wi[index_camada_oculta]
                 self.AdaWi[index_camada_oculta] += dAdaWi[index_camada_oculta] ** 2
 
-                dAdabi[index_camada_oculta] += (dbi[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.bi[index_camada_oculta])
+                dAdabi[index_camada_oculta] += dbi[index_camada_oculta] + self.lambdaRegAdagrad * self.bi[index_camada_oculta]
                 self.Adabi[index_camada_oculta] += dAdabi[index_camada_oculta] ** 2
 
-                dAdaWc[index_camada_oculta] += (dWc[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.Wc[index_camada_oculta])
+                dAdaWc[index_camada_oculta] += dWc[index_camada_oculta] + self.lambdaRegAdagrad * self.Wc[index_camada_oculta]
                 self.AdaWc[index_camada_oculta] += dAdaWc[index_camada_oculta] ** 2
 
-                dAdabc[index_camada_oculta] += (dbc[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.bc[index_camada_oculta])
+                dAdabc[index_camada_oculta] += dbc[index_camada_oculta] + self.lambdaRegAdagrad * self.bc[index_camada_oculta]
                 self.Adabc[index_camada_oculta] += dAdabc[index_camada_oculta] ** 2
 
-                dAdaWo[index_camada_oculta] += (dWo[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.Wo[index_camada_oculta])
+                dAdaWo[index_camada_oculta] += dWo[index_camada_oculta] + self.lambdaRegAdagrad * self.Wo[index_camada_oculta]
                 self.AdaWo[index_camada_oculta] += dAdaWo[index_camada_oculta] ** 2
 
-                dAdabo[index_camada_oculta] += (dbo[index_camada_oculta] + self.lambdaRegAdagrad *
-                                                self.bo[index_camada_oculta])
+                dAdabo[index_camada_oculta] += dbo[index_camada_oculta] + self.lambdaRegAdagrad * self.bo[index_camada_oculta]
                 self.Adabo[index_camada_oculta] += dAdabo[index_camada_oculta] ** 2
 
                 if index_entrada_t >= 0:
-                    self.Wf[index_camada_oculta] -= ((self.txAprendizado * dAdaWf[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.AdaWf[index_camada_oculta]) + 1e-7))
-                    self.Wi[index_camada_oculta] -= ((self.txAprendizado * dAdaWi[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.AdaWi[index_camada_oculta]) + 1e-7))
-                    self.Wc[index_camada_oculta] -= ((self.txAprendizado * dAdaWc[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.AdaWc[index_camada_oculta]) + 1e-7))
-                    self.Wo[index_camada_oculta] -= ((self.txAprendizado * dAdaWo[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.AdaWo[index_camada_oculta]) + 1e-7))
-                    self.bf[index_camada_oculta] -= ((self.txAprendizado * dAdabf[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.Adabf[index_camada_oculta]) + 1e-7))
-                    self.bi[index_camada_oculta] -= ((self.txAprendizado * dAdabi[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.Adabi[index_camada_oculta]) + 1e-7))
-                    self.bc[index_camada_oculta] -= ((self.txAprendizado * dAdabc[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.Adabc[index_camada_oculta]) + 1e-7))
-                    self.bo[index_camada_oculta] -= ((self.txAprendizado * dAdabo[index_camada_oculta]) /
-                                                     (numpy.sqrt(self.Adabo[index_camada_oculta]) + 1e-7))
+                    self.Wf[index_camada_oculta] -= (self.txAprendizado * dAdaWf[index_camada_oculta]) / (numpy.sqrt(self.AdaWf[index_camada_oculta]) + 1e-7)
+                    self.Wi[index_camada_oculta] -= (self.txAprendizado * dAdaWi[index_camada_oculta]) / (numpy.sqrt(self.AdaWi[index_camada_oculta]) + 1e-7)
+                    self.Wc[index_camada_oculta] -= (self.txAprendizado * dAdaWc[index_camada_oculta]) / (numpy.sqrt(self.AdaWc[index_camada_oculta]) + 1e-7)
+                    self.Wo[index_camada_oculta] -= (self.txAprendizado * dAdaWo[index_camada_oculta]) / (numpy.sqrt(self.AdaWo[index_camada_oculta]) + 1e-7)
+                    self.bf[index_camada_oculta] -= (self.txAprendizado * dAdabf[index_camada_oculta]) / (numpy.sqrt(self.Adabf[index_camada_oculta]) + 1e-7)
+                    self.bi[index_camada_oculta] -= (self.txAprendizado * dAdabi[index_camada_oculta]) / (numpy.sqrt(self.Adabi[index_camada_oculta]) + 1e-7)
+                    self.bc[index_camada_oculta] -= (self.txAprendizado * dAdabc[index_camada_oculta]) / (numpy.sqrt(self.Adabc[index_camada_oculta]) + 1e-7)
+                    self.bo[index_camada_oculta] -= (self.txAprendizado * dAdabo[index_camada_oculta]) / (numpy.sqrt(self.Adabo[index_camada_oculta]) + 1e-7)
 
                 # dAdaWo = dWo[index_camada_oculta] + self.lambdaRegAdagrad * self.Wo[index_camada_oculta]
                 # self.Wo[index_camada_oculta] -= self.txAprendizado * dWo[index_camada_oculta]
-                # self.bo[index_camada_oculta] -= self.txAprendizado * dbo[index_camada_oculta]
+                #self.bo[index_camada_oculta] -= self.txAprendizado * dbo[index_camada_oculta]
 
     def calcular_erro(self, rotulos: list[list[list]], arrPrevisoes: list[list[list[list]]], isPrintar: bool = True) -> \
     list[list, list]:

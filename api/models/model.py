@@ -13,12 +13,12 @@ class Database:
         try:
             if cls._instance is None:
                 cls._instance = super().__new__(cls)
-                cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1", charset='utf8mb4')
+                cls._instance.conexao = connection.connect(database="footxap", user="root", password="footxap", host="127.0.0.1", charset='utf8mb4')
 
                 while not cls._instance.conexao:
                     time.sleep(0.5)
                     print("tentando 3")
-                    cls._instance.conexao = connection.connect(database="footxap", user="root", password="pudinzinho", host="127.0.0.1", charset='utf8mb4')
+                    cls._instance.conexao = connection.connect(database="footxap", user="root", password="footxap", host="127.0.0.1", charset='utf8mb4')
 
                 newCursonMaxTime = cls._instance.conexao.cursor()
                 newCursonMaxTime.execute("SET max_execution_time = 30")
@@ -209,7 +209,6 @@ class Model(AtualizarDatabase):
         self.database = Database()
         self.atualizarDatabase = super()
         self.regraApiFootBall = RegraAPIFootBall()
-
 
     def insert(self, data: dict) -> int:
         name_table = self.name_table

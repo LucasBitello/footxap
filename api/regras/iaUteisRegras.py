@@ -82,7 +82,7 @@ class IAUteisRegras:
         return derivada_tanh
 
     def sigmoid(self, x) -> list | float:
-        #sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64))
+        # sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64))
         sig = 1 / (1 + numpy.exp(-x, dtype=numpy.float64)) + 1e-7
         return sig
 
