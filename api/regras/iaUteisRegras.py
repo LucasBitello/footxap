@@ -22,12 +22,23 @@ class IAUteisRegras:
         dataset_normalizado: numpy.ndarray[numpy.ndarray] = (dataset - min_valor) / dividendos
         return dataset_normalizado.tolist(), max_valor.tolist(), min_valor.tolist()
 
-    def  desnormalizarValue(self, value_normalizado, max_value, min_value):
+    def desnormalizarValue(self, value_normalizado, max_value, min_value):
         x = value_normalizado * (max_value - min_value) + min_value
         return x
 
-
     def obter_k_folds_temporal(self, arrDados: list, n_folds: int):
+        tamanho_fold = len(arrDados) // n_folds
+        folds = []
+
+        for i in range(n_folds):
+            inicio = i * tamanho_fold
+            fim = (i + 1) * tamanho_fold if i < n_folds - 1 else len(arrDados)
+            fold = arrDados[inicio:fim]
+            folds.append(fold)
+
+        return folds
+
+    def dividir_fold_include_metade(self, arrDados: list, n_folds: int):
         len_k_folds = int(len(arrDados) / n_folds) + 1
         arrDadosCortados = list(arrDados)
         new_k_arr_dados = []

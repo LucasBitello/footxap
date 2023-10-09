@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import pickle
 import random
+import time
+
 import numpy
 
 from copy import deepcopy
@@ -27,255 +29,193 @@ class ModelPrevisao:
 
 class RedeLTSM:
     def preverComRNN(self, id_team_home: int, id_team_away: int = None, id_season: int = None, isPartida=False,
-                     qtdeDados=120, isAmbas: bool = False):
+                     qtdeDados=55, isAmbas: bool = True, isGols: bool = True):
 
         arrIdsTeamSelec = [id_team_home]
         if isAmbas:
             arrIdsTeamSelec.append(id_team_away)
 
-        datasetPartidaRegras = DatasetPartidasRegras()
-        datasetEntrada, datasetRotulo, datasetPrever = datasetPartidaRegras.obter(arrIdsTeam=arrIdsTeamSelec,
-                                                                                  isNormalizarSaidaEmClasse=False,
-                                                                                  isFiltrarTeams=True,
-                                                                                  qtdeDados=qtdeDados,
-                                                                                  isAgruparTeams=True, isForFF=False,
-                                                                                  isDadosSoUmLado=False)
-
-        modelDataRNN = ModelDataRNN(arrEntradas=datasetEntrada, arrRotulos=datasetRotulo, arrDadosPrever=None,
-                                    arrNameFuncAtivacaoCadaOculta=["tanh", "tanh", "tanh", "tanh"],
-                                    arrNameFuncAtivacaoCadaSaida=["sigmoid", "sigmoid", "sigmoid", "sigmoid"])
-
-        newModelData = None
-        isAchouResultado = False
-        arrConfigs = self.gerarConfigs(idRede=2)
-        arrDadosEntradas = modelDataRNN.iaRegras.obter_k_folds_temporal(datasetEntrada, 2)
-        arrDadosRotulos = modelDataRNN.iaRegras.obter_k_folds_temporal(datasetRotulo, 2)
         resulRNN = [0, 0, 0]
+        qtdeDadosA = 120 if isAmbas else 35
+        qtdeDadosB = 130 if isAmbas else 45
+        isAchouResultado = False
+        for i in range(20):
+            datasetPartidaRegras = DatasetPartidasRegras()
+            datasetEntrada, datasetRotulo, datasetPrever = datasetPartidaRegras.obter(arrIdsTeam=arrIdsTeamSelec,
+                                                                                      isNormalizarSaidaEmClasse=True,
+                                                                                      isFiltrarTeams=True,
+                                                                                      qtdeDados=random.randint(qtdeDadosA, qtdeDadosB),
+                                                                                      isAgruparTeams=False,
+                                                                                      isForFF=False,
+                                                                                      isDadosSoUmLado=False,
+                                                                                      isGols=isGols)
+            isAchouResultado = False
+            modelDataRNN = ModelDataRNN(arrEntradas=datasetEntrada, arrRotulos=datasetRotulo, arrDadosPrever=None,
+                                        arrNameFuncAtivacaoCadaOculta=["tanh", "tanh", "tanh", "tanh"],
+                                        arrNameFuncAtivacaoCadaSaida=["sigmoid" if isGols else "softmax", "sigmoid", "sigmoid", "sigmoid",
+                                                                      "sigmoid", "sigmoid"])
 
-        for i in range(25):
+            if len(datasetEntrada) < qtdeDadosA:
+                raise Exception("Sem dado suficientes temos somente: " + str(len(datasetEntrada)))
+            else:
+                print("Vai ser somente com " + str(len(datasetEntrada)))
+
+            arrDadosEntradas = modelDataRNN.iaRegras.obter_k_folds_temporal(datasetEntrada, 2)
+            arrDadosRotulos = modelDataRNN.iaRegras.obter_k_folds_temporal(datasetRotulo, 2)
+
             entradaConcat = arrDadosEntradas[0]
             rotuloConcat = arrDadosRotulos[0]
             config = {}
 
             newModelData = deepcopy(modelDataRNN)
-            newModelData.arr_n_camada_oculta = [26, 10]
-            newModelData.taxa_aprendizado = 0.05
-            newModelData.taxa_regularizacao_l2 = 0.005
-            newModelData.n_epocas = 15000
+            newModelData.arr_n_camada_oculta = [15, 8] \
+                if isGols else [15, 7]
+            newModelData.taxa_aprendizado_culta = [random.uniform(0.01, 0.005) if isGols else random.uniform(0.001, 0.005),
+                                                   random.uniform(0.005, 0.01) if isGols else random.uniform(0.005, 0.01),
+                                                   random.uniform(0.005, 0.01)]
+            newModelData.taxa_regularizacao_l2_oculta = [random.uniform(0.05, 0.1), random.uniform(0.01, 0.05),
+                                                         random.uniform(0.001, 0.01)]
+
+            newModelData.taxa_aprendizado_saida = [random.uniform(0.01, 0.05) if isGols else random.uniform(0.01, 0.05),
+                                                   random.uniform(0.01, 0.05) if isGols else random.uniform(0.01, 0.05),
+                                                   random.uniform(0.03, 0.05) if isGols else random.uniform(0.01, 0.05),
+                                                   random.uniform(0.07, 0.01) if isGols else random.uniform(0.01, 0.05)]
+            newModelData.taxa_regularizacao_l2_saida = [random.uniform(0.00001, 0.0001), random.uniform(0.00001, 0.0001),
+                                                        random.uniform(0.00001, 0.0001), random.uniform(0.00001, 0.0001),
+                                                        random.uniform(0.00001, 0.0001), random.uniform(0.00001, 0.0001),
+                                                        random.uniform(0.00001, 0.0001), random.uniform(0.00001, 0.0001)]
+            newModelData.n_epocas = 5000 if isGols else 5000
             newRede = RNN(modelDataRNN=newModelData)
 
+            estados_ocultos = None
             for iEnt in range(len(arrDadosEntradas)):
                 newRede.modelDataRNN.arr_dados_prever = datasetPrever
                 newRede.modelDataRNN.arr_entradas = entradaConcat
                 newRede.modelDataRNN.arr_rotulos = rotuloConcat
                 resulRNN = newRede.treinar(
-                    isBrekarPorEpocas=True, isAtualizarPesos=True, qtdeDadoValidar=2)
+                    isBrekarPorEpocas=True, isAtualizarPesos=True,
+                    qtdeDadoValidar=1 if iEnt < len(arrDadosEntradas) - 1 else 0,
+                    estados_ocultos_anterior=estados_ocultos)
+
+                for indexReg in range(len(newRede.txAprendizadoSaida)):
+                    newRede.txAprendizadoSaida[indexReg] = (newRede.txAprendizadoSaida[indexReg] * 1.)
+                    newRede.taxa_regularizacao_saida[indexReg] = (newRede.taxa_regularizacao_saida[indexReg] * 1)
+
+                for indexReg in range(len(newRede.txAprendizadoOculta)):
+                    newRede.txAprendizadoOculta[indexReg] = (newRede.txAprendizadoOculta[indexReg] * 1.)
+                    newRede.taxa_regularizacao_oculta[indexReg] = (newRede.taxa_regularizacao_oculta[indexReg] * 1)
+
+                newRede.nEpocas *= 2
 
                 if resulRNN is not False:
+                    estados_ocultos = resulRNN[3][-5:]
+
                     if iEnt < len(arrDadosEntradas) - 1:
-                        entradaConcat = numpy.concatenate((entradaConcat, arrDadosEntradas[iEnt + 1])).tolist()
-                        rotuloConcat = numpy.concatenate((rotuloConcat, arrDadosRotulos[iEnt + 1])).tolist()
+                        """entradaConcat = numpy.concatenate((entradaConcat, arrDadosEntradas[iEnt + 1])).tolist()
+                        rotuloConcat = numpy.concatenate((rotuloConcat, arrDadosRotulos[iEnt + 1])).tolist()"""
+                        entradaConcat = arrDadosEntradas[iEnt + 1]
+                        rotuloConcat = arrDadosRotulos[iEnt + 1]
+                        for i in range(5):
+                            aaa = arrDadosEntradas[iEnt].pop()
+                            bbb = arrDadosRotulos[iEnt].pop()
+
+                            entradaConcat.insert(0, aaa)
+                            rotuloConcat.insert(0, bbb)
+
                     else:
-                        resulRNN = newRede.treinar(
-                            isBrekarPorEpocas=True, isAtualizarPesos=True, qtdeDadoValidar=0)
-                        if resulRNN is not False:
-                            isAchouResultado = True
+                        isAchouResultado = True
                 else:
                     break
 
             if isAchouResultado:
                 break
 
-        #arrConfigs = sorted(arrConfigs, key=lambda x: (sum(x["media_accuracy"])), reverse=False)
+        if not isAchouResultado:
+            print("NÃO FOI POSSIVL ACHAR UM BOM RESULTADO")
+            raise Exception("NÃO FOI POSSIVL ACHAR UM BOM RESULTADO")
+
+        # arrConfigs = sorted(arrConfigs, key=lambda x: (sum(x["media_accuracy"])), reverse=False)
         return resulRNN[2]
 
-    def preverComRNNBkp(self, id_team_home: int, id_team_away: int = None, id_season: int = None, isPartida=False,
-                     qtdeDados=120, isAmbas: bool = False):
+    def preverComFF(self, id_team_home: int, id_team_away: int = None, id_season: int = None, isPartida=False,
+                    qtdeDados=750, qtdeDadosValidar: int = 6, nFolds: int = 1, isAmbas: bool = True):
 
         arrIdsTeamSelec = [id_team_home]
         if isAmbas:
             arrIdsTeamSelec.append(id_team_away)
 
-        datasetPartidaRegras = DatasetPartidasRegras()
-        datasetEntrada, datasetRotulo, datasetPrever = datasetPartidaRegras.obter(arrIdsTeam=arrIdsTeamSelec,
-                                                                                  isNormalizarSaidaEmClasse=False,
-                                                                                  isFiltrarTeams=True,
-                                                                                  qtdeDados=qtdeDados,
-                                                                                  isAgruparTeams=True, isForFF=False,
-                                                                                  isDadosSoUmLado=False)
+        resulFF = [0, 0, 0]
+        qtdeDadosA = 120 if isAmbas else 60
+        qtdeDadosB = 130 if isAmbas else 65
+        for i in range(150):
+            datasetPartidaRegras = DatasetPartidasRegras()
+            datasetEntrada, datasetRotulo, datasetPrever = datasetPartidaRegras.obter(arrIdsTeam=arrIdsTeamSelec,
+                                                                                      isNormalizarSaidaEmClasse=True,
+                                                                                      isFiltrarTeams=True,
+                                                                                      qtdeDados=random.randint(qtdeDadosA, qtdeDadosB),
+                                                                                      isAgruparTeams=True,
+                                                                                      isForFF=False,
+                                                                                      isDadosSoUmLado=False)
 
-        modelDataRNN = ModelDataRNN(arrEntradas=datasetEntrada, arrRotulos=datasetRotulo, arrDadosPrever=None,
-                                    arrNameFuncAtivacaoCadaOculta=["tanh", "tanh", "tanh", "tanh"],
-                                    arrNameFuncAtivacaoCadaSaida=["sigmoid", "sigmoid", "sigmoid", "sigmoid"])
+            modelDataFF = ModelDataFF(arrEntradas=datasetEntrada, arrRotulos=datasetRotulo, arrDadosPrever=None,
+                                      arrNameFuncAtivacaoCadaOculta=["tanh", "tanh", "tanh", "tanh"],
+                                      arrNameFuncAtivacaoCadaSaida=["softmax", "sigmoid", "sigmoid", "sigmoid",
+                                                                    "sigmoid", "sigmoid"])
 
-        newModelData = None
-        arrConfigs = self.gerarConfigs(idRede=2)
-        arrDadosEntradasA = []
-        arrDadosRotulosA = []
-        arrDadosEntradasB = deepcopy(datasetEntrada)
-        arrDadosRotulosB = deepcopy(datasetRotulo)
+            if len(datasetEntrada) < 60:
+                raise Exception("Sem dado suficientes temos somente: " + str(len(datasetEntrada)))
+            else:
+                print("Vai ser somente com " + str(len(datasetEntrada)))
+                time.sleep(3)
 
-        for i in range(int(len(datasetEntrada) * 0.7)):
-            arrayEntradaRemove = datasetEntrada.pop(0)
-            arrayRotuloRemove = datasetRotulo.pop(0)
-            arrDadosEntradasA.append(arrayEntradaRemove)
-            arrDadosRotulosA.append(arrayRotuloRemove)
+            isAchouResultado = False
+            arrDadosEntradas = modelDataFF.iaRegras.obter_k_folds_temporal(datasetEntrada, 3)
+            arrDadosRotulos = modelDataFF.iaRegras.obter_k_folds_temporal(datasetRotulo, 3)
 
-        for config in arrConfigs:
-            newModelData = deepcopy(modelDataRNN)
+            entradaConcat = arrDadosEntradas[0]
+            rotuloConcat = arrDadosRotulos[0]
+            config = {}
 
-            newModelData.arr_n_camada_oculta = config["arr_n_camada_oculta"]
-            newModelData.taxa_aprendizado = config["taxa_aprendizado"]
-            newModelData.taxa_regularizacao_l2 = config["taxa_regularizacao_l2"]
-            newModelData.n_epocas = 1
-            newRede = None
-
-            with open(str(os.path.abspath("./api/regras/class_rnn.txt")), 'rb') as class_rnn:
-                try:
-                    newRede = pickle.load(class_rnn)
-                    if len(newModelData.arr_entradas[0]) != len(newRede.modelDataRNN.arr_entradas[0]):
-                        newRede = RNN(modelDataRNN=newModelData)
-                        print("precisou criar novo arquivo RNN")
-                    else:
-                        newRede = RNN(modelDataRNN=newModelData)
-                        # newRede = newRede.__init__(modelDataFF=newModelData, isNovosPesos=False)
-                        print("Carregou arquivo")
-                except EOFError:
-                    newRede = RNN(modelDataRNN=newModelData)
-                    print("não carregou arquivo RNN")
-
-            #rede = paramEscolhidos["rede"]
-            newRede.nEpocas = 5
-            newRede.modelDataRNN.arr_dados_prever = datasetPrever
-            newRede.modelDataRNN.arr_entradas = arrDadosEntradasA
-            newRede.modelDataRNN.arr_rotulos = arrDadosRotulosA
-            config["media_entropy"], config["media_accuracy"], config["sdf"] = newRede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=False, qtdeDadoValidar=0)
-
-            config["rede"] = deepcopy(newRede)
-
-        arrConfigs = sorted(arrConfigs, key=lambda x: (sum(x["media_accuracy"])), reverse=False)
-
-        for i in arrConfigs:
-            print(i)
-
-        resulRNN = None
-        for i in range(15):
-            paramEscolhidos = arrConfigs[i]
-
-            newRede = paramEscolhidos["rede"]
-            newRede.nEpocas = 15000
-            newRede.modelDataRNN.arr_dados_prever = datasetPrever
-            resulRNN = newRede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True, qtdeDadoValidar=1)
-
-            if resulRNN is not False:
-                newRede.modelDataRNN.arr_entradas = arrDadosEntradasB
-                newRede.modelDataRNN.arr_rotulos = arrDadosRotulosB
-                newRede.nEpocas = 20000
-                resulRNN = newRede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True, qtdeDadoValidar=2)
-
-                if resulRNN is not False:
-                    resulRNN = newRede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True, qtdeDadoValidar=0)
-
-                    if resulRNN is not False:
-                        break
-
-
-        return resulRNN[2]
-
-    def preverComFF(self, id_team_home: int, id_team_away: int = None, id_season: int = None, isPartida=False,
-                    qtdeDados=750, qtdeDadosValidar: int = 6, nFolds: int = 1):
-
-        datasetPartidaRegras = DatasetPartidasRegras()
-        datasetEntrada, datasetRotulo, datasetPrever = datasetPartidaRegras.obter(arrIdsTeam=[id_team_home, id_team_away],
-                                                                                  isNormalizarSaidaEmClasse=False,
-                                                                                  isFiltrarTeams=True,
-                                                                                  qtdeDados=qtdeDados,
-                                                                                  isAgruparTeams=False, isForFF=True,
-                                                                                  isDadosSoUmLado=False)
-
-        modelDataFF = ModelDataFF(arrEntradas=datasetEntrada, arrRotulos=datasetRotulo, arrDadosPrever=None,
-                                  arrNameFuncAtivacaoCadaOculta=["tanh", "tanh", "tanh", "tanh", "tanh", "tanh"],
-                                  arrNameFuncAtivacaoCadaSaida=["sigmoid", "sigmoid", "sigmoid", "sigmoid"])
-
-        newModelData = None
-        arrConfigs = self.gerarConfigs(idRede=1)
-
-        for config in arrConfigs:
             newModelData = deepcopy(modelDataFF)
-            newModelData.arr_n_camada_oculta = config["arr_n_camada_oculta"]
-            newModelData.taxa_aprendizado = config["taxa_aprendizado"]
-            newModelData.taxa_regularizacao_l2 = config["taxa_regularizacao_l2"]
-            newModelData.n_epocas = 1
-            newRede = None
+            newModelData.arr_n_camada_oculta = [18, 9]
+            newModelData.taxa_aprendizado_culta = [0.01, 0.01, 0.001]
+            newModelData.taxa_regularizacao_l2_oculta = [0.000005, 0.00000001, 0.0001]
+            newModelData.taxa_aprendizado_saida = [0.005, 0.001, 0.001, 0.003, 0.005, 0.008]
+            newModelData.taxa_regularizacao_l2_saida = [0.00000003, 0.00000025, 0.00000025, 0.000000004, 0.0001, 0.0008]
+            newModelData.n_epocas = 2500
+            newRede = FF(modelDataFF=newModelData)
 
-            with open(str(os.path.abspath("./api/regras/class_ff.txt")), 'rb') as class_ff:
-                try:
-                    newRede = pickle.load(class_ff)
-                    if len(newModelData.arr_entradas[0]) != len(newRede.modelDataFF.arr_entradas[0]):
-                        newRede = FF(modelDataFF=newModelData)
-                        print("precisou criar novo arquivo FF")
-                    else:
-                        newRede = FF(modelDataFF=newModelData)
-                        # newRede = newRede.__init__(modelDataFF=newModelData, isNovosPesos=False)
-                        print("Carregou arquivo")
-                except EOFError:
-                    newRede = FF(modelDataFF=newModelData)
-                    print("não carregou arquivo FF")
+            for iEnt in range(len(arrDadosEntradas)):
+                newRede.modelDataFF.arr_dados_prever = datasetPrever
+                newRede.modelDataFF.arr_entradas = entradaConcat
+                newRede.modelDataFF.arr_rotulos = rotuloConcat
+                resulFF = newRede.treinar(
+                    isBrekarPorEpocas=True, isAtualizarPesos=True,
+                    qtdeDadoValidar=1 if iEnt < len(arrDadosEntradas) - 1 else 0, n_folds=1)
 
-            """newRede.nEpocas = 1
-            config["media_entropy"], config["media_accuracy"], resul = newRede.treinar(
-                isBrekarPorEpocas=True, isAtualizarPesos=False, qtdeDadoValidar=qtdeDadosValidar, n_folds=nFolds)
-            config["rede"] = deepcopy(newRede)"""
+                for indexReg in range(len(newRede.txAprendizadoSaida)):
+                    newRede.txAprendizadoSaida[indexReg] = (newRede.txAprendizadoSaida[indexReg] * 0.5)
+                    newRede.taxa_regularizacao_saida[indexReg] = (newRede.taxa_regularizacao_saida[indexReg] * 0.5)
 
-            rede = newRede
-            rede.nEpocas = 10000
-            rede.modelDataFF.arr_dados_prever = datasetPrever
-            resulFF = rede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True,
-                                   qtdeDadoValidar=qtdeDadosValidar, n_folds=nFolds)
+                for indexReg in range(len(newRede.txAprendizadoOculta)):
+                    newRede.txAprendizadoOculta[indexReg] = (newRede.txAprendizadoOculta[indexReg] * 0.5)
+                    newRede.taxa_regularizacao_oculta[indexReg] = (newRede.taxa_regularizacao_oculta[indexReg] * 0.5)
 
-            if resulFF is not False:
-                with open("./api/regras/class_ff.txt", 'wb') as class_ff:
-                    pickle.dump(rede, class_ff)
-
-                resulFF = rede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True,
-                                       qtdeDadoValidar=qtdeDadosValidar, n_folds=nFolds)
-
-                resulFF = rede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True,
-                                       qtdeDadoValidar=0, n_folds=nFolds, isForcarTreino=True)
+                newRede.nEpocas *= 2
 
                 if resulFF is not False:
+                    if iEnt < len(arrDadosEntradas) - 1:
+                        entradaConcat = numpy.concatenate((entradaConcat, arrDadosEntradas[iEnt + 1])).tolist()
+                        rotuloConcat = numpy.concatenate((rotuloConcat, arrDadosRotulos[iEnt + 1])).tolist()
+                    else:
+                        isAchouResultado = True
+                else:
                     break
-            else:
-                print("is criou novos arquivos")
-                with open("./api/regras/class_ff.txt", 'wb') as class_ff:
-                    pickle.dump(FF(modelDataFF=newModelData, isNovosPesos=True), class_ff)
 
-        return resulFF[2]
-
-        arrConfigs = sorted(arrConfigs, key=lambda x: (x["media_entropy"][0]), reverse=False)
-
-        for i in arrConfigs:
-            print(i)
-
-        resulFF = False
-        for i in range(15):
-            paramEscolhidos = arrConfigs[i]
-
-            rede = paramEscolhidos["rede"]
-            rede.nEpocas = 7000
-            rede.modelDataFF.arr_dados_prever = datasetPrever
-            resulFF = rede.treinar(isBrekarPorEpocas=True, isAtualizarPesos=True,
-                                   qtdeDadoValidar=qtdeDadosValidar, n_folds=nFolds)
-
-            if resulFF is not False:
-                with open("./api/regras/class_ff.txt", 'wb') as class_ff:
-                    pickle.dump(rede, class_ff)
+            if isAchouResultado:
                 break
-            else:
-                print("is criou novos arquivos")
-                with open("./api/regras/class_ff.txt", 'wb') as class_ff:
-                    pickle.dump(FF(modelDataFF=newModelData, isNovosPesos=True), class_ff)
 
+        # arrConfigs = sorted(arrConfigs, key=lambda x: (sum(x["media_accuracy"])), reverse=False)
         return resulFF[2]
 
     @staticmethod
@@ -311,10 +251,10 @@ class RedeLTSM:
         randNeuroniosB = 22
 
         randTxAprendizadoA = 0.02 if idRede == 1 else 0.05
-        randTxAprendizadoB = 0.02 if idRede == 1 else 0.05
+        randTxAprendizadoB = 0.02 if idRede == 1 else 0.1
 
-        randTxRegularizacaoA = 0.0001 if idRede == 1 else 0.05
-        randTxRegularizacaoB = 0.0001 if idRede == 1 else 0.05
+        randTxRegularizacaoA = 0.0001 if idRede == 1 else 0.005
+        randTxRegularizacaoB = 0.0001 if idRede == 1 else 0.005
 
         arrayCamadas = self.initArrayUniform(randeNCamadasA, randeNCamadasB, nRanges, isEmbaralhar=True)
         arrayCamadasNormalizadas = []

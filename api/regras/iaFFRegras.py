@@ -5,15 +5,22 @@ from sklearn.model_selection import KFold
 class ModelDataFF:
     def __init__(self, arrEntradas: list[list], arrRotulos: list[list[list]],
                  arrDadosPrever: list[list] = None, arrNameFuncAtivacaoCadaOculta: list[str] = [],
-                 arrNameFuncAtivacaoCadaSaida: list[str] = []):
+                 arrNameFuncAtivacaoCadaSaida: list[str] = [],
+                 arrValoresTaxaAprendizadoOculta: list[float] = [],
+                 arrValoresTaxaAprendizadoSaida: list[float] = [],
+                 arrValoresTaxaL2Oculta: list[float] = [],
+                 arrValoresTaxaL2Saida: list[float] = []):
 
         if len(arrRotulos[0][0]) == 0:
             raise "reveja os rótulos nao é uma list[list[list]]"
 
         self.iaRegras = IAUteisRegras()
         self.n_epocas: int = 1500
-        self.taxa_aprendizado: float = 0.05
-        self.taxa_regularizacao_l2: float = 0.001
+
+        self.taxa_aprendizado_culta: list[float] = arrValoresTaxaAprendizadoOculta
+        self.taxa_aprendizado_saida: list[float] = arrValoresTaxaAprendizadoSaida
+        self.taxa_regularizacao_l2_oculta: list[float] = arrValoresTaxaL2Oculta
+        self.taxa_regularizacao_l2_saida: list[float] = arrValoresTaxaL2Saida
 
         self.arr_n_camada_oculta: list[int] = [len(arrEntradas[0])]
         self.nNeuroniosEntrada: int = len(arrEntradas[0])
@@ -81,11 +88,14 @@ class FF:
     def __init__(self, modelDataFF: ModelDataFF, isNovosPesos: bool = True):
         self.modelDataFF = modelDataFF
         self.nEpocas = modelDataFF.n_epocas
-        self.txAprendizado = modelDataFF.taxa_aprendizado
         self.arrCamadaSaida = modelDataFF.arrCamadasSaida
         self.nNeuroniosEntrada = modelDataFF.nNeuroniosEntrada
         self.arrNEstadosOcultos = modelDataFF.arr_n_camada_oculta
-        self.lambdaRegAdagrad = modelDataFF.taxa_regularizacao_l2
+
+        self.txAprendizadoOculta = modelDataFF.taxa_aprendizado_culta
+        self.txAprendizadoSaida = modelDataFF.taxa_aprendizado_saida
+        self.taxa_regularizacao_oculta = modelDataFF.taxa_regularizacao_l2_oculta
+        self.taxa_regularizacao_saida = modelDataFF.taxa_regularizacao_l2_saida
 
         self.media_accuracy: float = 0.0
         self.media_entropy: float = 0.0
@@ -206,7 +216,7 @@ class FF:
             if len(delta_o[indexSaida]) == 0:
                 delta_o[indexSaida] = erro_o * funcDerivada(saidas_rede[indexSaida])
             else:
-                delta_o[indexSaida] += erro_o * funcDerivada(saidas_rede[indexSaida])
+                delta_o[indexSaida] = erro_o * funcDerivada(saidas_rede[indexSaida])
 
             dWo[indexSaida] = numpy.dot(estados_ocultos[-1], numpy.transpose(delta_o[indexSaida]))
             dbo[indexSaida] = numpy.transpose([numpy.sum(erro_o, axis=1)])
@@ -217,13 +227,13 @@ class FF:
             else:
                 delta_h[-1] += numpy.dot(self.Wo[indexSaida], erro_o) * derivAtivacaoOculta(estados_ocultos[-1])
 
-            dAdaWo[indexSaida] = dWo[indexSaida] + self.lambdaRegAdagrad * self.Wo[indexSaida]
+            dAdaWo[indexSaida] = dWo[indexSaida] + self.taxa_regularizacao_saida[indexSaida] * self.Wo[indexSaida]
             self.AdaWo[indexSaida] = dAdaWo[indexSaida] ** 2
-            self.Wo[indexSaida] -= (self.txAprendizado * dAdaWo[indexSaida]) / (numpy.sqrt(self.AdaWo[indexSaida]) + 1e-9)
+            self.Wo[indexSaida] -= (self.txAprendizadoSaida[indexSaida] * dAdaWo[indexSaida]) / (numpy.sqrt(self.AdaWo[indexSaida]) + 1e-9)
 
-            dAdabo[indexSaida] = dbo[indexSaida] + self.lambdaRegAdagrad * self.bo[indexSaida]
+            dAdabo[indexSaida] = dbo[indexSaida] + self.taxa_regularizacao_saida[indexSaida] * self.bo[indexSaida]
             self.Adabo[indexSaida] += dAdabo[indexSaida] ** 2
-            self.bo[indexSaida] -= (self.txAprendizado * dAdabo[indexSaida]) / (numpy.sqrt(self.Adabo[indexSaida]) + 1e-9)
+            self.bo[indexSaida] -= (self.txAprendizadoSaida[indexSaida] * dAdabo[indexSaida]) / (numpy.sqrt(self.Adabo[indexSaida]) + 1e-9)
 
         for indexOculto in range(len(self.arrNEstadosOcultos) - 1, -1, -1):
             derivAtivacaoOculta = self.modelDataFF.arrFuncAtivacaoCadaOculta[-1][1]
@@ -244,13 +254,13 @@ class FF:
                     delta_h[indexOculto - 1] += (numpy.dot(self.Wh[indexOculto], delta_h[indexOculto]) *
                                                  derivAtivacaoOculta(estados_ocultos[indexOculto - 1]))
 
-            dAdaWh[indexOculto] = dWh[indexOculto] + self.lambdaRegAdagrad * self.Wh[indexOculto]
+            dAdaWh[indexOculto] = dWh[indexOculto] + self.taxa_regularizacao_oculta[indexOculto] * self.Wh[indexOculto]
             self.AdaWh[indexOculto] = dAdaWh[indexOculto] ** 2
-            self.Wh[indexOculto] -= (self.txAprendizado * dAdaWh[indexOculto]) / (numpy.sqrt(self.AdaWh[indexOculto]) + 1e-9)
+            self.Wh[indexOculto] -= (self.txAprendizadoOculta[indexOculto] * dAdaWh[indexOculto]) / (numpy.sqrt(self.AdaWh[indexOculto]) + 1e-9)
 
-            dAdabh[indexOculto] = dbh[indexOculto] + self.lambdaRegAdagrad * self.bh[indexOculto]
+            dAdabh[indexOculto] = dbh[indexOculto] + self.taxa_regularizacao_oculta[indexOculto] * self.bh[indexOculto]
             self.Adabh[indexOculto] += dAdabh[indexOculto] ** 2
-            self.bh[indexOculto] -= (self.txAprendizado * dAdabh[indexOculto]) / (numpy.sqrt(self.Adabh[indexOculto]) + 1e-9)
+            self.bh[indexOculto] -= (self.txAprendizadoOculta[indexOculto] * dAdabh[indexOculto]) / (numpy.sqrt(self.Adabh[indexOculto]) + 1e-9)
 
     def calcular_erro(self, rotulos: list[list[list]], arrPrevisoes:list[list[list[list]]], isPrintar: bool = True) -> list[list, list, list]:
         arrEntropy, arrAcurracy = [], []
@@ -334,13 +344,15 @@ class FF:
         saidaNorm = []
 
         for indexEntrada in range(len(entradas)):
+            saidaB = []
             for indexCamadaSaida in range(len(self.arrCamadaSaida)):
-                saidaNorm.append([saida[indexEntrada] for saida in arrSaidas[indexCamadaSaida]])
+                saidaB.append([saida[indexEntrada] for saida in arrSaidas[indexCamadaSaida]])
+            saidaNorm.append(saidaB)
 
         return saidaNorm
 
     def treinar(self, isBrekarPorEpocas=True, isAtualizarPesos=True, nEpocas=None, qtdeDadoValidar: int = 0,
-                n_folds: int = 5, isForcarTreino: bool = False):
+                n_folds: int = 3, isForcarTreino: bool = False):
 
         arrEntradas = deepcopy(self.modelDataFF.arr_entradas)
         arrRotulos = deepcopy(self.modelDataFF.arr_rotulos)
@@ -396,8 +408,8 @@ class FF:
                     arrDadosRotulos_v.append(arrRotulos_nf[i_fold])
 
                     if i % 100 == 0:
-                        print(i, "de", nEpocas, ", txAprendizado: ", self.txAprendizado,
-                              ", L2: ", self.lambdaRegAdagrad, ", qtdeDados: ", len(arrEntradas),
+                        print(i, "de", nEpocas, ", txAprendizado: ", str(self.txAprendizadoSaida) + str(self.txAprendizadoOculta),
+                              ", L2: ", str(self.taxa_regularizacao_saida) + str(self.taxa_regularizacao_oculta), ", qtdeDados: ", len(arrEntradas),
                               ", n_folds:", n_folds, ", camadas: ", self.arrNEstadosOcultos, ", N_len-etrada: ",
                               len(arrEntradas[0]))
                     media_entripy, media_acurracy, acertos_v = self.calcular_erro(rotulos=arrDadosRotulos_v,
@@ -406,8 +418,8 @@ class FF:
                     arrArrSaidas_v = []
                     arrDadosRotulos_v = []
 
-                    if ((sum(media_acurracy) / len(media_acurracy) >= 1 and n_folds >= 2) or
-                        (sum(media_acurracy) / len(media_acurracy) >= 1 and n_folds == 1)):
+                    if ((sum(media_acurracy) / len(media_acurracy) >= 0.95 and n_folds >= 2) or
+                        (sum(media_acurracy) / len(media_acurracy) >= 0.95 and n_folds == 1)):
                         isValidarBom = True
                     else:
                         isValidarBom = False
@@ -424,7 +436,7 @@ class FF:
                                                                                     arrPrevisoes=[saida_validar_v],
                                                                                     isPrintar=i % 100 == 0)
 
-            if ((sum(self.media_accuracy) / len(self.media_accuracy) >= 0.5 and isValidarBom and not isForcarTreino) or
+            if ((sum(self.media_accuracy) / len(self.media_accuracy) >= 1 and isValidarBom and not isForcarTreino) or
                     (sum(self.media_accuracy) / len(self.media_accuracy) >= 1 and isValidarBom and isForcarTreino)):
                 if self.modelDataFF.arr_dados_prever is not None:
                     resul_prev = self.prever(entradas=self.modelDataFF.arr_dados_prever)

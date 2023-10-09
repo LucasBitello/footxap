@@ -400,10 +400,15 @@ async function fazerRequisicaoEstatisticas(name_id_div, id_season, id_team, is_h
     div_estatisticas.classList.add("margin-horizontal-15px")
     div_estatisticas.classList.add("margin-vertical-15px")
 
+    console.log(arrTeamsEstatisticas)
+
     if(arrTeamsEstatisticas.length >= 2){
         alert("eitaa BB, retornando mais doque devia para as Estatisticas")
         throw new Error("eitaa BB, retornando mais doque devia para as Estatisticas")
+    }else if(arrTeamsEstatisticas.length === 0){
+        return
     }
+
 
     let teamStatistics = arrTeamsEstatisticas[0]
     let arrTeamEstatisticas = teamStatistics["arr_dataset_data_fixture_team"].slice(-1)

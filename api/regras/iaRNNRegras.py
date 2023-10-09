@@ -11,15 +11,21 @@ from api.regras.iaUteisRegras import IAUteisRegras
 class ModelDataRNN:
     def __init__(self, arrEntradas: list[list], arrRotulos: list[list[list]],
                  arrDadosPrever: list[list[list]] = None, arrNameFuncAtivacaoCadaOculta: list[str] = [],
-                 arrNameFuncAtivacaoCadaSaida: list[str] = []):
+                 arrNameFuncAtivacaoCadaSaida: list[str] = [],
+                 arrValoresTaxaAprendizadoOculta: list[float] = [],
+                 arrValoresTaxaAprendizadoSaida: list[float] = [],
+                 arrValoresTaxaL2Oculta: list[float] = [],
+                 arrValoresTaxaL2Saida: list[float] = []):
 
         if len(arrRotulos[0][0]) == 0:
-            raise "reveja os rótulos nao é uma list[list[list]]"
+            raise Exception("reveja os rótulos nao é uma list[list[list]]")
 
         self.iaRegras = IAUteisRegras()
         self.n_epocas: int = 25000
-        self.taxa_aprendizado: float = 0.1
-        self.taxa_regularizacao_l2: float = 0.001
+        self.taxa_aprendizado_culta: list[float] = arrValoresTaxaAprendizadoOculta
+        self.taxa_aprendizado_saida: list[float] = arrValoresTaxaAprendizadoSaida
+        self.taxa_regularizacao_l2_oculta: list[float] = arrValoresTaxaL2Oculta
+        self.taxa_regularizacao_l2_saida: list[float] = arrValoresTaxaL2Saida
 
         self.arr_n_camada_oculta: list[int] = [len(arrEntradas[0])]
         self.nNeuroniosEntrada: int = len(arrEntradas[0])
@@ -82,8 +88,10 @@ class RNN:
         self.nNeuroniosEntrada = modelDataRNN.nNeuroniosEntrada
         self.arrNCamadasOcultas = modelDataRNN.arr_n_camada_oculta
         self.arrCamadasSaida = modelDataRNN.arrCamadasSaida
-        self.txAprendizado = modelDataRNN.taxa_aprendizado
-        self.taxa_regularizacao = modelDataRNN.taxa_regularizacao_l2
+        self.txAprendizadoOculta = modelDataRNN.taxa_aprendizado_culta
+        self.txAprendizadoSaida = modelDataRNN.taxa_aprendizado_saida
+        self.taxa_regularizacao_oculta = modelDataRNN.taxa_regularizacao_l2_oculta
+        self.taxa_regularizacao_saida = modelDataRNN.taxa_regularizacao_l2_saida
         self.nEpocas = modelDataRNN.n_epocas
         self.media_entropy = 0
         self.media_accuracy = 0
@@ -170,19 +178,22 @@ class RNN:
 
     def forward(self, entradas: list, estado_oculto_anterior: list = None):
         arrSaidas = []
-        arrEstadosOcultos = []
-
+        arrEstadosOcultos = [] if estado_oculto_anterior is None else estado_oculto_anterior
+        len_estados_cultos_anterior = 0 if estado_oculto_anterior is None else len(estado_oculto_anterior)
         for indexEntrada in range(len(entradas)):
             entrada = entradas[indexEntrada]
             entrada_t = numpy.transpose([entrada])
-            arrEstadosOcultos.append([])
+            if estado_oculto_anterior is None or indexEntrada > len_estados_cultos_anterior - 1:
+                arrEstadosOcultos.append([])
 
             for indexCamadaOculta in range(len(self.arrNCamadasOcultas)):
                 funcAtivacaoOculta = self.modelDataRNN.arrFuncAtivacaoCamadaOculta[indexCamadaOculta][0]
 
                 if indexEntrada == 0:
-                    estado_oculto_t = numpy.transpose([numpy.zeros(self.arrNCamadasOcultas[indexCamadaOculta])]) \
-                        if estado_oculto_anterior is None else estado_oculto_anterior[indexEntrada][indexCamadaOculta]
+                    if estado_oculto_anterior is None:
+                        estado_oculto_t = numpy.transpose([numpy.zeros(self.arrNCamadasOcultas[indexCamadaOculta])])
+                    else:
+                        estado_oculto_t = estado_oculto_anterior[indexEntrada][indexCamadaOculta]
                 else:
                     estado_oculto_t = arrEstadosOcultos[indexEntrada - 1][indexCamadaOculta]
 
@@ -197,7 +208,8 @@ class RNN:
                 sum_dot_U_W = dot_W + dot_U
                 estado_oculto_n = funcAtivacaoOculta(sum_dot_U_W)
 
-                arrEstadosOcultos[indexEntrada].append(estado_oculto_n)
+                if estado_oculto_anterior is None or indexEntrada > len_estados_cultos_anterior - 1:
+                    arrEstadosOcultos[indexEntrada].append(estado_oculto_n)
 
             arrSaidas_t = []
 
@@ -247,9 +259,10 @@ class RNN:
                 # self.matriz_Vb[index_camada_saida] -= self.txAprendizado * delta_Vb[index_camada_saida] / \
                 # (numpy.sqrt(self.matriz_adagrad_Vb[index_camada_saida]) + 1e-9)
 
-                delta_V_regularized = delta_V[index_camada_saida] + self.taxa_regularizacao * self.matriz_V[index_camada_saida]
+                delta_V_regularized = (delta_V[index_camada_saida] + self.taxa_regularizacao_saida[index_camada_saida] *
+                                       self.matriz_V[index_camada_saida])
                 self.matriz_adagrad_V[index_camada_saida] += delta_V[index_camada_saida] ** 2
-                self.matriz_V[index_camada_saida] -= (self.txAprendizado * delta_V_regularized) / \
+                self.matriz_V[index_camada_saida] -= (self.txAprendizadoSaida[index_camada_saida] * delta_V_regularized) / \
                                                      (numpy.sqrt(self.matriz_adagrad_V[index_camada_saida]) + 1e-7)
 
             for index_camada_oculta in reversed(range(len(self.arrNCamadasOcultas))):
@@ -274,24 +287,28 @@ class RNN:
                     deriv_delta_oculto = funcDerivadaOculta(numpy.transpose(estado_oculto_camada_anterior))
                     delta_oculto[index_camada_oculta - 1] = dot_delta_oculto * deriv_delta_oculto
 
-                delta_W_regularized = delta_W[index_camada_oculta] + self.taxa_regularizacao * self.matriz_W[index_camada_oculta]
+                delta_W_regularized = (delta_W[index_camada_oculta] + self.taxa_regularizacao_oculta[index_camada_oculta]
+                                       * self.matriz_W[index_camada_oculta])
                 self.matriz_adagrad_W[index_camada_oculta] += self.matriz_W[index_camada_oculta] ** 2
-                self.matriz_W[index_camada_oculta] -= (self.txAprendizado * delta_W_regularized) / \
+                self.matriz_W[index_camada_oculta] -= (self.txAprendizadoOculta[index_camada_oculta] * delta_W_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_W[index_camada_oculta]) + 1e-7)
 
-                delta_Wb_regularized = delta_Wb[index_camada_oculta] + self.taxa_regularizacao * self.matriz_Wb[index_camada_oculta]
+                delta_Wb_regularized = (delta_Wb[index_camada_oculta] + self.taxa_regularizacao_oculta[index_camada_oculta]
+                                        * self.matriz_Wb[index_camada_oculta])
                 self.matriz_adagrad_Wb[index_camada_oculta] += self.matriz_Wb[index_camada_oculta] ** 2
-                self.matriz_Wb[index_camada_oculta] -= (self.txAprendizado * delta_Wb_regularized) / \
+                self.matriz_Wb[index_camada_oculta] -= (self.txAprendizadoOculta[index_camada_oculta] * delta_Wb_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_Wb[index_camada_oculta]) + 1e-7)
 
-                delta_U_regularized = delta_U[index_camada_oculta] + self.taxa_regularizacao * self.matriz_U[index_camada_oculta]
+                delta_U_regularized = (delta_U[index_camada_oculta] + self.taxa_regularizacao_oculta[index_camada_oculta]
+                                       * self.matriz_U[index_camada_oculta])
                 self.matriz_adagrad_U[index_camada_oculta] += delta_U_regularized ** 2
-                self.matriz_U[index_camada_oculta] -= (self.txAprendizado * delta_U_regularized) / \
+                self.matriz_U[index_camada_oculta] -= (self.txAprendizadoOculta[index_camada_oculta] * delta_U_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_U[index_camada_oculta]) + 1e-7)
 
-                delta_Ub_regularized = delta_Ub[index_camada_oculta] + self.taxa_regularizacao * self.matriz_Ub[index_camada_oculta]
+                delta_Ub_regularized = (delta_Ub[index_camada_oculta] + self.taxa_regularizacao_oculta[index_camada_oculta]
+                                        * self.matriz_Ub[index_camada_oculta])
                 self.matriz_adagrad_Ub[index_camada_oculta] += self.matriz_Ub[index_camada_oculta] ** 2
-                self.matriz_Ub[index_camada_oculta] -= (self.txAprendizado * delta_Ub_regularized) / \
+                self.matriz_Ub[index_camada_oculta] -= (self.txAprendizadoOculta[index_camada_oculta] * delta_Ub_regularized) / \
                                                       (numpy.sqrt(self.matriz_adagrad_Ub[index_camada_oculta]) + 1e-7)
 
     def calcular_erro(self, rotulos: list[list[list]], arrPrevisoes: list[list[list[list]]], isPrintar: bool = True) -> \
@@ -367,7 +384,8 @@ class RNN:
         return mediaEntropy, mediaAcurracy
 
     def treinar(self, isBrekarPorEpocas: bool = True, isAtualizarPesos: bool = True, qtdeDadoValidar: int = 2,
-                n_folds: int = 5, isRecursiva: bool = False, isForcarTreino: bool = False) -> tuple[list, list, list] | bool:
+                n_folds: int = 5, isRecursiva: bool = False, isForcarTreino: bool = False,
+                estados_ocultos_anterior: list = None) -> tuple[list, list, list] | bool:
 
         nEpoca = 0
         nEpocaValidacao = 0
@@ -393,19 +411,33 @@ class RNN:
         previsao = []
         while not isBrekarWhile:
             nEpoca += 1
-            previsoes, estados_ocultos = self.forward(entradas=arrEntradas_t)
+
+            if nEpoca % 2500 == 0:
+                for indexReg in range(len(self.txAprendizadoSaida)):
+                    self.txAprendizadoSaida[indexReg] = (self.txAprendizadoSaida[indexReg] * 1.0)
+                    self.taxa_regularizacao_saida[indexReg] = (self.taxa_regularizacao_saida[indexReg] * 0.5)
+
+                for indexReg in range(len(self.taxa_regularizacao_oculta)):
+                    self.txAprendizadoOculta[indexReg] = (self.txAprendizadoOculta[indexReg] * 1.0)
+                    self.taxa_regularizacao_oculta[indexReg] = (self.taxa_regularizacao_oculta[indexReg] * 0.5)
+
+            if nEpoca == 1 and estados_ocultos_anterior is not None:
+                previsoes, estados_ocultos = self.forward(entradas=arrEntradas_t,
+                                                          estado_oculto_anterior=estados_ocultos_anterior)
+            else:
+                previsoes, estados_ocultos = self.forward(entradas=arrEntradas_t)
             arrArrSaidas.append(previsoes)
 
             if nEpoca % 100 == 0:
-                print(nEpoca, "de", self.nEpocas, ", txAprendizado: ", self.txAprendizado,
-                      ", L2: ", self.taxa_regularizacao, ", qtdeDados: ", len(arrEntradas),
+                print(nEpoca, "de", self.nEpocas, ", txAprendizado: ", str(self.txAprendizadoSaida),
+                      ", L2: ", str(self.taxa_regularizacao_saida), ", qtdeDados: ", len(arrEntradas),
                       ", camadas: ", self.arrNCamadasOcultas, ", nEntrada: ", len(arrEntradas[0]))
 
             media_entropy, media_accuracy = self.calcular_erro(rotulos=arrRotulos_t, arrPrevisoes=arrArrSaidas,
                                                                isPrintar=nEpoca % 100 == 0)
             arrArrSaidas = []
 
-            if sum(media_accuracy) / len(media_accuracy) >= 0.95:
+            if sum(media_accuracy) / len(media_accuracy) >= 1:
                 isAcuraciaBoa = True
             else:
                 isAcuraciaBoa = False
@@ -424,18 +456,21 @@ class RNN:
                 media_entropy_v, media_accuracy_v = self.calcular_erro(rotulos=arrRotulos_v, arrPrevisoes=[previsoes_v],
                                                                        isPrintar=nEpoca % 10 == 0)
 
-                if ((sum(media_accuracy_v) / len(media_accuracy_v) >= 0.5 and not isForcarTreino) or
+                if ((sum(media_accuracy_v) / len(media_accuracy_v) >= 1 and not isForcarTreino) or
                         (isForcarTreino and (sum(media_accuracy_v) / len(media_accuracy_v) >= 1))):
                     if self.modelDataRNN.arr_dados_prever is not None:
 
                         previsao = self.forward(entradas=self.modelDataRNN.arr_dados_prever,
-                                                estado_oculto_anterior=[estados_ocultos_v[-1]])[0]
+                                                estado_oculto_anterior=[estados_ocultos_v[-1]])
 
                         if nEpoca == self.nEpocas:
-                            for prev in previsao:
+                            for prev in previsao[0]:
                                 print("Previsão: ", [a for a in prev])
+
+                        for eov in estados_ocultos_v:
+                            estados_ocultos.append(eov)
                         break
-                elif sum(media_accuracy) == 1:
+                elif sum(media_accuracy) / len(media_accuracy) == 1:  # and nEpoca >= (self.nEpocas * 0.5):
                     return False
 
             if isBrekarPorEpocas and nEpoca == self.nEpocas:
@@ -452,4 +487,4 @@ class RNN:
         self.media_entropy = media_entropy
         self.media_accuracy = media_accuracy
 
-        return media_entropy, media_accuracy, previsao
+        return media_entropy, media_accuracy, previsao[0], estados_ocultos

@@ -64,6 +64,8 @@ async function callGETAPI(params, isShowLoader = true, isMostrarMensagem = false
         if (isShowLoader){
             document.body.removeChild(loader);
         }
+        const result = new Audio(URL_BASE + "/static/js/msg.mp3")
+        result.play()
 
         alert("Ops alguém derramou café na minha placa e não consegui processar oque você pediu.")
     }

@@ -1,0 +1,400 @@
+Prevendo Jogo: San Martin Tucuman VS Almirante Brown
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-08 14:17:45
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.13;  1: 0.42;  2: 0.41;  3: 0.00;  4: 0.04;  ]
+As probabilidades são: [0: 0.00;  1: 0.95;  2: 0.00;  3: 0.00;  4: 0.04;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palestino VS Colo Colo
+Pais: Chile - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-08 14:24:18
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.06;  3: 0.94;  4: 0.00;  ]
+As probabilidades são: [0: 0.86;  1: 0.01;  2: 0.12;  3: 0.00;  4: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Aarhus VS FC Copenhagen
+Pais: Denmark - Liga: Superliga - Season: 2023
+Data da analise: 2023-10-08 14:27:59
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.94;  3: 0.02;  4: 0.03;  ]
+As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.97;  3: 0.01;  4: 0.01;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: El Nacional VS Mushuc Runa SC
+Pais: Ecuador - Liga: Liga Pro - Season: 2023
+Data da analise: 2023-10-08 14:33:00
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.01;  1: 0.01;  2: 0.98;  3: 0.00;  4: 0.00;  ]
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.93;  3: 0.00;  4: 0.06;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Toluca VS Club Queretaro
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-08 14:37:07
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.96;  1: 0.00;  2: 0.02;  3: 0.01;  4: 0.01;  ]
+As probabilidades são: [0: 0.05;  1: 0.00;  2: 0.07;  3: 0.66;  4: 0.21;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Atletico Grau VS Alianza Atletico
+Pais: Peru - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-08 14:39:28
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.97;  1: 0.01;  2: 0.01;  3: 0.00;  4: 0.01;  ]
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.01;  3: 0.98;  4: 0.02;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Defensores Unidos VS Flandria
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-08 14:42:52
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.01;  1: 0.00;  2: 0.42;  3: 0.57;  4: 0.00;  ]
+As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.00;  3: 0.98;  4: 0.01;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Aldosivi VS Deportivo Maipu
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-08 14:46:30
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.01;  1: 0.01;  2: 0.41;  3: 0.56;  4: 0.01;  ]
+As probabilidades são: [0: 0.24;  1: 0.01;  2: 0.67;  3: 0.02;  4: 0.06;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Deportivo Riestra VS Ferro Carril Oeste
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-08 14:48:18
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.91;  2: 0.00;  3: 0.07;  4: 0.01;  ]
+As probabilidades são: [0: 0.05;  1: 0.00;  2: 0.45;  3: 0.50;  4: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Rennes VS Paris Saint Germain
+Pais: France - Liga: Ligue 1 - Season: 2023
+Data da analise: 2023-10-08 14:54:03
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.11;  1: 0.00;  2: 0.85;  3: 0.01;  4: 0.02;  ]
+As probabilidades são: [0: 0.96;  1: 0.01;  2: 0.01;  3: 0.00;  4: 0.01;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Napoli VS Fiorentina
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-08 15:03:24
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.04;  1: 0.01;  2: 0.91;  3: 0.03;  4: 0.00;  ]
+As probabilidades são: [0: 0.98;  1: 0.01;  2: 0.01;  3: 0.00;  4: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Fluminense VS Botafogo
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-08 15:19:55
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.24;  1: 0.57;  2: 0.15;  3: 0.01;  4: 0.02;  ]
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.02;  3: 0.97;  4: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palmeiras VS Santos
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-08 15:22:29
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.81;  1: 0.10;  2: 0.08;  3: 0.00;  4: 0.00;  ]
+As probabilidades são: [0: 0.01;  1: 0.08;  2: 0.03;  3: 0.58;  4: 0.30;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Internacional VS Gremio
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-08 15:25:23
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.05;  3: 0.94;  4: 0.00;  ]
+As probabilidades são: [0: 0.00;  1: 0.04;  2: 0.91;  3: 0.04;  4: 0.01;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Granada CF VS Barcelona
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-08 15:28:15
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.27;  1: 0.10;  2: 0.00;  3: 0.00;  4: 0.63;  ]
+As probabilidades são: [0: 0.11;  1: 0.02;  2: 0.37;  3: 0.35;  4: 0.15;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Villa Mitre VS Olimpo Bahia Blanca
+Pais: Argentina - Liga: Torneo Federal A - Season: 2023
+Data da analise: 2023-10-08 15:30:24
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.81;  1: 0.00;  2: 0.04;  3: 0.15;  4: 0.00;  ]
+As probabilidades são: [0: 0.00;  1: 0.31;  2: 0.38;  3: 0.30;  4: 0.01;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Cipolletti VS Germinal de Rawson
+Pais: Argentina - Liga: Torneo Federal A - Season: 2023
+Data da analise: 2023-10-08 15:31:51
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.02;  2: 0.96;  3: 0.01;  4: 0.01;  ]
+As probabilidades são: [0: 0.01;  1: 0.00;  2: 0.01;  3: 0.89;  4: 0.09;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Gimnasia Y Tiro VS Sarmiento Resistencia
+Pais: Argentina - Liga: Torneo Federal A - Season: 2023
+Data da analise: 2023-10-08 15:33:40
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.62;  1: 0.34;  2: 0.01;  3: 0.03;  4: 0.00;  ]
+As probabilidades são: [0: 0.03;  1: 0.64;  2: 0.00;  3: 0.31;  4: 0.02;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+----------------------------------tytyttuhytuh-----------------------------------------
+
+Prevendo Jogo: Universidad de Concepcion VS Union San Felipe
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-08 17:01:52
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.36;  2: 0.28;  3: 0.02;  4: 0.34;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.08;  3: 0.28;  4: 0.63;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: D. La Serena VS Santiago Morning
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-08 17:04:58
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.88;  3: 0.00;  4: 0.12;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.79;  1: 0.00;  2: 0.00;  3: 0.20;  4: 0.00;  ]
+Não previu nada
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: D. La Serena VS Santiago Morning
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-08 17:08:39
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.94;  3: 0.00;  4: 0.05;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.78;  1: 0.00;  2: 0.00;  3: 0.22;  4: 0.00;  ]
+As probabilidades são: [0: 0.01;  1: 0.98;  2: 0.00;  ]
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Independiente del Valle VS Gualaceo SC
+Pais: Ecuador - Liga: Liga Pro - Season: 2023
+Data da analise: 2023-10-08 17:12:26
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.97;  1: 0.00;  2: 0.00;  3: 0.03;  4: 0.00;  ]
+As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.22;  3: 0.00;  4: 0.77;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: ADT VS Union Comercio
+Pais: Peru - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-08 17:15:35
+
+ #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.36;  2: 0.64;  3: 0.00;  4: 0.00;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away sem ambas em saida Superior Home - Away sendo RNN #### 
+As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.02;  3: 0.00;  4: 0.98;  ]
+As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+ #### Home/Away com Ambas em saida Gols Home - Away sendo Dense #### 
+
+ #### Home/Away com Ambas em saida Superior Home - Away sendo Dense #### 
+
+
+--------------------------------------------------------------------------- 
+

@@ -31,6 +31,30 @@ class DatasetPartidaRotulo:
         self.empate_away: int = 0
         self.derrota_away: int = 0
 
+        self.is_superior_home: int = 0
+        self.is_superior_away: int = 0
+
+        self.chance_empate_home: int = 0
+        self.chance_empate_away: int = 0
+
+        self.superior: int = 0
+        self.superior_home: int = 0
+        self.superior_away: int = 0
+        self.vitoria: int = 0
+
+        self.winner_by_gols: int = 0
+        self.winner_by_gols_home: int = 0
+        self.winner_by_gols_away: int = 0
+        self.qtde_gols_partida: int = 0
+        self.qtde_gols_partida_home: int = 0
+        self.qtde_gols_partida_away: int = 0
+        self.is_mais_dois_meio: int = 0
+        self.is_home_marca: int = 0
+        self.is_away_marca: int = 0
+        self.is_amba_marca: int = 0
+        self.is_none_marca: int = 0
+
+
 
 class DatasetPartidaEntrada:
     def __init__(self):
@@ -146,91 +170,75 @@ class DatasetPartidaEntrada:
                  self.team_ultimos_empates_home, self.team_ultimos_vitorias_home, self.team_ultimos_derrotas_home,
                  self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home]
             )
-
-            """arrDados.append(
-                [self.id_team_away, 0, self.id_season,
-                 self.season_pontos_away, self.team_melhorando_resultados_partida_away,
-                 self.team_saldo_gols_away, self.season_saldo_gols_away,
-                 self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
-                 self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
-                 self.team_ultimos_empates_away, self.team_ultimos_vitorias_away, self.team_ultimos_derrotas_away,
-                 self.team_max_vitorias_away, self.team_max_empates_away, self.team_max_derrotas_away,
-                 self.id_team_home,
-                 self.season_pontos_home, self.team_melhorando_resultados_partida_home,
-                 self.team_saldo_gols_home, self.season_saldo_gols_home,
-                 self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
-                 self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
-                 self.team_ultimos_empates_home, self.team_ultimos_vitorias_home, self.team_ultimos_derrotas_home,
-                 self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home]
-            )"""
-
-            """arrDados.append(
-                [self.id_team_home, self.team_pontos_home, self.team_saldo_gols_home,
-                 self.season_pontos_home, self.season_saldo_gols_home,
-                 self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
-                 self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
-                 self.team_empates_casa_home, self.team_vitorias_casa_home, self.team_derrotas_casa_home,
-                 self.team_max_empates_home, self.team_max_vitorias_home, self.team_max_derrotas_home,
-                 self.team_ultimos_empates_home, self.team_ultimos_vitorias_home, self.team_ultimos_derrotas_home,
-                 self.team_media_resultados_partida_home, isHomePontuacaoMaiorAway]
-            )
-
-            arrDados.append(
-                [self.id_team_away, self.team_pontos_away, self.team_saldo_gols_away,
-                 self.season_pontos_away, self.season_saldo_gols_away,
-                 self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
-                 self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
-                 self.team_empates_casa_away, self.team_vitorias_casa_away, self.team_derrotas_casa_away,
-                 self.team_max_empates_away, self.team_max_vitorias_away, self.team_max_derrotas_away,
-                 self.team_ultimos_empates_away, self.team_ultimos_vitorias_away, self.team_ultimos_derrotas_away,
-                 self.team_media_resultados_partida_away, isAwayPontuacaoMaiorHome]
-            )"""
         else:
+            if isAgrupasTeams:
+                arrDados.append(
+                    [self.id_team_home, 1, id_jogo_home,
 
-            arrDados.append(
-                [self.id_team_home, 1, id_jogo_home,
-                 self.season_pontos_home, self.team_melhorando_resultados_partida_home,
-                 self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
-                 self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
-                 self.team_ultimos_empates_home, self.team_ultimos_vitorias_home, self.team_ultimos_derrotas_home,
-                 self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home]
-            )
+                     self.season_pontos_home, self.season_saldo_gols_home,
+                     self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
+                     self.team_melhorando_resultados_partida_home,
+                     self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
+                     self.team_ultimos_empates_home, self.team_ultimos_vitorias_home, self.team_ultimos_derrotas_home,
+                     self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home]
+                )
 
-            arrDados.append(
-                [self.id_team_away, 0, id_jogo_home,
-                 self.season_pontos_away, self.team_melhorando_resultados_partida_away,
-                 self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
-                 self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
-                 self.team_ultimos_empates_away, self.team_ultimos_vitorias_away, self.team_ultimos_derrotas_away,
-                 self.team_max_vitorias_away, self.team_max_empates_away, self.team_max_derrotas_away]
-            )
+                arrDados.append(
+                    [self.id_team_away, 0, id_jogo_home,
 
-            """arrDados.append(
-                [self.id_team_home, self.id_season,
-                 self.team_pontos_home, self.season_pontos_home,
-                 self.team_saldo_gols_home, self.season_saldo_gols_home,
-                 self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
-                 self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
-                 self.team_ultimos_empates_home, self.team_ultimos_vitorias_home, self.team_ultimos_derrotas_home,
-                 self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home,
-                 self.team_media_resultados_partida_home]
-            )
+                     self.season_pontos_away, self.season_saldo_gols_away,
+                     self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
+                     self.team_melhorando_resultados_partida_away,
+                     self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
+                     self.team_ultimos_empates_away, self.team_ultimos_vitorias_away, self.team_ultimos_derrotas_away,
+                     self.team_max_vitorias_away, self.team_max_empates_away, self.team_max_derrotas_away]
+                )
+            else:
+                arrDados.append(
+                    [self.id_team_home, 1,
 
-            arrDados.append(
-                [self.id_team_away, self.id_season,
-                 self.team_pontos_away, self.season_pontos_away,
-                 self.team_saldo_gols_away, self.season_saldo_gols_away,
-                 self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
-                 self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
-                 self.team_ultimos_empates_away, self.team_ultimos_vitorias_away, self.team_ultimos_derrotas_away,
-                 self.team_max_vitorias_away, self.team_max_empates_away, self.team_max_derrotas_away,
-                 self.team_media_resultados_partida_away]
-            )"""
+                     self.season_pontos_home, self.season_saldo_gols_home,
+                     self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
+                     self.team_saldo_gols_home, self.team_media_resultados_partida_home,
+                     self.team_melhorando_resultados_partida_home,
+                     self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
+                     self.team_ultimos_vitorias_home, self.team_ultimos_empates_home, self.team_ultimos_derrotas_home,
+                     self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home,
+
+                     self.season_pontos_away, self.season_saldo_gols_away,
+                     self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
+                     self.team_saldo_gols_away, self.team_media_resultados_partida_away,
+                     self.team_melhorando_resultados_partida_away,
+                     self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
+                     self.team_ultimos_vitorias_away, self.team_ultimos_empates_away, self.team_ultimos_derrotas_away,
+                     self.team_max_vitorias_away, self.team_max_empates_away, self.team_max_derrotas_away]
+                )
+
+                arrDados.append(
+                    [self.id_team_away, 0,
+
+                     self.season_pontos_away, self.season_saldo_gols_away,
+                     self.season_media_gols_marcados_away, self.season_media_gols_sofridos_away,
+                     self.team_saldo_gols_away, self.team_media_resultados_partida_away,
+                     self.team_melhorando_resultados_partida_away,
+                     self.team_media_gols_marcados_away, self.team_media_gols_sofridos_away,
+                     self.team_ultimos_vitorias_away, self.team_ultimos_empates_away, self.team_ultimos_derrotas_away,
+                     self.team_max_vitorias_away, self.team_max_empates_away, self.team_max_derrotas_away,
+
+                     self.season_pontos_home, self.season_saldo_gols_home,
+                     self.season_media_gols_marcados_home, self.season_media_gols_sofridos_home,
+                     self.team_saldo_gols_home, self.team_media_resultados_partida_home,
+                     self.team_melhorando_resultados_partida_home,
+                     self.team_media_gols_marcados_home, self.team_media_gols_sofridos_home,
+                     self.team_ultimos_vitorias_home, self.team_ultimos_empates_home, self.team_ultimos_derrotas_home,
+                     self.team_max_vitorias_home, self.team_max_empates_home, self.team_max_derrotas_home]
+                )
 
         return arrDados
 
     def obterDadoRotulosEmArray(self, arridsTeam: list[int] = None, isForFF: bool = False,
-                                isGruparTeams: bool = True, isDadosSoUmLado: bool = True):
+                                isGruparTeams: bool = True, isDadosSoUmLado: bool = True, isGols: bool = True,
+                                idTypeReturn: int = 1):
         # cada array interno representa uma camada de saida.
         arrDados = []
         if isForFF:
@@ -244,27 +252,56 @@ class DatasetPartidaEntrada:
                              [self.dataset_partida_rotulo.derrota_away], [self.dataset_partida_rotulo.is_superior]]]
         else:
             if isGruparTeams:
-                if self.id_team_away == arridsTeam[0] and isDadosSoUmLado and not isForFF:
-                    arrDados.append([[self.dataset_partida_rotulo.winner_away],
-                                     [self.dataset_partida_rotulo.winner_home],
-                                     [self.dataset_partida_rotulo.chance_empate]])
+                if isGols:
+                    arrDados = [[[self.dataset_partida_rotulo.is_superior_home]],
+                                [[self.dataset_partida_rotulo.is_superior_away]]]
                 else:
-                    arrDados = [[[self.dataset_partida_rotulo.vitoria_home], [self.dataset_partida_rotulo.empate_home],
-                                 [self.dataset_partida_rotulo.derrota_home], [self.dataset_partida_rotulo.is_superior]]]
+                    if idTypeReturn == 1:
+                        arrDados = [[[self.dataset_partida_rotulo.winner_home]],
+                                    [[self.dataset_partida_rotulo.winner_away]]]
+                    elif idTypeReturn == 2:
+                        arrDados = [[[self.dataset_partida_rotulo.superior_home]],
+                                    [[self.dataset_partida_rotulo.superior_away]]]
+                    elif idTypeReturn == 3:
+                        arrDados = [[[self.dataset_partida_rotulo.superior]]]
+                    elif idTypeReturn == 4:
+                        arrDados = [[[self.dataset_partida_rotulo.is_amba_marca]]]
+                    elif idTypeReturn == 5:
+                        arrDados = [[[self.dataset_partida_rotulo.is_home_marca,
+                                      self.dataset_partida_rotulo.is_away_marca,
+                                      self.dataset_partida_rotulo.is_none_marca]]]
+                    elif idTypeReturn == 6:
+                        arrDados = [[[self.dataset_partida_rotulo.qtde_gols_partida]]]
             else:
-                # arrDados = [[[self.dataset_partida_rotulo.is_winner_home], [self.dataset_partida_rotulo.is_superior]],
-                            # [[self.dataset_partida_rotulo.is_winner_away], [self.dataset_partida_rotulo.is_superior]]]
-                arrDados = [[[self.dataset_partida_rotulo.derrota_home], [self.dataset_partida_rotulo.empate_home],
-                             [self.dataset_partida_rotulo.vitoria_home]],
-                            [[self.dataset_partida_rotulo.derrota_away], [self.dataset_partida_rotulo.empate_away],
-                             [self.dataset_partida_rotulo.vitoria_away]]]
+                if isGols:
+                    arrDados = [[[self.dataset_partida_rotulo.is_superior_home]],
+                                [[self.dataset_partida_rotulo.is_superior_away]]]
+                else:
+                    if idTypeReturn == 1:
+                        arrDados = [[[self.dataset_partida_rotulo.winner_home]],
+                                    [[self.dataset_partida_rotulo.winner_away]]]
+                    elif idTypeReturn == 2:
+                        arrDados = [[[self.dataset_partida_rotulo.superior_home]],
+                                    [[self.dataset_partida_rotulo.superior_away]]]
+                    elif idTypeReturn == 3:
+                        arrDados = [[[self.dataset_partida_rotulo.winner_by_gols_home]],
+                                    [[self.dataset_partida_rotulo.winner_by_gols_away]]]
+                    elif idTypeReturn == 4:
+                        arrDados = [[[self.dataset_partida_rotulo.winner_by_gols_away]],
+                                    [[self.dataset_partida_rotulo.winner_by_gols_home]]]
+                    elif idTypeReturn == 5:
+                        arrDados = [[[self.dataset_partida_rotulo.qtde_gols_partida_away]],
+                                    [[self.dataset_partida_rotulo.qtde_gols_partida_home]]]
+                    elif idTypeReturn == 6:
+                        arrDados = [[[self.dataset_partida_rotulo.qtde_gols_partida_home]],
+                                    [[self.dataset_partida_rotulo.qtde_gols_partida_away]]]
         return arrDados
 
 
 class DatasetPartidasRegras:
     def obter(self, arrIdsTeam: list[int], limitHistoricoMedias: int = 5, isNormalizarSaidaEmClasse: bool = True,
               isFiltrarTeams: bool = True, qtdeDados: int = 40, isAgruparTeams: bool = True, isForFF: bool = True,
-              isDadosSoUmLado: bool = True):
+              isDadosSoUmLado: bool = True, isGols: bool = True, idTypeReturn: int = 1):
         iaUteisRegras = IAUteisRegras()
 
         arrDatasetEntradaEmArray = []
@@ -276,9 +313,10 @@ class DatasetPartidasRegras:
         indexPrev = 0
         index = -1
         for i in range(len(arrDatasetPartida)):
-            if (arrDatasetPartida[i].id_team_home not in arrIdsTeam and
-                    arrDatasetPartida[i].id_team_away not in arrIdsTeam):
-                continue
+            """if isFiltrarTeams:
+                if (arrDatasetPartida[i].id_team_home not in arrIdsTeam and
+                        arrDatasetPartida[i].id_team_away not in arrIdsTeam):
+                    continue"""
 
             index += 1
             for retEntrada in arrDatasetPartida[i].obterDadoEntradaEmArray(arridsTeam=arrIdsTeam,
@@ -289,7 +327,7 @@ class DatasetPartidasRegras:
 
                 if arrDatasetPartida[i].is_prever == 1:
                     if ((index not in arrIndexDadosRemover and isAgruparTeams) or
-                            (retEntrada[0] in arrIdsTeam and indexPrev not in arrIndexDadosRemover and
+                            ((retEntrada[0] in arrIdsTeam) and indexPrev not in arrIndexDadosRemover and
                              not isAgruparTeams)):
                         arrIndexDadosRemover.append(index if isAgruparTeams else indexPrev)
 
@@ -307,54 +345,80 @@ class DatasetPartidasRegras:
 
             for retRotulo in arrDatasetPartida[i].obterDadoRotulosEmArray(arridsTeam=arrIdsTeam, isForFF=isForFF,
                                                                           isGruparTeams=isAgruparTeams,
-                                                                          isDadosSoUmLado=isDadosSoUmLado):
+                                                                          isDadosSoUmLado=isDadosSoUmLado,
+                                                                          isGols=isGols, idTypeReturn=idTypeReturn):
                 arrDatasetRotuloEmArray.append(retRotulo)
 
         if len(arrDatasetRotuloEmArray) != len(arrDatasetEntradaEmArray) and not isAgruparTeams:
-            raise "opss, array diferentes"
+            raise Exception("opss, array diferentes")
 
         arrDatasetEntradaEmArrayNormalizado, max_value_entrada, min_value_entrada = \
             iaUteisRegras.normalizar_dataset(arrDatasetEntradaEmArray)
 
-        arrDatasetRotuloEmArrayNormalizado, max_value_rotulo, min_value_rotulo = \
-            iaUteisRegras.normalizar_dataset(arrDatasetRotuloEmArray)
+        arrDatasetRotuloEmArrayNormalizado = arrDatasetRotuloEmArray
+        """arrDatasetRotuloEmArrayNormalizado, max_value_rotulo, min_value_rotulo = \
+            iaUteisRegras.normalizar_dataset(arrDatasetRotuloEmArray)"""
 
         arrDatasetPreverEmArrayNormalizado = []
         newArrEntradasNormalizadas = []
         newEntradaNormalizada = []
+        newArrRotulosNormalizados = []
+        newRotulosNormalizados = []
 
         if isAgruparTeams:
             for indexEntradaNormalizada in range(len(arrDatasetEntradaEmArrayNormalizado)):
                 if (indexEntradaNormalizada + 1) % 2 != 0:
                     newEntradaNormalizada = arrDatasetEntradaEmArrayNormalizado[indexEntradaNormalizada]
+                    # newRotulosNormalizados = arrDatasetRotuloEmArrayNormalizado[indexEntradaNormalizada]
                 else:
                     newEntradaNormalizada = (
                         numpy.concatenate((newEntradaNormalizada,
                                            arrDatasetEntradaEmArrayNormalizado[indexEntradaNormalizada])).tolist())
 
+                    # newRotulosNormalizados = (
+                        # numpy.concatenate((newRotulosNormalizados,
+                                           # arrDatasetRotuloEmArrayNormalizado[indexEntradaNormalizada])).tolist())
+
                     newArrEntradasNormalizadas.append(newEntradaNormalizada)
+                    # newArrRotulosNormalizados.append(newRotulosNormalizados)
                     newEntradaNormalizada = []
+                    newRotulosNormalizados = []
 
         for indexRemover in reversed(arrIndexDadosRemover):
             if isAgruparTeams:
                 elementoPrever = newArrEntradasNormalizadas.pop(indexRemover)
+                # newArrRotulosNormalizados.pop(indexRemover)
+                arrDatasetRotuloEmArrayNormalizado.pop(indexRemover)
             else:
                 elementoPrever = arrDatasetEntradaEmArrayNormalizado.pop(indexRemover)
-            arrDatasetRotuloEmArrayNormalizado.pop(indexRemover)
+                arrDatasetRotuloEmArrayNormalizado.pop(indexRemover)
             arrDatasetPreverEmArrayNormalizado.append(elementoPrever)
 
         arrDatasetPreverEmArrayNormalizado = arrDatasetPreverEmArrayNormalizado[::-1]
 
         if isNormalizarSaidaEmClasse:
-            arrDatasetRotuloEmArrayNormalizado = self.normalizarSaidaEmClasses(arrDatasetRotuloEmArrayNormalizado)
+            if isAgruparTeams:
+                # newArrRotulosNormalizados = self.normalizarSaidaEmClasses(newArrRotulosNormalizados)
+                arrDatasetRotuloEmArrayNormalizado = self.normalizarSaidaEmClasses(arrDatasetRotuloEmArrayNormalizado)
+            else:
+                arrDatasetRotuloEmArrayNormalizado = self.normalizarSaidaEmClasses(arrDatasetRotuloEmArrayNormalizado)
         else:
-            arrsNormalizados = []
-            for i in range(len(arrDatasetRotuloEmArrayNormalizado)):
-                normalizado = [[]]
-                for j in arrDatasetRotuloEmArrayNormalizado[i]:
-                    normalizado[0].append(j[0])
-                arrsNormalizados.append(normalizado)
-            arrDatasetRotuloEmArrayNormalizado = arrsNormalizados
+            if False:
+                arrsNormalizados = []
+                for i in range(len(newArrRotulosNormalizados)):
+                    normalizado = [[]]
+                    for j in newArrRotulosNormalizados[i]:
+                        normalizado[0].append(j[0])
+                    arrsNormalizados.append(normalizado)
+                newArrRotulosNormalizados = arrsNormalizados
+            else:
+                arrsNormalizados = []
+                """for i in range(len(arrDatasetRotuloEmArrayNormalizado)):
+                    normalizado = [[]]
+                    for j in arrDatasetRotuloEmArrayNormalizado[i]:
+                        normalizado[0].append(j[0])
+                    arrsNormalizados.append(normalizado)
+                arrDatasetRotuloEmArrayNormalizado = arrsNormalizados"""
 
         arrEntradas = []
         arrRotulos = []
@@ -363,12 +427,15 @@ class DatasetPartidasRegras:
             for index in arrIndexDados:
                 if isAgruparTeams:
                     arrEntradas.append(newArrEntradasNormalizadas[index])
+                    # arrRotulos.append(newArrRotulosNormalizados[index])
+                    arrRotulos.append(arrDatasetRotuloEmArrayNormalizado[index])
                 else:
                     arrEntradas.append(arrDatasetEntradaEmArrayNormalizado[index])
-                arrRotulos.append(arrDatasetRotuloEmArrayNormalizado[index])
+                    arrRotulos.append(arrDatasetRotuloEmArrayNormalizado[index])
         else:
             if isAgruparTeams:
                 arrEntradas = newArrEntradasNormalizadas
+                # arrRotulos = newArrRotulosNormalizados
                 arrRotulos = arrDatasetRotuloEmArrayNormalizado
             else:
                 arrEntradas = arrDatasetEntradaEmArrayNormalizado
@@ -468,6 +535,7 @@ class DatasetPartidasRegras:
 
                     newDatasetPartida.season_media_gols_marcados_home, newDatasetPartida.season_media_gols_sofridos_home = \
                         self.obterMediaGolsTeam(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida,
+                                                id_season=newDatasetPartida.id_season,
                                                 limitDados=limitHistoricoMedias)
 
                     newDatasetPartida.team_media_gols_marcados_home, newDatasetPartida.team_media_gols_sofridos_home = \
@@ -481,8 +549,7 @@ class DatasetPartidasRegras:
                     newDatasetPartida.team_empates_casa_home, newDatasetPartida.team_vitorias_casa_home, \
                         newDatasetPartida.team_derrotas_casa_home, newDatasetPartida.team_empates_fora_home, \
                         newDatasetPartida.team_vitorias_fora_home, newDatasetPartida.team_derrotas_fora_home = \
-                        self.obterInfoCasaForaPartida(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida,
-                                                      limitDados=limitHistoricoMedias)
+                        self.obterInfoCasaForaPartida(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida)
 
                     newDatasetPartida.team_ultimos_vitorias_home, newDatasetPartida.team_ultimos_empates_home, \
                         newDatasetPartida.team_ultimos_derrotas_home = self.obterUltimosInfoCasaForaPartida(
@@ -522,6 +589,7 @@ class DatasetPartidasRegras:
 
                     newDatasetPartida.season_media_gols_marcados_away, newDatasetPartida.season_media_gols_sofridos_away = \
                         self.obterMediaGolsTeam(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida,
+                                                id_season=newDatasetPartida.id_season,
                                                 limitDados=limitHistoricoMedias)
 
                     newDatasetPartida.team_media_gols_marcados_away, newDatasetPartida.team_media_gols_sofridos_away = \
@@ -535,8 +603,7 @@ class DatasetPartidasRegras:
                     newDatasetPartida.team_empates_casa_away, newDatasetPartida.team_vitorias_casa_away, \
                         newDatasetPartida.team_derrotas_casa_away, newDatasetPartida.team_empates_fora_away, \
                         newDatasetPartida.team_vitorias_fora_away, newDatasetPartida.team_derrotas_fora_away = \
-                        self.obterInfoCasaForaPartida(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida,
-                                                      limitDados=limitHistoricoMedias)
+                        self.obterInfoCasaForaPartida(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida)
 
                     newDatasetPartida.team_ultimos_vitorias_away, newDatasetPartida.team_ultimos_empates_away, \
                         newDatasetPartida.team_ultimos_derrotas_away = self.obterUltimosInfoCasaForaPartida(
@@ -547,11 +614,105 @@ class DatasetPartidasRegras:
                      newDatasetPartida.team_max_derrotas_away) = (
                         self.obterMaxInfoCasaForaPartida(fixtureTeam=fixtureTeam, arrDatasetPartida=arrDatasetPartida,
                                                          limitDados=limitHistoricoMedias))
-
+            golsPartida = newDatasetPartida.dataset_partida_rotulo.gols_home + newDatasetPartida.dataset_partida_rotulo.gols_away
+            golsHome = newDatasetPartida.dataset_partida_rotulo.gols_home
+            golsAway = newDatasetPartida.dataset_partida_rotulo.gols_away
             saldoGolsPartida = newDatasetPartida.dataset_partida_rotulo.gols_home - newDatasetPartida.dataset_partida_rotulo.gols_away
+            saldoGolsPartidaHome = newDatasetPartida.dataset_partida_rotulo.gols_home - newDatasetPartida.dataset_partida_rotulo.gols_away
+            saldoGolsPartidaAway = newDatasetPartida.dataset_partida_rotulo.gols_away - newDatasetPartida.dataset_partida_rotulo.gols_home
+
             newDatasetPartida.dataset_partida_rotulo.chance_empate = int(abs(saldoGolsPartida) <= 1)
+            newDatasetPartida.dataset_partida_rotulo.chance_empate_home = (
+                int((saldoGolsPartidaHome == 1 or saldoGolsPartidaHome == 0)))
+            newDatasetPartida.dataset_partida_rotulo.chance_empate_away = (
+                int((saldoGolsPartidaAway == 1 or saldoGolsPartidaAway == 0)))
+
             newDatasetPartida.dataset_partida_rotulo.is_superior = int(abs(saldoGolsPartida) >= 2)
+            newDatasetPartida.dataset_partida_rotulo.is_superior_home = int(saldoGolsPartidaHome >= 2)
+            newDatasetPartida.dataset_partida_rotulo.is_superior_away = int(saldoGolsPartidaAway >= 2)
             arrDatasetPartida.append(newDatasetPartida)
+
+            if newDatasetPartida.dataset_partida_rotulo.is_superior_home == 1:
+                newDatasetPartida.dataset_partida_rotulo.superior = 0
+                newDatasetPartida.dataset_partida_rotulo.superior_home = 2
+                newDatasetPartida.dataset_partida_rotulo.superior_away = 0
+            elif newDatasetPartida.dataset_partida_rotulo.is_superior_away == 1:
+                newDatasetPartida.dataset_partida_rotulo.superior = 2
+                newDatasetPartida.dataset_partida_rotulo.superior_home = 0
+                newDatasetPartida.dataset_partida_rotulo.superior_away = 2
+            else:
+                newDatasetPartida.dataset_partida_rotulo.superior = 1
+                newDatasetPartida.dataset_partida_rotulo.superior_home = 1
+                newDatasetPartida.dataset_partida_rotulo.superior_away = 1
+
+            if (newDatasetPartida.dataset_partida_rotulo.is_superior_home == 1 and
+                    newDatasetPartida.dataset_partida_rotulo.winner_home == 2):
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols = 0
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_home = 0
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_away = 4
+
+            elif (newDatasetPartida.dataset_partida_rotulo.is_superior_home == 0 and
+                    newDatasetPartida.dataset_partida_rotulo.winner_home == 2):
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols = 1
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_home = 1
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_away = 3
+
+            elif (newDatasetPartida.dataset_partida_rotulo.is_superior_away == 1 and
+                    newDatasetPartida.dataset_partida_rotulo.winner_away == 2):
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols = 4
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_home = 4
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_away = 0
+
+            elif (newDatasetPartida.dataset_partida_rotulo.is_superior_away == 0 and
+                  newDatasetPartida.dataset_partida_rotulo.winner_away == 2):
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols = 3
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_home = 3
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_away = 1
+            else:
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols = 2
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_home = 2
+                newDatasetPartida.dataset_partida_rotulo.winner_by_gols_away = 2
+
+            if golsPartida == 0 or golsPartida == 1:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida = 0
+            elif golsPartida == 2 or golsPartida == 3:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida = 1
+            else:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida = 2
+
+            if golsHome == 0 or golsHome == 1:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida_home = 0
+            elif golsHome == 2 or golsHome == 3:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida_home = 1
+            else:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida_home = 2
+
+            if golsAway == 0 or golsAway == 1:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida_away = 0
+            elif golsAway == 2 or golsAway == 3:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida_away = 1
+            else:
+                newDatasetPartida.dataset_partida_rotulo.qtde_gols_partida_away = 2
+
+            if golsPartida >= 3:
+                newDatasetPartida.dataset_partida_rotulo.is_mais_dois_meio = 1
+            else:
+                newDatasetPartida.dataset_partida_rotulo.is_mais_dois_meio = 0
+
+            if golsHome >= 1:
+                newDatasetPartida.dataset_partida_rotulo.is_home_marca = 1
+
+            if golsAway >= 1:
+                newDatasetPartida.dataset_partida_rotulo.is_away_marca = 1
+
+            if golsHome >= 1 and golsAway >= 1:
+                newDatasetPartida.dataset_partida_rotulo.is_amba_marca = 1
+
+            if golsHome == 0 and golsAway == 0:
+                newDatasetPartida.dataset_partida_rotulo.is_none_marca = 1
+
+
+
         return arrDatasetPartida
 
     def obterUltimoDatasetPartida(self, arrDatasetPartida: list[DatasetPartidaEntrada], id_team: int,

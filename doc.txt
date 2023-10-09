@@ -33,3 +33,8 @@ nano /etc/nginx/sites-available/footxap
 source env/bin/activate
 sudo systemctl restart nginx
 gunicorn --bind 127.0.0.1:8000 footxap.wsgi:application --timeout 900
+
+#### Home ####
+As probabilidade de Vh, E ou Va são: [1.4402887e-03 3.2051584e-08 3.8054874e-04 3.7841839e-04 9.9780065e-01]
+
+As probabilidade de Vh, E ou Va são: [8.3137611e-06 9.9777371e-01 7.4680237e-08 6.4328249e-04 1.5745295e-03]
