@@ -3,7 +3,7 @@ from api.models.model import Database
 
 class ParamsNotNone:
     def __init__(self):
-        self.nameColumns: list[str] = []
+        self.nameColumns: list = []
         self.dataColumns: list = []
 
 class UteisRegras():
@@ -16,7 +16,7 @@ class UteisRegras():
 
         return paramsNotNone
 
-    def normalizarDadosForView(self, arrDados: list[object], isFecharConexao: bool = True) -> list[dict]:
+    def normalizarDadosForView(self, arrDados: list, isFecharConexao: bool = True) -> list:
         database = Database()
         arrDadosJson = []
         arrDadosNormalizados = []
@@ -51,3 +51,10 @@ class UteisRegras():
 
         database.closeConnection()
         return arrDadosNormalizados
+
+    @staticmethod
+    def normalizarValorNoneToDefault(valueIn, default):
+        if valueIn is None:
+            return default
+        else:
+            return valueIn

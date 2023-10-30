@@ -6,8 +6,8 @@ from copy import deepcopy
 from api.regras.iaUteisRegras import IAUteisRegras
 
 class ModelDataLTSM:
-    def __init__(self, arrEntradas: list[list], arrRotulos: list[list[list]],
-                 arrDadosPrever: list[list[list]] = None, arrNameFuncAtivacaoCadaSaida: list[str] = []):
+    def __init__(self, arrEntradas: list, arrRotulos: list,
+                 arrDadosPrever: list = None, arrNameFuncAtivacaoCadaSaida: list = []):
 
         if len(arrRotulos[0][0]) == 0:
             raise "reveja os rótulos nao é uma list[list[list]]"
@@ -17,15 +17,15 @@ class ModelDataLTSM:
         self.taxa_aprendizado: float = 0.08
         self.taxa_regularizacao_l2: float = 0.00000000000001
 
-        self.arr_n_camada_oculta: list[int] = [len(arrEntradas[0])]
+        self.arr_n_camada_oculta: list = [len(arrEntradas[0])]
         self.nNeuroniosEntrada: int = len(arrEntradas[0])
-        self.arrCamadasSaida: list[int] = [len(saida) for saida in arrRotulos[0]]
+        self.arrCamadasSaida: list = [len(saida) for saida in arrRotulos[0]]
 
-        self.arr_entradas: list[list] = arrEntradas
+        self.arr_entradas: list = arrEntradas
         # Lista de dados com os dados divididos em camadas lista rotulos com lista de camada
-        self.arr_rotulos: list[list[list]] = arrRotulos
-        self.arr_dados_prever: list[list[list]] = arrDadosPrever
-        self.arrFuncAtivacaoCadaSaida: list[list[any, any]] = []
+        self.arr_rotulos: list= arrRotulos
+        self.arr_dados_prever: list= arrDadosPrever
+        self.arrFuncAtivacaoCadaSaida: list = []
 
         if len(arrNameFuncAtivacaoCadaSaida) == 0:
             for camadaSaida in self.arr_rotulos[0]:

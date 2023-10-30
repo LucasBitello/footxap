@@ -70,7 +70,6 @@ class FixturesTeamsModel(Model):
         else:
             return None
 
-
     def criarTableDataBase(self):
         query = f"""CREATE TABLE IF NOT EXISTS {self.name_table} (
             `id` INT NOT NULL AUTO_INCREMENT,
@@ -79,6 +78,10 @@ class FixturesTeamsModel(Model):
             `is_winner` TINYINT(1) NULL,
             `is_home` TINYINT(1) NOT NULL,
             `goals` INT NOT NULL DEFAULT 0,
+            `goals_halftime` INT NOT NULL DEFAULT 0,
+            `goals_fulltime` INT NOT NULL DEFAULT 0,
+            `goals_extratime` INT NOT NULL DEFAULT 0,
+            `goals_penalty` INT NOT NULL DEFAULT 0,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX `id_team_fte_fix_idx` (`id_team` ASC) VISIBLE,
@@ -96,8 +99,9 @@ class FixturesTeamsModel(Model):
 
         self.executarQuery(query=query, params=[])
 
+
 class FixtureTeams(ClassModel):
-    def __init__(self, fixtureTeams: dict|object = None):
+    def __init__(self, fixtureTeams = None):
         self.id: int = None
         self.id_fixture: int = None
         self.id_team: int = None
@@ -107,3 +111,4 @@ class FixtureTeams(ClassModel):
         self.last_modification: str = None
 
         super().__init__(dado=fixtureTeams)
+

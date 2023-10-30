@@ -486,5 +486,6 @@ class IdTabelas:
         self.fixture_team_estatistics = 11
         self.type_fixture_team_lineup = 12
         self.fixture_team_lineups = 13
+        self.next_games = 14
 
 

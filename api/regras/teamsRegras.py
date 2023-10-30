@@ -4,7 +4,7 @@ class TeamsRegras:
     def __init__(self):
         self.teamsModel = TeamsModel()
 
-    def obter(self, id: int = None, name: str = None, id_season: int = None) -> list[Team]:
+    def obter(self, id: int = None, name: str = None, id_season: int = None) -> list:
         if id is not None and id_season is None:
             arrTeams = self.teamsModel.obterByColumnsID(arrDados=[id])
         elif id_season is not None:

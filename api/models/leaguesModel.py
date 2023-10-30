@@ -4,6 +4,7 @@ from api.models.model import Model, IdTabelas, ReferenciaDatabaseToAPI, Referenc
 from api.models.countriesModel import CountriesModel, Country
 from api.models.seasonsModel import SeasonsModel, Season
 
+
 class LeaguesModel(Model):
     def __init__(self):
         super().__init__(
@@ -26,7 +27,6 @@ class LeaguesModel(Model):
         self.criarTableDataBase()
         self.seasonsModel = SeasonsModel()
 
-
     def criarTableDataBase(self):
         query = f"""CREATE TABLE IF NOT EXISTS  {self.name_table} (
             `id` INT NOT NULL AUTO_INCREMENT,
@@ -48,10 +48,9 @@ class LeaguesModel(Model):
 
         self.executarQuery(query=query, params=[])
 
-
     def fazerConsultaApiFootball(self, id_league: int = None, name: str = None, country: str = None,
-                                       code_country: str = None, season: int = None, id_team: int = None, type: str = None,
-                                       current: str = None, search: str = None, last: int = None) -> list[dict]:
+                                 code_country: str = None, season: int = None, id_team: int = None, type: str = None,
+                                 current: str = None, search: str = None, last: int = None) -> list[dict]:
         arrParams = []
         query = "leagues"
         nameColumnResponseData = "response"
@@ -65,7 +64,7 @@ class LeaguesModel(Model):
         if code_country is not None:
             arrParams.append("code=" + code_country)
         if season is not None:
-            arrParams.append("season=" + season)
+            arrParams.append("season=" + str(season))
         if id_team is not None:
             arrParams.append("team=" + str(id_team))
         if type is not None:
@@ -75,7 +74,7 @@ class LeaguesModel(Model):
         if search is not None:
             arrParams.append("search=" + search)
         if last is not None:
-            arrParams.append("last=" + last)
+            arrParams.append("last=" + str(last))
 
         if len(arrParams) >= 1:
             query += "?" + "&".join(arrParams)
@@ -84,7 +83,6 @@ class LeaguesModel(Model):
         responseData = response[nameColumnResponseData]
 
         return responseData
-
 
     def atualizarDBLeague(self, name_country: int = None, id_league_api: int = None, year_season: int = None,
                           id_team_api: int = None) -> None:
@@ -107,7 +105,7 @@ class LeaguesModel(Model):
             arrCountries = self.countriesModel.obterByReferenceApi(dadosBusca=[dataCountry["name"]])
 
             if len(arrCountries) >= 2:
-                raise "retornando mais dados que o previsto: Dados:\n" + str(countrie)
+                raise "retornando mais dados que o previsto: Dados:\n" + str(arrCountries)
             elif len(arrCountries) == 0:
                 raise "Sem dados necesários para continuar a salvar a liga"
             else:

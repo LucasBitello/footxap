@@ -28,8 +28,12 @@ from api.regras.iaAprendizado import RedeLTSM, ModelPrevisao
 from api.models.countriesModel import Country
 from api.models.leaguesModel import League
 from api.models.teamsModel import Team
+from api.models.nextGamesModel import NextGamesModel, NextGames
 
 from api.models.model import Database
+
+from api.regras.KerasSequencialWithDQN import ViviFoot
+from api.regras.KerasSequencialNormal import KerasSequencialNormal
 
 database = Database()
 
@@ -87,12 +91,8 @@ def searchTeams(request):
 
 
 def obterPrevisaoPartida(request):
-    iaRegras = IAUteisRegras()
-    iaLTSM = RedeLTSM()
-    uteisRegras = UteisRegras()
-    statisticsRegras = StatisticsRegras()
     fixturesRegras = FixturesRegras()
-    kerasNeurais = KerasNeurais()
+
     idSeason = request.GET.get("id_season")
     idTeamHome = request.GET.get("id_team_home")
     idTeamAway = request.GET.get("id_team_away")
@@ -108,186 +108,250 @@ def obterPrevisaoPartida(request):
     fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeamHome, idTeamAway])
 
     try:
-        isFF = False
+        teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0]
+        teamAway: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0]
 
-        if isFF:
-            """previsaoFFFAmbasA = iaLTSM.preverComFF(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
-                                                 isPartida=True, isAmbas=True)
-            previsaoFFFAmbasB = iaLTSM.preverComFF(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
-                                                  isPartida=True, isAmbas=True)
-                                                  
-            print("Previsao FFHome", previsaoFFFAmbasA)
-            print("Previsao FFHome", previsaoFFFAmbasB)"""
+        season: Season = fixturesRegras.fixturesModel.teamsModel.seasonsModel.obterByColumnsID(
+            arrDados=[idSeason])[0]
+        league: League = fixturesRegras.fixturesModel.teamsModel.leaguesModel.obterByColumnsID(
+            arrDados=[season.id_league])[0]
+        country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
+            arrDados=[league.id_country])[0]
 
-            """previsaoFFFHome = iaLTSM.preverComFF(id_team_home=idTeamHome, id_team_away=idTeamAway, id_season=idSeason,
-                                                 isPartida=True, isAmbas=False)
-            previsaoFFFAway = iaLTSM.preverComFF(id_team_home=idTeamAway, id_team_away=idTeamAway, id_season=idSeason,
-                                                 isPartida=True, isAmbas=False)
+        strInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
+        strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
+            season.year) + "\n"
+        strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-            print("Previsao FFHome", previsaoFFFHome)
-            print("Previsao FFAway", previsaoFFFAway)"""
+        allResults = strInfos + "\n\n"
 
-            kerasNeurais.treinarLSTM(id_team_home=idTeamHome, isAmbas=False, isGols=False)
-            kerasNeurais.treinarLSTM(id_team_home=idTeamHome, isAmbas=False, isGols=True)
-            kerasNeurais.treinarLSTM(id_team_home=idTeamAway, isAmbas=False, isGols=False)
-            kerasNeurais.treinarLSTM(id_team_home=idTeamAway, isAmbas=False, isGols=True)
-        else:
-            teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0]
-            teamAway: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0]
+        footGolsHome = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=False,
+                                isAgruparTeams=False, idTypeReturn=1, isFiltrarTeams=True, isRecurrent=False,
+                                funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Superior Home: \n"
+        for k in range(len(footGolsHome.predit)):
+            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHome.predit[k]]) + "\n"
 
-            season: Season = fixturesRegras.fixturesModel.teamsModel.seasonsModel.obterByColumnsID(
-                arrDados=[idSeason])[0]
-            league: League = fixturesRegras.fixturesModel.teamsModel.leaguesModel.obterByColumnsID(
-                arrDados=[season.id_league])[0]
-            country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
-                arrDados=[league.id_country])[0]
+        # -------
+        footGolsHomeB = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamAway, isAmbas=False,
+                                 isAgruparTeams=False, idTypeReturn=1, isFiltrarTeams=True, isRecurrent=False,
+                                 funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Superior Away: \n"
+        for k in range(len(footGolsHomeB.predit)):
+            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeB.predit[k]]) + "\n"
 
-            homePart1 = "" # kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 # isAmbas=True, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 # isFiltrarTeams=True, isRecurrent=False)
+        # -------
+        footGolsHomeA = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamHome, isAmbas=False,
+                                 isAgruparTeams=False, idTypeReturn=2, isFiltrarTeams=True, isRecurrent=False,
+                                 funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Winner Home: \n"
+        for k in range(len(footGolsHomeA.predit)):
+            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeA.predit[k]]) + "\n"
+        # -------
+        footGolsHomeAB = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamHome, isAmbas=False,
+                                  isAgruparTeams=False, idTypeReturn=2, isFiltrarTeams=True, isRecurrent=False,
+                                  funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Winner Away: \n"
+        for k in range(len(footGolsHomeAB.predit)):
+            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeAB.predit[k]]) + "\n"
+        # -------
 
-            homePart2 = "" # kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                # isAmbas=True, isGols=False, isAgruparTeams=False, idTypeReturn=5,
-                                                # isFiltrarTeams=True, isRecurrent=False)
+        '''footGols = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=True,
+                            isAgruparTeams=True, idTypeReturn=2, isFiltrarTeams=False, isRecurrent=False,
+                            funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Alls: \n"
+        for k in range(len(footGols.predit)):
+            allResults += str([str(round(j * 100, 1)) + "%" for j in footGols.predit[k]]) + "\n"'''
 
-            """homePart1 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=True)
+        '''# -------
+        footGolsA = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamHome, isAmbas=True,
+                             isAgruparTeams=False, idTypeReturn=4, isFiltrarTeams=True, isRecurrent=False,
+                             funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Fora: \n"
+        for k in range(len(footGolsA.predit)):
+            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsA.predit[k]]) + "\n"
+        # -------'''
+        '''footGolsHomeAmbas = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=True,
+                                     isAgruparTeams=True, idTypeReturn=1, isFiltrarTeams=False, isRecurrent=False,
+                                     funcAtiv='softmax', isPassadaTempoDupla=False)
+        allResults += "Ambas: " + str([str(round(k * 100, 1)) + "%" for k in footGolsHomeAmbas.predit[0]]) + "\n"
+        arrays.append(footGolsHomeAmbas.predit[0])'''
 
-            homePart2 = kerasNeurais.treinarLSTM(id_team_home=idTeamAway, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=True)
+        allResults += "\n"
 
-            homePart3 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=True, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=False, isRecurrent=False)
+        allResults += "--------------------------------------------------------------------------- \n\n"
+        print(allResults)
+        with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados-dqn.txt",
+                  "a", encoding="utf-8") as results:
+            results.write(allResults)
+            results.close()
 
-            homePart4 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=True, isGols=False, isAgruparTeams=True, idTypeReturn=3,
-                                                 isFiltrarTeams=False, isRecurrent=False)"""
-
-            """homePart1 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=True)
-
-            homePart2 = kerasNeurais.treinarLSTM(id_team_home=idTeamAway, id_team_away=idTeamHome,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=True)
-
-            homePart3 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=True, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=False)
-
-            homePart4 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=True, isGols=False, isAgruparTeams=False, idTypeReturn=3,
-                                                 isFiltrarTeams=True, isRecurrent=False)"""
-
-            homePart1 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=3,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart7 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=4,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart2 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart3 = kerasNeurais.treinarLSTM(id_team_home=idTeamHome, id_team_away=idTeamAway,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=5,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart4 = kerasNeurais.treinarLSTM(id_team_home=idTeamAway, id_team_away=idTeamHome,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=3,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart8 = kerasNeurais.treinarLSTM(id_team_home=idTeamAway, id_team_away=idTeamHome,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=4,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart5 = kerasNeurais.treinarLSTM(id_team_home=idTeamAway, id_team_away=idTeamHome,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=6,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            homePart6 = kerasNeurais.treinarLSTM(id_team_home=idTeamAway, id_team_away=idTeamHome,
-                                                 isAmbas=False, isGols=False, isAgruparTeams=False, idTypeReturn=5,
-                                                 isFiltrarTeams=True, isRecurrent=True, funcAtiv="softmax")
-
-            strInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
-            strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(season.year) + "\n"
-            strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-            """allResults = strInfos
-            allResults += "\n\n #### Home/Away sem ambas em saida Gols Home - Away sendo RNN #### \n"
-            allResults += homePart1 + "\n" + homePart2
-            allResults += "\n #### Home/Away com Todos em saida Gols Home - Away sendo Dense #### \n"
-            allResults += homePart3
-            allResults += "\n #### Home/Away com Todos em saida Superior Home - Away sendo Dense #### \n"
-            allResults += homePart4 + "\n\n"
-            allResults += "--------------------------------------------------------------------------- \n\n"""
-
-            allResults = strInfos
-            allResults += "\n\n #### Team Home #### \n"
-            allResults += str("ResulH W - E - D: " + homePart1)
-            allResults += str("ResulA W - E - D: " + homePart8)
-            allResults += str("GolsH 0 - 2 - 4: " + homePart2)
-            allResults += str("GolsA 0 - 2 - 4: " + homePart6)
-
-            allResults += "\n\n #### Team Away #### \n"
-            allResults += str("ResulA W - E - D: " + homePart4)
-            allResults += str("ResulH W - E - D: " + homePart7)
-            allResults += str("GolsA 0 - 2 - 4: " + homePart5)
-            allResults += str("GolsH 0 - 2 - 4: " + homePart3)
-
-            allResults += "\n\n"
-            allResults += "--------------------------------------------------------------------------- \n\n"
-
-            with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados.txt",
-                      "a", encoding="utf-8") as results:
-                results.write(allResults)
-                results.close()
-
-            # print(homeGols)
-            # print("#### AWAY ####")
-            # print(awayPart)
-            # print(awayGols)
-            print(allResults)
-            return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
-                                         " não se preocupe até o dia do jogo terei as informações."}, safe=False)
+        print(allResults)
+        return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
+                                     " não se preocupe até o dia do jogo terei as informações."}, safe=False)
     except Exception as exc:
         print(exc)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
                                      " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
-    dictPrevPartida = {
-        "v_ia": "0.35.1",
-        "erro": previsao.msg_erro,
-        "qtde_dados_home": previsao.qtde_dados_entrada,
-        "qtde_dados_away": previsao.qtde_dados_entrada,
-        "data_jogo_previsto": previsao.data_previsao
-    }
 
-    dictPrevPartida["previsao_home"] = {
-        "vitoria": f"{previsao.previsao[0][0][0] * 100:.2f}%",
-        "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%",
-        "derrota": f"{previsao.previsao[0][0][2] * 100:.2f}%"
-    }
+def obterPrevisaoListaPartida(request):
+    fixturesRegras = FixturesRegras()
+    nextGamesModel = NextGamesModel()
+    kerasSequencialNormal = KerasSequencialNormal()
 
-    dictPrevPartida["previsao_away"] = {
-        "vitoria": f"{previsao.previsao[0][1][2] * 100:.2f}%",
-        "empate": f"{previsao.previsao[0][1][1] * 100:.2f}%",
-        "derrota": f"{previsao.previsao[0][1][0] * 100:.2f}%"
-    }
+    try:
+        arrListGames = nextGamesModel.obterByColumns(arrNameColuns=["is_previu"], arrDados=[0])
+        msg = "##################################### new List ########################################\n"
+        with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados-dqn.txt",
+                  "a", encoding="utf-8") as results:
+            results.write(msg)
+            results.close()
+
+        for indexJogo in range(len(arrListGames)):
+            jogo: NextGames = arrListGames[indexJogo]
+
+            print("######### Treinando Partida ##########")
+            fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[jogo.id_team_home, jogo.id_team_away])
+
+            teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_home])[0]
+            teamAway: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_away])[0]
+
+            season: Season = fixturesRegras.fixturesModel.teamsModel.seasonsModel.obterByColumnsID(
+                arrDados=[jogo.id_season])[0]
+            league: League = fixturesRegras.fixturesModel.teamsModel.leaguesModel.obterByColumnsID(
+                arrDados=[season.id_league])[0]
+            country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
+                arrDados=[league.id_country])[0]
+
+            strInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
+            strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
+                season.year) + "\n"
+            strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n"
+
+            kerasSequencialNormal.gravarLogs(strInfos)
+
+            resultadoA = "\n#### Team " + teamHome.name + " - " + str(teamHome.id) + ": ####\n"
+            kerasSequencialNormal.gravarLogs(resultadoA)
+            prdict, arrAcertos = kerasSequencialNormal.getBestRedeNeuralByDataset(
+                arrIdsTeam=[jogo.id_team_home], isAgruparTeams=False, idTypeReturn=4,
+                isFiltrarTeams=True, isRecurrent=True, funcAtiv='softmax', isPassadaTempoDupla=False,
+                nRedes=4, qtdeTentativas=5)
+            print("blablablabalb")
+            print(prdict)
+            print(arrAcertos)
+            resultadoA = "\nWinner Home: \n"
+            resultadoA += str(prdict) + "\n" + str(arrAcertos) + "\n"
+            kerasSequencialNormal.gravarLogs(resultadoA)
+
+            # -------
+
+            resultadoB = "\n#### Team " + teamAway.name + " - " + str(teamAway.id) + ": ####\n"
+            kerasSequencialNormal.gravarLogs(resultadoB)
+            prdict, arrAcertos = kerasSequencialNormal.getBestRedeNeuralByDataset(
+                arrIdsTeam=[jogo.id_team_away], isAgruparTeams=False, idTypeReturn=4, isFiltrarTeams=True,
+                isRecurrent=True, funcAtiv='softmax', isPassadaTempoDupla=False, nRedes=4, qtdeTentativas=5)
+
+            print("blablablabalb")
+            print(prdict)
+            print(arrAcertos)
+            resultadoB = "\nWinner Away: \n"
+            resultadoB += str(prdict) + "\n" + str(arrAcertos) + "\n"
+            kerasSequencialNormal.gravarLogs(resultadoB)
+
+            '''footGolsHomeB = ViviFoot(id_team_home=jogo.id_team_home, id_team_away=None, isAmbas=False,
+                                     isAgruparTeams=False, idTypeReturn=5, isFiltrarTeams=True, isRecurrent=True,
+                                     funcAtiv='softmax', isPassadaTempoDupla=True, qtdeDados=60)
+            allResults += "Winner Home: \n"
+            for k in range(len(footGolsHomeB.predit)):
+                allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeB.predit[k]]) + "\n"
+            allResults += str(footGolsHomeB.qtdeAcertos) + "\n"
+
+            # -------
+            footGolsHomeBA = ViviFoot(id_team_home=jogo.id_team_away, id_team_away=None, isAmbas=False,
+                                      isAgruparTeams=False, idTypeReturn=5, isFiltrarTeams=True, isRecurrent=True,
+                                      funcAtiv='softmax', isPassadaTempoDupla=True, qtdeDados=60)
+            allResults += "Winner Away: \n"
+            for k in range(len(footGolsHomeBA.predit)):
+                allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeBA.predit[k]]) + "\n"
+            allResults += str(footGolsHomeBA.qtdeAcertos) + "\n"
+
+            # -------'''
+
+            allResults = "\n---------------------------------------------------------------------------\n\n"
+            kerasSequencialNormal.gravarLogs(allResults)
+
+            jogo.is_previu = 1
+            nextGamesModel.salvar(data=[jogo.__dict__])
+        return JsonResponse({"erro": "SUCESSS Lista de times prevista"}, safe=False)
+    except Exception as exc:
+        print(exc)
+        return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
+                                     " não se preocupe até o dia do jogo terei as informações."}, safe=False)
 
 
-    print("######### Previsões ##########")
-    name_team_home = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0].name
-    name_team_away = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0].name
-    #print("Team home: ", name_team_home, "Team away: ", name_team_away)
-    print(dictPrevPartida["previsao_home"], dictPrevPartida["previsao_away"])
-    database.closeConnection()
-    return JsonResponse({"response": dictPrevPartida}, safe=False)
+def addTeamsToList(request):
+    fixturesRegras = FixturesRegras()
+    nextGamesModel = NextGamesModel()
+
+    idSeason = request.GET.get("id_season")
+    idTeamHome = request.GET.get("id_team_home")
+    idTeamAway = request.GET.get("id_team_away")
+
+    if idSeason is None and idTeamHome is None:
+        raise "É necessário passar o prametro id_season ou id_team"
+
+    idSeason = int(idSeason)
+    idTeamHome = int(idTeamHome)
+    idTeamAway = int(idTeamAway) if idTeamAway is not None else None
+
+    try:
+        teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0]
+        teamAway: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0]
+
+        season: Season = fixturesRegras.fixturesModel.teamsModel.seasonsModel.obterByColumnsID(
+            arrDados=[idSeason])[0]
+        league: League = fixturesRegras.fixturesModel.teamsModel.leaguesModel.obterByColumnsID(
+            arrDados=[season.id_league])[0]
+        country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
+            arrDados=[league.id_country])[0]
+
+        strInfos = "Adicionado Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
+        strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
+            season.year) + "\n"
+        strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        print(strInfos)
+        print("team Home: ", teamHome.name, " - ", teamHome.id, " / ", idTeamHome)
+        print("team Away: ", teamAway.name, " - ", teamAway.id, " / ", idTeamAway)
+
+        if idTeamHome != teamHome.id or idTeamAway != teamAway.id:
+            raise Exception("Ids teams estao diferentes para adicionar")
+
+        fixtureGame = fixturesRegras.obterProximoJogo(id_team=idTeamHome, id_team_away=idTeamAway)
+
+        arrNewNextGame = nextGamesModel.obterByColumns(arrNameColuns=["id_fixture"], arrDados=[fixtureGame.id])
+        if len(arrNewNextGame) == 0:
+            newNextGame = NextGames()
+        elif len(arrNewNextGame) >= 2:
+            raise Exception("Dados duplicados no banco para add to list para a fixture: ", fixtureGame.id)
+        else:
+            newNextGame = arrNewNextGame[0]
+
+        newNextGame.id_team_home = idTeamHome
+        newNextGame.id_team_away = idTeamAway
+        newNextGame.id_season = idSeason
+        newNextGame.id_fixture = fixtureGame.id
+        newNextGame.data_jogo = fixtureGame.date.strftime(nextGamesModel.formato_datetime_YYYY_MM_DD_H_M_S)
+        newNextGame.is_previu = 0
+
+        nextGamesModel.salvar([newNextGame])
+
+        return JsonResponse({"sucess": "Time adicionado com successo a lista."}, safe=False)
+    except Exception as exc:
+        print(exc)
+        return JsonResponse({"erro": exc}, safe=False)
+
 
 def obterPrevisaoTeam(request):
     pass

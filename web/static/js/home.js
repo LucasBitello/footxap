@@ -46,6 +46,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     let newEvent = new Event("change")
     document.getElementById("select-country").dispatchEvent(newEvent)
     document.getElementById("select-tabela-jogos").dispatchEvent(newEvent)
+    document.getElementById("get-teams-to-list").addEventListener("click", async () => {
+        await getTeamsToList()
+    })
 });
 
 async function ajustarSelectCountry(id_html_select) {
@@ -264,8 +267,14 @@ async function showJogos(id_season){
                     data-name-team-away="${team["team_away"]["info_team"]["name"]}"
                     data-logo-team-away="${team["team_away"]["info_team"]["logo"]}"> 
                         ${team["team_home"]["name_team"]} <b>VS</b> ${team["team_away"]["name_team"]}
-                    </a> 
-                    <br> as: ${team["data_jogo"]}
+                    </a> &emsp; 
+                    <button type="button" class="btn-add-teams-to-list"
+                     data-id-team-home="${team["team_home"]["id_team"]}"
+                     data-id-team-away="${team["team_away"]["id_team"]}"
+                     data-data-jogo="${team["data_jogo"]}">
+                        add to list
+                    </button>
+                    <br> as: ${team["data_jogo"]} 
                 </td>
             </tr>`
 
@@ -292,8 +301,17 @@ async function showJogos(id_season){
 
 
                 await fazerRequisicaoParaIA(id_season_selected, id_team_home, id_team_away)
-            })
-        }
+        })}
+
+        let elementsBtnAddTeamsToList = document.querySelectorAll(".btn-add-teams-to-list")
+        for (let element of elementsBtnAddTeamsToList){
+            element.addEventListener("click", async () => {
+                let id_season_selected = document.getElementById("select-season").value
+                let id_team_home = element.getAttribute("data-id-team-home")
+                let id_team_away = element.getAttribute("data-id-team-away")
+
+                await addTeamsToList(id_season_selected, id_team_home, id_team_away)
+        })}
     }
 }
 
@@ -528,3 +546,13 @@ function obterSetaInclinacaoMedia(mediaEstatistica){
     return name_class
 }
 
+async function addTeamsToList(id_season, id_team_home, id_team_away){
+    let params = "/add-teams-to-list?id_season="+id_season+"&id_team_home="+id_team_home+"&id_team_away="+id_team_away
+    console.log(id_season, id_team_home, id_team_away)
+    await callGETAPI(params, true, true)
+}
+
+async function getTeamsToList(){
+    let params = "/get-teams-to-list"
+    await callGETAPI(params, true, true)
+}

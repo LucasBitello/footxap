@@ -4,7 +4,7 @@ class CountriesRegras:
     def __init__(self):
         self.countriesModel = CountriesModel()
 
-    def obter(self, id: int = None) -> list[Country]:
+    def obter(self, id: int = None) -> list:
         if id is None:
             self.countriesModel.atualizarDados()
             arrDados = self.countriesModel.obterTudo()

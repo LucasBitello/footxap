@@ -3,13 +3,13 @@ from copy import deepcopy
 from api.regras.iaUteisRegras import IAUteisRegras
 from sklearn.model_selection import KFold
 class ModelDataFF:
-    def __init__(self, arrEntradas: list[list], arrRotulos: list[list[list]],
-                 arrDadosPrever: list[list] = None, arrNameFuncAtivacaoCadaOculta: list[str] = [],
-                 arrNameFuncAtivacaoCadaSaida: list[str] = [],
-                 arrValoresTaxaAprendizadoOculta: list[float] = [],
-                 arrValoresTaxaAprendizadoSaida: list[float] = [],
-                 arrValoresTaxaL2Oculta: list[float] = [],
-                 arrValoresTaxaL2Saida: list[float] = []):
+    def __init__(self, arrEntradas: list, arrRotulos: list,
+                 arrDadosPrever: list = None, arrNameFuncAtivacaoCadaOculta: list = [],
+                 arrNameFuncAtivacaoCadaSaida: list = [],
+                 arrValoresTaxaAprendizadoOculta: list = [],
+                 arrValoresTaxaAprendizadoSaida: list = [],
+                 arrValoresTaxaL2Oculta: list = [],
+                 arrValoresTaxaL2Saida: list = []):
 
         if len(arrRotulos[0][0]) == 0:
             raise "reveja os rótulos nao é uma list[list[list]]"
@@ -17,22 +17,22 @@ class ModelDataFF:
         self.iaRegras = IAUteisRegras()
         self.n_epocas: int = 1500
 
-        self.taxa_aprendizado_culta: list[float] = arrValoresTaxaAprendizadoOculta
-        self.taxa_aprendizado_saida: list[float] = arrValoresTaxaAprendizadoSaida
-        self.taxa_regularizacao_l2_oculta: list[float] = arrValoresTaxaL2Oculta
-        self.taxa_regularizacao_l2_saida: list[float] = arrValoresTaxaL2Saida
+        self.taxa_aprendizado_culta: list = arrValoresTaxaAprendizadoOculta
+        self.taxa_aprendizado_saida: list = arrValoresTaxaAprendizadoSaida
+        self.taxa_regularizacao_l2_oculta: list = arrValoresTaxaL2Oculta
+        self.taxa_regularizacao_l2_saida: list = arrValoresTaxaL2Saida
 
-        self.arr_n_camada_oculta: list[int] = [len(arrEntradas[0])]
+        self.arr_n_camada_oculta: list = [len(arrEntradas[0])]
         self.nNeuroniosEntrada: int = len(arrEntradas[0])
-        self.arrCamadasSaida: list[int] = [len(saida) for saida in arrRotulos[0]]
+        self.arrCamadasSaida: list = [len(saida) for saida in arrRotulos[0]]
         self.arrNameFuncCamadaSaida = []
 
-        self.arr_entradas: list[list] = arrEntradas
+        self.arr_entradas: list = arrEntradas
         # Lista de dados com os dados divididos em camadas lista rotulos com lista de camada
-        self.arr_rotulos: list[list[list]] = arrRotulos
-        self.arr_dados_prever: list[list] = arrDadosPrever
-        self.arrFuncAtivacaoCadaOculta: list[list[any, any]] = []
-        self.arrFuncAtivacaoCadaSaida: list[list[any, any]] = []
+        self.arr_rotulos: list = arrRotulos
+        self.arr_dados_prever: list = arrDadosPrever
+        self.arrFuncAtivacaoCadaOculta: list = []
+        self.arrFuncAtivacaoCadaSaida: list = []
 
         if len(arrNameFuncAtivacaoCadaSaida) == 0:
             for camadaSaida in self.arr_rotulos[0]:
@@ -158,7 +158,7 @@ class FF:
 
         return arrXavier
 
-    def forward(self, entradas: list[list]) -> (list[list], list[list[list]]):
+    def forward(self, entradas: list) -> (list, list):
         ativacoesOcultas = []
         pMatricialOcultos = []
         arrSaidas = []
@@ -185,8 +185,8 @@ class FF:
 
         return pMatricialOcultos, ativacoesOcultas, pMatricialSaidas, arrSaidas
 
-    def backward(self, entradas: list[list], estados_ocultos: list[list], saidas_rede: list[list[list]],
-                 rotulos:list[list[list]], pMatricalOcultas: list[list], pMatricialSaidas: list[list], acertos: list):
+    def backward(self, entradas: list, estados_ocultos: list, saidas_rede: list,
+                 rotulos:list, pMatricalOcultas: list, pMatricialSaidas: list, acertos: list):
         dWh, dWo = [], []
         dAdaWh, dAdaWo = [], []
         dbh, dbo = [], []
@@ -262,7 +262,7 @@ class FF:
             self.Adabh[indexOculto] += dAdabh[indexOculto] ** 2
             self.bh[indexOculto] -= (self.txAprendizadoOculta[indexOculto] * dAdabh[indexOculto]) / (numpy.sqrt(self.Adabh[indexOculto]) + 1e-9)
 
-    def calcular_erro(self, rotulos: list[list[list]], arrPrevisoes:list[list[list[list]]], isPrintar: bool = True) -> list[list, list, list]:
+    def calcular_erro(self, rotulos: list, arrPrevisoes:list, isPrintar: bool = True) -> list:
         arrEntropy, arrAcurracy = [], []
         acertos = []
 
@@ -339,7 +339,7 @@ class FF:
 
         return mediaEntropy, mediaAcurracy, acertos
 
-    def prever(self, entradas: list[list], isPrintar: bool = True):
+    def prever(self, entradas: list, isPrintar: bool = True):
         pMatricialOcultos, ativacoesOcultas, pMatricialSaidas, arrSaidas = self.forward(entradas=entradas)
         saidaNorm = []
 

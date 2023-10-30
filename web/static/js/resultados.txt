@@ -619,3 +619,403 @@ GolsH 0 - 2 - 4: As probabilidades são: [0: 0.05;  1: 0.95;  2: 0.00;  ]
 
 --------------------------------------------------------------------------- 
 
+Prevendo Jogo: Vaca Díez VS Real Tomayapo
+Pais: Bolivia - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-09 15:15:20
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 1.00;  3: 0.00;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.97;  1: 0.00;  2: 0.00;  3: 0.02;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.02;  1: 0.98;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.03;  2: 0.01;  3: 0.00;  4: 0.97;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 1.00;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Villarreal II VS Espanyol
+Pais: Spain - Liga: Segunda División - Season: 2023
+Data da analise: 2023-10-09 15:23:45
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.14;  1: 0.00;  2: 0.84;  3: 0.02;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.00;  3: 0.00;  4: 1.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.09;  1: 0.91;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  3: 0.00;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.04;  2: 0.91;  3: 0.00;  4: 0.05;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.97;  1: 0.03;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Burton Albion VS Cambridge United
+Pais: England - Liga: League One - Season: 2023
+Data da analise: 2023-10-09 15:34:57
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.54;  2: 0.05;  3: 0.40;  4: 0.01;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.02;  1: 0.01;  2: 0.97;  3: 0.00;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.96;  3: 0.02;  4: 0.02;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.23;  2: 0.26;  3: 0.51;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Deportes Santa Cruz VS Deportes Iquique
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:12:25
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.07;  2: 0.87;  3: 0.06;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.06;  2: 0.50;  3: 0.02;  4: 0.41;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.68;  1: 0.02;  2: 0.26;  3: 0.04;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.02;  2: 0.96;  3: 0.02;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.99;  1: 0.01;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: San Marcos de Arica VS Antofagasta
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:19:09
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.09;  3: 0.91;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.01;  1: 0.00;  2: 0.00;  3: 0.98;  4: 0.01;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.97;  1: 0.03;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.02;  1: 0.98;  2: 0.00;  3: 0.00;  4: 0.01;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.99;  2: 0.01;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.85;  1: 0.15;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Cobreloa VS San Luis
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:25:04
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.01;  1: 0.06;  2: 0.93;  3: 0.00;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.02;  3: 0.05;  4: 0.93;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.88;  1: 0.03;  2: 0.08;  3: 0.00;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.83;  3: 0.12;  4: 0.05;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.01;  1: 0.87;  2: 0.12;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.99;  1: 0.01;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Santiago Wanderers VS Deportes Temuco
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:30:39
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.92;  1: 0.08;  2: 0.00;  3: 0.00;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.02;  2: 0.01;  3: 0.97;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.97;  1: 0.03;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.89;  2: 0.04;  3: 0.07;  4: 0.01;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.01;  1: 0.00;  2: 0.00;  3: 0.07;  4: 0.92;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.10;  1: 0.90;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+-------------------------------rede com mais neuros--------------------------------------------
+
+Prevendo Jogo: Deportes Santa Cruz VS Deportes Iquique
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:35:47
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.03;  2: 0.93;  3: 0.04;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.03;  2: 0.63;  3: 0.05;  4: 0.30;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.98;  1: 0.02;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.42;  1: 0.02;  2: 0.53;  3: 0.02;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.03;  2: 0.93;  3: 0.03;  4: 0.01;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: San Marcos de Arica VS Antofagasta
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:41:39
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.08;  3: 0.92;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.01;  1: 0.00;  2: 0.00;  3: 0.95;  4: 0.04;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.90;  1: 0.10;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.01;  1: 0.99;  2: 0.00;  3: 0.00;  4: 0.01;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.55;  2: 0.45;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.72;  1: 0.28;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Cobreloa VS San Luis
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:45:45
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.01;  1: 0.15;  2: 0.83;  3: 0.00;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.08;  3: 0.08;  4: 0.83;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.88;  1: 0.08;  2: 0.02;  3: 0.01;  4: 0.01;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.85;  3: 0.12;  4: 0.03;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 0.98;  2: 0.02;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Santiago Wanderers VS Deportes Temuco
+Pais: Chile - Liga: Primera B - Season: 2023
+Data da analise: 2023-10-09 16:49:52
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.83;  1: 0.15;  2: 0.00;  3: 0.00;  4: 0.02;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.05;  2: 0.08;  3: 0.86;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.76;  1: 0.24;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.95;  2: 0.02;  3: 0.03;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.01;  1: 0.00;  2: 0.00;  3: 0.05;  4: 0.94;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.12;  1: 0.88;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Canuelas VS Comunicaciones
+Pais: Argentina - Liga: Primera B Metropolitana - Season: 2023
+Data da analise: 2023-10-09 17:12:39
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.99;  3: 0.01;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.81;  3: 0.06;  4: 0.13;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.76;  1: 0.24;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.15;  1: 0.06;  2: 0.80;  3: 0.00;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.99;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.86;  1: 0.12;  2: 0.03;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.09;  1: 0.91;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Arsenal Sarandi VS Banfield
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-09 17:19:09
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.25;  2: 0.00;  3: 0.51;  4: 0.24;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.99;  2: 0.00;  3: 0.00;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.00;  3: 0.99;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.24;  1: 0.38;  2: 0.00;  3: 0.38;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.86;  1: 0.14;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.56;  1: 0.44;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Barracas Central VS Colon Santa Fe
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-09 17:24:42
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.96;  2: 0.01;  3: 0.03;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.60;  1: 0.01;  2: 0.00;  3: 0.40;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.01;  1: 0.98;  2: 0.01;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.62;  2: 0.00;  3: 0.00;  4: 0.37;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.02;  3: 0.97;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Sportivo Ameliano VS Sportivo Luqueno
+Pais: Paraguay - Liga: Division Profesional - Clausura - Season: 2023
+Data da analise: 2023-10-09 17:29:38
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.12;  3: 0.86;  4: 0.01;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.97;  2: 0.00;  3: 0.03;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.05;  1: 0.95;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.03;  2: 0.00;  3: 0.97;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.87;  2: 0.13;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.04;  1: 0.96;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Libertad VS Guayaquil City FC
+Pais: Ecuador - Liga: Liga Pro - Season: 2023
+Data da analise: 2023-10-09 17:59:52
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.03;  3: 0.03;  4: 0.94;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.75;  2: 0.25;  3: 0.00;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.01;  1: 0.99;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.24;  3: 0.76;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.97;  1: 0.01;  2: 0.02;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.09;  1: 0.91;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.06;  1: 0.94;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Aurora VS Guabirá
+Pais: Bolivia - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-09 18:06:06
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.70;  1: 0.00;  2: 0.29;  3: 0.01;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  3: 0.00;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.58;  1: 0.00;  2: 0.42;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.78;  1: 0.07;  2: 0.15;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.00;  3: 1.00;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.31;  3: 0.00;  4: 0.68;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Blooming VS Royal Pari
+Pais: Bolivia - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-09 18:10:16
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.70;  2: 0.00;  3: 0.25;  4: 0.04;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.01;  1: 0.25;  2: 0.73;  3: 0.01;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.01;  1: 0.99;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.81;  3: 0.18;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.01;  1: 0.35;  2: 0.00;  3: 0.64;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 0.10;  1: 0.90;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Velez Sarsfield VS Atletico Tucuman
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-09 18:15:50
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  3: 0.00;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.02;  2: 0.98;  3: 0.01;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.01;  2: 0.97;  3: 0.02;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 0.00;  3: 1.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Sport Recife VS Ponte Preta
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-09 18:22:20
+
+ #### Team Home #### 
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 1.00;  3: 0.00;  4: 0.00;  ]
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 1.00;  3: 0.00;  4: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.96;  1: 0.00;  2: 0.04;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+
+
+ #### Team Away #### 
+ResulA W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 1.00;  3: 0.00;  4: 0.00;  ]
+ResulH W - E - D: As probabilidades são: [0: 0.00;  1: 0.00;  2: 1.00;  3: 0.00;  4: 0.00;  ]
+GolsA 0 - 2 - 4: As probabilidades são: [0: 1.00;  1: 0.00;  2: 0.00;  ]
+GolsH 0 - 2 - 4: As probabilidades são: [0: 0.00;  1: 1.00;  2: 0.00;  ]
+
+
+--------------------------------------------------------------------------- 
+

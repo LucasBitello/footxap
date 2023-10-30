@@ -142,8 +142,7 @@ class FixturesModel(Model):
 
         self.executarQuery(query=query, params=[])
 
-
-    def atualizarDados(self, id_season: int = None, arr_ids_team: list[int] = [], qtde_dados_estatisticas: int = 15):
+    def atualizarDados(self, id_season: int = None, arr_ids_team: list= [], qtde_dados_estatisticas: int = 15):
         dateNow = datetime.now().strftime("%Y-%m-%d")
 
         if id_season is not None:
@@ -154,7 +153,6 @@ class FixturesModel(Model):
                 self.atualizarTabela(model=self, functionAtualizacao=functionAttFixtures, isForçarAtualização=True)
                 season.last_get_fixtures_api = datetime.now().strftime(self.seasonsModel.formato_datetime_YYYY_MM_DD_H_M_S)
                 self.seasonsModel.salvar(data=season)
-
 
         if len(arr_ids_team) >= 1:
             for id_team in arr_ids_team:
@@ -176,14 +174,13 @@ class FixturesModel(Model):
                             country: Country = self.countriesModel.obterByColumns(arrNameColuns=["name"],
                                                                                   arrDados=[countryAPI["name"]])[0]
                             self.leaguesModel.atualizarDados(id_country=country.id)
-                            arrLeaguesDB = self.obterByReferenceApi(dadosBusca=[id_league_api])
 
                         elif len(arrLeaguesDB) >= 2 or len(arrLeaguesDB) == 0:
                             raise "Leagues duplicadas ou sem league"
 
                         else:
                             league: League = arrLeaguesDB[0]
-                            arrSeasons: list[Season] = self.seasonsModel.obterByColumns(arrNameColuns=["id_league"], arrDados=[league.id])
+                            arrSeasons: list = self.seasonsModel.obterByColumns(arrNameColuns=["id_league"], arrDados=[league.id])
 
                             for season in arrSeasons:
                                 arrFixturesEmAberto = self.obterFixturesOrderDataBy(id_season=season.id, id_team=None,
@@ -194,7 +191,6 @@ class FixturesModel(Model):
                                 isObterFixtures = season.last_get_fixtures_api is None or \
                                                   (season.last_get_fixtures_api.strftime("%Y-%m-%d") < dateNow and season.current == 1) or \
                                                   (isPossuisFixturesEmAberto and season.current == 0)
-
 
                                 if season.last_get_teams_api is None or (season.last_get_teams_api.strftime("%Y-%m-%d") < dateNow and season.current == 1):
                                     self.teamsModel.atualizarDados(id_season=season.id)
@@ -211,10 +207,9 @@ class FixturesModel(Model):
                     team.last_get_data_api = datetime.now().strftime(self.teamsModel.formato_datetime_YYYY_MM_DD_H_M_S)
                     self.teamsModel.salvar(data=[team])
 
-                arrFixturesForStatistics: list[Fixture] = self.obterFixturesOrderDataBy(id_team=id_team, isASC=False,
-                                                                           limit=qtde_dados_estatisticas,
-                                                                           isApenasConcluidas=True,
-                                                                           isApenasComStatistics=True)
+                arrFixturesForStatistics: list = (
+                    self.obterFixturesOrderDataBy(id_team=id_team, isASC=False, limit=qtde_dados_estatisticas,
+                                                  isApenasConcluidas=True, isApenasComStatistics=True))
 
                 #for fixture in arrFixturesForStatistics:
                     #seasonFixture: Season = self.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
@@ -225,7 +220,7 @@ class FixturesModel(Model):
                         #self.salvar(data=[fixture])
 
     def obterFixturesOrderDataBy(self, id_season: int = None, id_team: int = None, isASC: bool = True, limit: int = None,
-                                 isApenasConcluidas: bool = True, isApenasComStatistics: bool = False, isApenasEmAberto: bool = False) -> list[Fixture]:
+                                 isApenasConcluidas: bool = True, isApenasComStatistics: bool = False, isApenasEmAberto: bool = False) -> list:
 
         arrStatusConcluido = ["'FT'", "'AET'", "'PEN'"]
         arrStatusEmAberto = ["'NS'", "'TBD'", "'PST'"]
@@ -262,7 +257,7 @@ class FixturesModel(Model):
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture, params=arrParams)
         return arrFixtures
 
-    def obterAllFixturesByIdsSeasons(self, arrIds: list[int]) -> list[Fixture]:
+    def obterAllFixturesByIdsSeasons(self, arrIds: list) -> list:
         arrIds = [str(id) for id in arrIds]
         query = f"SELECT * from {self.name_table} as fix WHERE fix.id_season in({','.join(arrIds)})" \
                 f" AND (fix.status = 'FT' OR fix.status = 'AET' OR fix.status = 'PEN')" \
@@ -271,7 +266,7 @@ class FixturesModel(Model):
         arrFixtures = self.database.executeSelectQuery(query=query, classModelDB=Fixture)
         return arrFixtures
 
-    def obterNextFixtureByidSeasonTeam(self, id_team: int, arrIdsFixtureIgnorar: list = [], id_season: int = None) -> list[Fixture]:
+    def obterNextFixtureByidSeasonTeam(self, id_team: int, arrIdsFixtureIgnorar: list = [], id_season: int = None) -> list:
         sqlIdsIgnorar = ""
         arrIdsFixtureIgnorar = [str(idFix) for idFix in arrIdsFixtureIgnorar]
         if len(arrIdsFixtureIgnorar) >= 2:

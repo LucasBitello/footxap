@@ -106,14 +106,14 @@ class StatisticsRegras:
 
     def obterAllFixturesByIdTeams(self, idTeamPrincipal: int, idTeamAdversario: int = None, id_season: int = None,
                                   isFiltrarTeams: bool = True, qtdeDados: int = 40,
-                                  qtdeJogosAnterioresPrever: int = None) -> list[TeamsPlaysEntrada]:
+                                  qtdeJogosAnterioresPrever: int = None) -> list:
         arrKeysFinished = ['FT', 'AET', 'PEN', 'CANC']
-        arrFixtures: list[Fixture] = self.fixturesRegras.obterTodasASFixturesSeasonAllTeamsByIdTeam(
+        arrFixtures: list = self.fixturesRegras.obterTodasASFixturesSeasonAllTeamsByIdTeam(
             idTeamHome=idTeamPrincipal,
             idTeamAway=idTeamAdversario,
             id_season=id_season)
 
-        arrTeamsPlays: list[TeamsPlaysEntrada] = []
+        arrTeamsPlays: list = []
 
         for fixture in arrFixtures:
             fixture.season: Season = fixture.season
@@ -126,7 +126,7 @@ class StatisticsRegras:
             newTeamPlays.saida_prevista_partida.qtde_gols_marcados_home = 0
             newTeamPlays.saida_prevista_partida.qtde_gols_marcados_away = 0
 
-            fixture.teams: list[FixtureTeams] = fixture.teams
+            fixture.teams: list = fixture.teams
             indexOutherTeam = 1
 
             arrIdsHomeAway = [idTeamPrincipal]
@@ -287,8 +287,8 @@ class StatisticsRegras:
         return arrTeamsPlaysFiltrado
 
 
-    def normalizarDadosTeamsPlayDataset(self, arrTeamsPlays: list[TeamsPlaysEntrada],
-                                        arrIdsTeamPrever: list[int]) -> TeamsPlaysDataset:
+    def normalizarDadosTeamsPlayDataset(self, arrTeamsPlays: list,
+                                        arrIdsTeamPrever: list) -> TeamsPlaysDataset:
 
         arrKeysIgnorarDadosEntrada: list = ["data_fixture", "is_prever", "name_team_home", "name_team_away",
                                             "saida_prevista_partida", "qtde_gols_marcados_away",
@@ -302,8 +302,8 @@ class StatisticsRegras:
         arrDadosEsperadosPartida: list = []
         arrDadosPrever: list = []
 
-        ordemNameValuesEntrada: list[str] = []
-        ordemNameValuesSaidaPartida: list[str] = []
+        ordemNameValuesEntrada: list = []
+        ordemNameValuesSaidaPartida: list = []
 
         isSalvouOrdem = False
         data_previsao = None
@@ -380,9 +380,9 @@ class StatisticsRegras:
 
         return newTeamsPlaysDataset
 
-    def obterDatasetNormalizadoUnicoPlaysTeam(self, arrTeamsPlays: list[TeamsPlaysEntrada], idTeam: int) -> TeamsPlaysDataset:
-        arrNameDadosEntrada: list[str] = []
-        arrNameDadosEsperados: list[str] = []
+    def obterDatasetNormalizadoUnicoPlaysTeam(self, arrTeamsPlays: list, idTeam: int) -> TeamsPlaysDataset:
+        arrNameDadosEntrada: list = []
+        arrNameDadosEsperados: list = []
         arrDadosEntrada: list = []
         arrDadosEsperados: list = []
         arrDadosPrever: list = []
@@ -408,17 +408,17 @@ class StatisticsRegras:
                 keyFilterTeam = "_away"
                 keyFilterOutr = "_home"
 
-            arrKeysComunsGetData: list[str] = ["id_season"]
-            arrKeysAbrevGetData: list[str] = ["is_playing_home", "id_team", "qtde_pontos_season", "qtde_saldo_gols",
+            arrKeysComunsGetData: list = ["id_season"]
+            arrKeysAbrevGetData: list = ["is_playing_home", "id_team", "qtde_pontos_season", "qtde_saldo_gols",
                                               "media_gols_marcados", "media_gols_sofridos", "qtde_gols_marcados",
                                               "media_vitorias", "is_decline_media_vitorias", "qtde_vitorias",
                                               "media_derrotas", "is_decline_media_derrotas", "qtde_derrotas",
                                               "media_empates", "is_decline_media_empates", "qtde_empates"]
 
-            arrKeysIgnorGetData: list[str] = ["data_fixture", "is_prever", "name_team", "saida_prevista_partida",
+            arrKeysIgnorGetData: list = ["data_fixture", "is_prever", "name_team", "saida_prevista_partida",
                                               "qtde_gols_marcados", "id_country_team_home", "id_league", "id_country_team_away"]
 
-            arrKeysAbreSaida: list[str] = ["probabilidades"]
+            arrKeysAbreSaida: list = ["probabilidades"]
 
             keysEntradaDict = teamDict.keys()
             keysSaidaDict = saidaDict.keys()
@@ -540,7 +540,7 @@ class StatisticsRegras:
 
         return teamsPlaysDataset
 
-    def obterUltimaTeamPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int, id_season: int = None) -> TeamsPlaysEntrada:
+    def obterUltimaTeamPlay(self, arrTeamsPlaysEntrada: list, id_team: int, id_season: int = None) -> TeamsPlaysEntrada:
         for teamsPlay in list(reversed(arrTeamsPlaysEntrada)):
             teamsPlay: TeamsPlaysEntrada = teamsPlay
             if id_season is not None:
@@ -552,9 +552,8 @@ class StatisticsRegras:
 
         return None
 
-
-    def atualizarUltimaTeamsPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int, name_atributo: str,
-                                     value_atributo: int, id_season: int = None) -> None:
+    def atualizarUltimaTeamsPlay(self, arrTeamsPlaysEntrada: list, id_team: int, name_atributo: str,
+                                 value_atributo: int, id_season: int = None) -> None:
         for teamsPlay in list(reversed(arrTeamsPlaysEntrada)):
             if id_season is not None:
                 if teamsPlay.id_season == id_season and (teamsPlay.id_team_home == id_team or teamsPlay.id_team_away == id_team):
@@ -565,7 +564,7 @@ class StatisticsRegras:
                     setattr(teamsPlay, name_atributo, value_atributo)
                     break
 
-    def calcularMediaGolsTeamsPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int,
+    def calcularMediaGolsTeamsPlay(self, arrTeamsPlaysEntrada: list, id_team: int,
                                    id_season: int = None, nUltimosJogos: int = 6):
         arrGolsMarcados = []
         arrGolsSofridos = []
@@ -630,8 +629,8 @@ class StatisticsRegras:
 
         return saldoGols
 
-    def calcularMediaVDETeamsPlay(self, arrTeamsPlaysEntrada: list[TeamsPlaysEntrada], id_team: int, is_home: bool,
-                                   id_season: int = None, nUltimosJogos: int = 5, typeInfo: str = None) -> list[int, int]:
+    def calcularMediaVDETeamsPlay(self, arrTeamsPlaysEntrada: list, id_team: int, is_home: bool,
+                                   id_season: int = None, nUltimosJogos: int = 5, typeInfo: str = None) -> list:
         """
             type info qtde: V, D ou E
         """
@@ -700,10 +699,10 @@ class StatisticsRegras:
 
 
     def last_opponent_winner(self, id_home_or_away: int, id_opponent: int, data_fixture: str = None):
-        arrFixtures: list[Fixture] = self.fixturesRegras.obter(id_team=id_home_or_away)
+        arrFixtures: list = self.fixturesRegras.obter(id_team=id_home_or_away)
         isWinner: int = None
         for fixture in list(reversed(arrFixtures)):
-            fixture.teams: list[FixtureTeams] = fixture.teams
+            fixture.teams: list = fixture.teams
 
             if fixture.teams[0].id_team == id_opponent or fixture.teams[1].id_team == id_opponent:
                 if fixture.teams[0].id_team == id_home_or_away:

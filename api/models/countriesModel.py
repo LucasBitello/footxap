@@ -38,7 +38,7 @@ class CountriesModel(Model):
         self.executarQuery(query=query, params=[])
 
 
-    def fazerConsultaApiFootball(self, name: str = None, code: str = None, search: str = None) -> list[dict]:
+    def fazerConsultaApiFootball(self, name: str = None, code: str = None, search: str = None) -> list:
         arrParams = []
         query = "countries"
         nameColumnResponseData = "response"
@@ -78,12 +78,12 @@ class CountriesModel(Model):
 
     def atualizarDados(self):
         functionAttDB = lambda: self.atualizarDBCountries()
-        arrCountries: list[Country] = self.obterTudo()
+        arrCountries: list = self.obterTudo()
         isForçarAtualização = len(arrCountries) == 0
         self.atualizarTabela(model=self, functionAtualizacao=functionAttDB, isForçarAtualização=isForçarAtualização)
 
 class Country(ClassModel):
-    def __init__(self, country: dict|object = None):
+    def __init__(self, country = None):
         self.id: int = None
         self.name: str = None
         self.code: str = None

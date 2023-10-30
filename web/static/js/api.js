@@ -57,7 +57,8 @@ async function callGETAPI(params, isShowLoader = true, isMostrarMensagem = false
         if (responseJson["erro"] === undefined){
             return responseJson["response"]
         }else {
-            alert(responseJson["erro"])
+            const result = new Audio(URL_BASE + "/static/js/msg.mp3")
+            result.play()
         }
 
     }catch (error){

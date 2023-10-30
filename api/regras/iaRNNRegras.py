@@ -9,34 +9,34 @@ from api.regras.iaUteisRegras import IAUteisRegras
 
 
 class ModelDataRNN:
-    def __init__(self, arrEntradas: list[list], arrRotulos: list[list[list]],
-                 arrDadosPrever: list[list[list]] = None, arrNameFuncAtivacaoCadaOculta: list[str] = [],
-                 arrNameFuncAtivacaoCadaSaida: list[str] = [],
-                 arrValoresTaxaAprendizadoOculta: list[float] = [],
-                 arrValoresTaxaAprendizadoSaida: list[float] = [],
-                 arrValoresTaxaL2Oculta: list[float] = [],
-                 arrValoresTaxaL2Saida: list[float] = []):
+    def __init__(self, arrEntradas: list, arrRotulos: list,
+                 arrDadosPrever: list = None, arrNameFuncAtivacaoCadaOculta: list = [],
+                 arrNameFuncAtivacaoCadaSaida: list = [],
+                 arrValoresTaxaAprendizadoOculta: list = [],
+                 arrValoresTaxaAprendizadoSaida: list = [],
+                 arrValoresTaxaL2Oculta: list = [],
+                 arrValoresTaxaL2Saida: list = []):
 
         if len(arrRotulos[0][0]) == 0:
             raise Exception("reveja os rótulos nao é uma list[list[list]]")
 
         self.iaRegras = IAUteisRegras()
         self.n_epocas: int = 25000
-        self.taxa_aprendizado_culta: list[float] = arrValoresTaxaAprendizadoOculta
-        self.taxa_aprendizado_saida: list[float] = arrValoresTaxaAprendizadoSaida
-        self.taxa_regularizacao_l2_oculta: list[float] = arrValoresTaxaL2Oculta
-        self.taxa_regularizacao_l2_saida: list[float] = arrValoresTaxaL2Saida
+        self.taxa_aprendizado_culta: list = arrValoresTaxaAprendizadoOculta
+        self.taxa_aprendizado_saida: list = arrValoresTaxaAprendizadoSaida
+        self.taxa_regularizacao_l2_oculta: list = arrValoresTaxaL2Oculta
+        self.taxa_regularizacao_l2_saida: list = arrValoresTaxaL2Saida
 
-        self.arr_n_camada_oculta: list[int] = [len(arrEntradas[0])]
+        self.arr_n_camada_oculta: list = [len(arrEntradas[0])]
         self.nNeuroniosEntrada: int = len(arrEntradas[0])
-        self.arrCamadasSaida: list[int] = [len(saida) for saida in arrRotulos[0]]
+        self.arrCamadasSaida: list = [len(saida) for saida in arrRotulos[0]]
 
-        self.arr_entradas: list[list] = arrEntradas
+        self.arr_entradas: list = arrEntradas
         # Lista de dados com os dados divididos em camadas lista rotulos com lista de camada
-        self.arr_rotulos: list[list[list]] = arrRotulos
-        self.arr_dados_prever: list[list[list]] = arrDadosPrever
-        self.arrFuncAtivacaoCadaSaida: list[list[any, any]] = []
-        self.arrFuncAtivacaoCamadaOculta: list[list[any, any]] = []
+        self.arr_rotulos: list = arrRotulos
+        self.arr_dados_prever: list = arrDadosPrever
+        self.arrFuncAtivacaoCadaSaida: list = []
+        self.arrFuncAtivacaoCamadaOculta: list = []
 
         if len(arrNameFuncAtivacaoCadaSaida) == 0:
             for camadaSaida in self.arr_rotulos[0]:

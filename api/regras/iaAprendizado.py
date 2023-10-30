@@ -15,9 +15,9 @@ from api.regras.datasetPartidasRegras import DatasetPartidasRegras
 class ModelPrevisao:
     def __init__(self):
         self.qtde_dados_entrada: int = None
-        self.previsao: list[list[list]] = []
-        self.arr_entradas_originais: list[list] = []
-        self.arr_rotulos: list[list[list]] = []
+        self.previsao: list = []
+        self.arr_entradas_originais: list = []
+        self.arr_rotulos: list = []
         self.tx_aprendizado: float = None
         self.L2_regularizacao: float = None
         self.nEpocas: int = None

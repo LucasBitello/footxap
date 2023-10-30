@@ -25,9 +25,9 @@ class SeasonsModel(Model):
         self.criarTableDataBase()
 
 
-    def obterSeasonAtualByIdLeague(self, idLeague: int) -> Season | None:
+    def obterSeasonAtualByIdLeague(self, idLeague: int):
         query = f"SELECT * FROM {self.name_table} WHERE id_league = {idLeague} AND current = 1"
-        arrSeasons: list[Season] = self.database.executeSelectQuery(query=query, classModelDB=self.classModelDB, params=[])
+        arrSeasons: list = self.database.executeSelectQuery(query=query, classModelDB=self.classModelDB, params=[])
 
         if len(arrSeasons) == 0:
             return None
@@ -63,14 +63,13 @@ class SeasonsModel(Model):
 
         self.executarQuery(query=query, params=[])
 
-
     def atualizarDBSeasonsByLeague(self, arrSeasonsAPI: list[dict], id_league_db: int):
         if type(arrSeasonsAPI) != list or id_league_db is None:
             raise "Opaa dados em formato diferente dos desejados para as seasons: \n" + str(arrSeasonsAPI)
 
         for dataSeason in arrSeasonsAPI:
             arrSeason: list[Season] = self.obterByColumns(arrNameColuns=["id_league", "year"],
-                                                         arrDados=[id_league_db, dataSeason["year"]])
+                                                          arrDados=[id_league_db, dataSeason["year"]])
 
             newSeason = Season()
 
@@ -83,9 +82,9 @@ class SeasonsModel(Model):
             else:
                 newSeason = arrSeason[0]
 
-            #Feito para evitar dados muito antigos não é util por Hora.
+            # Feito para evitar dados muito antigos não é util por Hora.
             if int(dataSeason["year"]) <= 2020:
-                 continue
+                continue
 
             newSeason.id_league = id_league_db
             newSeason.year = dataSeason["year"]

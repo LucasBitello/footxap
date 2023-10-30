@@ -18,18 +18,23 @@ from django.urls import path
 from web.views.home import index
 #from api.views.tests import urlTesteMetodos
 from api.views.api import obterCountries, obterLeagues, obterSeasons, searchTeams, \
-    obterPrevisaoPartida, obterTabelaPontuacao, obterTabelaJogos, obterPrevisaoTeam, obterEstatisticas, urlTesteMetodos
+    obterPrevisaoPartida, obterTabelaPontuacao, obterTabelaJogos, obterPrevisaoTeam, obterEstatisticas, \
+    urlTesteMetodos, addTeamsToList, obterPrevisaoListaPartida
+import tensorflow
+
+tensorflow.compat.v1.disable_eager_execution()
+tensorflow.compat.v1.enable_eager_execution()
 
 nivelAPIatual = "api/v1"
 
 urlpatterns = [
-    #Somente para testes
+    # Somente para testes
     path('test/', urlTesteMetodos),
 
     path('admin/', admin.site.urls),
     path('home/', index),
 
-    #Urls para obter a base dos itens
+    # Urls para obter a base dos itens
     path(nivelAPIatual + '/countries', obterCountries),
     path(nivelAPIatual + '/leagues', obterLeagues),
     path(nivelAPIatual + '/seasons', obterSeasons),
@@ -40,5 +45,7 @@ urlpatterns = [
     path(nivelAPIatual + '/previsao-team', obterPrevisaoTeam),
     path(nivelAPIatual + '/previsao-partida', obterPrevisaoPartida),
     path(nivelAPIatual + '/tabela', obterTabelaPontuacao),
-    path(nivelAPIatual + '/jogos', obterTabelaJogos)
+    path(nivelAPIatual + '/jogos', obterTabelaJogos),
+    path(nivelAPIatual + '/add-teams-to-list', addTeamsToList),
+    path(nivelAPIatual + '/get-teams-to-list', obterPrevisaoListaPartida)
 ]

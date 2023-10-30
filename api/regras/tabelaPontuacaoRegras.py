@@ -68,10 +68,10 @@ class TabelaPontuacaoRegras:
 
             last_index_ultimos_jogos = 0
 
-            arrFixtures: list[Fixture] = self.fixturesRegras.obter(id_team=team.id, id_season=id_season)
+            arrFixtures: list = self.fixturesRegras.obter(id_team=team.id, id_season=id_season)
 
             for fixture in arrFixtures:
-                fixture.teams: list[FixtureTeams] = fixture.teams
+                fixture.teams: list = fixture.teams
                 newUltimoJogo = InfoTeamJogo()
 
                 for fixtureTeam in fixture.teams:

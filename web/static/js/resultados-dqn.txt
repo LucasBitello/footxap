@@ -1,0 +1,3938 @@
+##################################### new List sem agrupar ########################################
+Prevendo Jogo: Wolves VS Newcastle
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-28 15:38:55
+
+Winner Home: 
+['79.9%', '1.1%', '87.4%', '11.5%']
+[4, 4, 6, 6, 10]
+Winner Away: 
+['0.0%', '0.1%', '76.4%', '24.3%']
+[4, 5, 4, 4, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Mallorca VS Getafe
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-28 15:40:14
+
+Winner Home: 
+['76.8%', '0.0%', '0.0%', '100.0%']
+[7, 6, 5, 5, 10]
+Winner Away: 
+['0.0%', '8.9%', '0.0%', '100.0%']
+[6, 4, 8, 8, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Lecce VS Torino
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 15:41:01
+
+Winner Home: 
+['78.2%', '0.1%', '0.0%', '100.0%']
+[1, 6, 6, 6, 10]
+Winner Away: 
+['100.0%', '0.0%', '98.2%', '2.0%']
+[5, 6, 8, 8, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: RB Leipzig VS FC Koln
+Pais: Germany - Liga: Bundesliga - Season: 2023
+Data da analise: 2023-10-28 15:41:41
+
+Winner Home: 
+['100.0%', '0.0%', '100.0%', '0.0%']
+[7, 9, 8, 8, 10]
+Winner Away: 
+['0.0%', '100.0%', '0.0%', '100.0%']
+[6, 9, 3, 3, 10]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Mallorca VS Getafe
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-28 15:50:48
+
+Winner Home: 
+['93.8%', '0.0%', '0.0%', '100.0%']
+[6, 7, 5, 5, 10]
+Winner Away: 
+['20.5%', '0.0%', '0.0%', '100.0%']
+[5, 10, 8, 8, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Lecce VS Torino
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 15:51:36
+
+Winner Home: 
+['0.1%', '49.8%', '0.0%', '100.0%']
+[4, 7, 6, 6, 10]
+Winner Away: 
+['0.0%', '16.6%', '4.2%', '95.8%']
+[7, 5, 6, 6, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: RB Leipzig VS FC Koln
+Pais: Germany - Liga: Bundesliga - Season: 2023
+Data da analise: 2023-10-28 15:52:23
+
+Winner Home: 
+['100.0%', '0.0%', '100.0%', '0.0%']
+[6, 6, 8, 8, 10]
+Winner Away: 
+['100.0%', '0.0%', '97.0%', '3.7%']
+[7, 6, 6, 6, 10]
+
+---------------------------------------------------------------------------
+
+footGolsHome = ViviFoot(id_team_home=jogo.id_team_home, id_team_away=jogo.id_team_away, isAmbas=False,
+                                    isAgruparTeams=True, idTypeReturn=4, isFiltrarTeams=True, isRecurrent=False,
+                                    funcAtiv='sigmoid', isPassadaTempoDupla=False)
+            allResults += "Winner Home: \n"
+            for k in range(len(footGolsHome.predit)):
+                allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHome.predit[k]]) + "\n"
+            allResults += str(footGolsHome.qtdeAcertos) + "\n"
+
+##################################### new List  ########################################
+
+Prevendo Jogo: GIL Vicente VS SC Braga
+Pais: Portugal - Liga: Primeira Liga - Season: 2023
+Data da analise: 2023-10-28 16:02:51
+
+Winner Home: 
+['0.0%', '0.1%', '0.5%', '99.4%']
+[8, 8, 7, 7, 10]
+Winner Away: 
+['1.2%', '0.0%', '0.0%', '100.0%']
+[5, 5, 3, 3, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Fortaleza EC VS LDU de Quito
+Pais: World - Liga: CONMEBOL Sudamericana - Season: 2023
+Data da analise: 2023-10-28 16:04:03
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '100.0%']
+[5, 4, 4, 4, 10]
+Winner Away: 
+['0.0%', '98.1%', '0.0%', '100.0%']
+[6, 8, 8, 8, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Chacarita Juniors VS Temperley
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-28 16:05:19
+
+Winner Home: 
+['39.6%', '0.0%', '0.0%', '100.0%']
+[3, 6, 5, 5, 10]
+Winner Away: 
+['28.5%', '19.2%', '99.9%', '0.1%']
+[7, 5, 6, 6, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Santa Ana VS Futbol Consultants Moravia
+Pais: Costa-Rica - Liga: Liga de Ascenso - Season: 2023
+Data da analise: 2023-10-28 16:06:04
+
+Winner Home: 
+['98.1%', '51.1%', '0.2%', '99.9%']
+[7, 5, 4, 4, 10]
+Winner Away: 
+['100.0%', '0.0%', '0.0%', '100.0%']
+[4, 6, 7, 7, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Deportivo Municipal VS Academia Cantolao
+Pais: Peru - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-28 16:07:00
+
+Winner Home: 
+['0.0%', '89.9%', '99.9%', '0.1%']
+[7, 5, 4, 4, 10]
+Winner Away: 
+['0.0%', '100.0%', '0.0%', '100.0%']
+[8, 9, 6, 6, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Sport Boys VS Cienciano
+Pais: Peru - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-28 16:07:41
+
+Winner Home: 
+['0.0%', '100.0%', '97.3%', '2.5%']
+[3, 6, 5, 5, 10]
+Winner Away: 
+['0.0%', '0.0%', '0.0%', '100.0%']
+[5, 8, 4, 4, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Cesar Vallejo VS Cusco
+Pais: Peru - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-28 16:08:33
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%', '100.0%']
+[6, 5, 6, 6, 10]
+Winner Away: 
+['100.0%', '0.0%', '99.3%', '0.8%']
+[3, 10, 3, 3, 10]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Criciuma VS Sampaio Correa
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 16:18:19
+
+Winner Home: 
+['0.0%', '0.4%', '0.0%', '100.0%']
+[5, 4, 9, 9, 10]
+Winner Away: 
+['2.3%', '0.0%', '0.0%', '100.0%']
+[5, 7, 6, 6, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Ituano VS Mirassol
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 16:19:09
+
+Winner Home: 
+['0.4%', '0.0%', '0.0%', '100.0%']
+[3, 7, 5, 5, 10]
+Winner Away: 
+['99.2%', '100.0%', '0.0%', '100.0%']
+[9, 9, 5, 5, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Juventus VS Verona
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 16:20:00
+
+Winner Home: 
+['100.0%', '5.0%', '100.0%', '0.0%']
+[2, 4, 3, 3, 10]
+Winner Away: 
+['98.3%', '0.0%', '0.1%', '99.9%']
+[4, 6, 2, 2, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: FC Kaiserslautern VS Hamburger SV
+Pais: Germany - Liga: 2. Bundesliga - Season: 2023
+Data da analise: 2023-10-28 16:20:51
+
+Winner Home: 
+['100.0%', '0.0%', '98.0%', '1.8%']
+[3, 8, 5, 5, 10]
+Winner Away: 
+['100.0%', '0.0%', '0.1%', '99.9%']
+[3, 4, 6, 6, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Al Wehda Club VS Al-Ettifaq
+Pais: Saudi-Arabia - Liga: Pro League - Season: 2023
+Data da analise: 2023-10-28 16:21:44
+
+Winner Home: 
+['100.0%', '1.3%', '100.0%', '0.0%']
+[5, 6, 6, 6, 10]
+Winner Away: 
+['0.0%', '99.9%', '84.1%', '15.9%']
+[5, 6, 3, 3, 10]
+
+--------------------------------------------------------------------------- 
+
+footGolsHomeB = ViviFoot(id_team_home=jogo.id_team_away, id_team_away=jogo.id_team_home, isAmbas=False,
+                                     isAgruparTeams=True, idTypeReturn=2, isFiltrarTeams=True, isRecurrent=False,
+                                     funcAtiv='softmax', isPassadaTempoDupla=False)
+##################################### new List ########################################
+Prevendo Jogo: Criciuma VS Sampaio Correa
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 16:25:18
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[5, 3, 1, 1]
+Winner Away: 
+['12.4%', '87.6%', '0.0%']
+[4, 2, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Ituano VS Mirassol
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 16:25:57
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[2, 3, 3, 2]
+Winner Away: 
+['21.9%', '0.0%', '78.1%']
+[8, 0, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Juventus VS Verona
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 16:26:32
+
+Winner Home: 
+['99.9%', '0.0%', '0.1%']
+[1, 4, 2, 3]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 3, 2, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: FC Kaiserslautern VS Hamburger SV
+Pais: Germany - Liga: 2. Bundesliga - Season: 2023
+Data da analise: 2023-10-28 16:27:12
+
+Winner Home: 
+['44.8%', '55.2%', '0.0%']
+[5, 1, 0, 4]
+Winner Away: 
+['99.9%', '0.1%', '0.0%']
+[3, 0, 2, 5]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Al Wehda Club VS Al-Ettifaq
+Pais: Saudi-Arabia - Liga: Pro League - Season: 2023
+Data da analise: 2023-10-28 16:27:51
+
+Winner Home: 
+['99.9%', '0.0%', '0.1%']
+[4, 0, 1, 5]
+Winner Away: 
+['1.7%', '0.0%', '98.3%']
+[3, 2, 2, 3]
+
+--------------------------------------------------------------------------- 
+
+footGolsHomeBA = ViviFoot(id_team_home=jogo.id_team_away, id_team_away=jogo.id_team_home, isAmbas=True,
+                                     isAgruparTeams=True, idTypeReturn=2, isFiltrarTeams=True, isRecurrent=False,
+                                     funcAtiv='softmax', isPassadaTempoDupla=False)
+            allResults += "Winner Away: \n"
+            for k in range(len(footGolsHomeBA.predit)):
+                allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeBA.predit[k]]) + "\n"
+            allResults += str(footGolsHomeBA.qtdeAcertos) + "\n"
+
+##################################### new List ########################################
+Prevendo Jogo: Criciuma VS Sampaio Correa
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 16:46:41
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[5, 3, 2]
+Winner Away: 
+['36.6%', '63.4%', '0.0%']
+[4, 4, 2]
+Winner Away: 
+['0.0%', '7.5%', '92.5%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Ituano VS Mirassol
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 16:48:33
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[2, 6, 2]
+Winner Away: 
+['1.0%', '0.0%', '99.0%']
+[8, 1, 1]
+Winner Away: 
+['99.9%', '0.1%', '0.0%']
+[2, 6, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Juventus VS Verona
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 16:50:30
+
+Winner Home: 
+['99.8%', '0.0%', '0.2%']
+[0, 6, 4]
+Winner Away: 
+['99.9%', '0.0%', '0.1%']
+[2, 5, 3]
+Winner Away: 
+['10.2%', '89.5%', '0.3%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: FC Kaiserslautern VS Hamburger SV
+Pais: Germany - Liga: 2. Bundesliga - Season: 2023
+Data da analise: 2023-10-28 16:52:29
+
+Winner Home: 
+['32.0%', '68.0%', '0.0%']
+[5, 2, 3]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 3, 5]
+Winner Away: 
+['0.0%', '100.0%', '0.0%']
+[5, 3, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Al Wehda Club VS Al-Ettifaq
+Pais: Saudi-Arabia - Liga: Pro League - Season: 2023
+Data da analise: 2023-10-28 16:54:35
+
+Winner Home: 
+['99.8%', '0.0%', '0.2%']
+[4, 1, 5]
+Winner Away: 
+['0.1%', '0.0%', '99.9%']
+[3, 3, 4]
+Winner Away: 
+['99.7%', '0.0%', '0.3%']
+[6, 3, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Criciuma VS Sampaio Correa
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 17:05:08
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[5, 2, 3]
+Winner Away: 
+['22.3%', '77.7%', '0.0%']
+[4, 3, 3]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['0.0%', '100.0%', '0.0%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Ituano VS Mirassol
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 17:07:01
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[3, 6, 1]
+Winner Away: 
+['0.7%', '0.0%', '99.3%']
+[10, 0, 0]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['100.0%', '0.0%', '0.0%']
+[4, 4, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Juventus VS Verona
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 17:09:01
+
+Winner Home: 
+['99.8%', '0.0%', '0.2%']
+[1, 5, 4]
+Winner Away: 
+['99.9%', '0.0%', '0.1%']
+[2, 5, 3]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['0.0%', '100.0%', '0.0%']
+[3, 5, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: FC Kaiserslautern VS Hamburger SV
+Pais: Germany - Liga: 2. Bundesliga - Season: 2023
+Data da analise: 2023-10-28 17:10:37
+
+Winner Home: 
+['55.7%', '44.3%', '0.0%']
+[4, 2, 4]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 3, 5]
+Winner Ambas: 
+['96.0%', '0.0%', '4.0%']
+['99.8%', '0.0%', '0.2%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Al Wehda Club VS Al-Ettifaq
+Pais: Saudi-Arabia - Liga: Pro League - Season: 2023
+Data da analise: 2023-10-28 17:12:08
+
+Winner Home: 
+['99.4%', '0.0%', '0.6%']
+[4, 1, 5]
+Winner Away: 
+['0.5%', '0.0%', '99.5%']
+[4, 2, 4]
+Winner Ambas: 
+['0.9%', '0.0%', '99.1%']
+['100.0%', '0.0%', '0.0%']
+[7, 3, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Criciuma VS Sampaio Correa
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 17:21:48
+
+Winner Home: 
+['0.0%', '99.9%', '0.1%']
+[5, 3, 2]
+Winner Away: 
+['0.0%', '99.9%', '0.1%']
+[6, 4, 0]
+Winner Ambas: 
+['33.1%', '66.9%', '0.0%']
+['0.0%', '97.5%', '2.5%']
+[2, 4, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Ituano VS Mirassol
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 17:23:12
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[1, 5, 4]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[3, 2, 5]
+Winner Ambas: 
+['0.0%', '100.0%', '0.0%']
+['0.0%', '100.0%', '0.0%']
+[3, 7, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Juventus VS Verona
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 17:24:34
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[2, 5, 3]
+Winner Away: 
+['0.4%', '99.6%', '0.0%']
+[5, 5, 0]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['98.7%', '0.1%', '1.2%']
+[2, 5, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: FC Kaiserslautern VS Hamburger SV
+Pais: Germany - Liga: 2. Bundesliga - Season: 2023
+Data da analise: 2023-10-28 17:25:58
+
+Winner Home: 
+['0.0%', '55.4%', '44.6%']
+[4, 2, 4]
+Winner Away: 
+['99.8%', '0.2%', '0.0%']
+[4, 3, 3]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['19.5%', '80.4%', '0.0%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Al Wehda Club VS Al-Ettifaq
+Pais: Saudi-Arabia - Liga: Pro League - Season: 2023
+Data da analise: 2023-10-28 17:27:27
+
+Winner Home: 
+['0.2%', '0.0%', '99.8%']
+[5, 1, 4]
+Winner Away: 
+['2.2%', '0.0%', '97.8%']
+[1, 3, 6]
+Winner Ambas: 
+['12.5%', '0.0%', '87.5%']
+['0.0%', '0.0%', '100.0%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Agropecuario VS Ferro Carril Oeste
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-28 17:32:17
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[1, 5, 4]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[3, 6, 1]
+Winner Ambas: 
+['3.3%', '96.7%', '0.0%']
+['99.9%', '0.1%', '0.0%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Nacional Potosí VS Independiente Petrolero
+Pais: Bolivia - Liga: Copa de la División Profesional - Season: 2023
+Data da analise: 2023-10-28 17:34:13
+
+Winner Home: 
+['0.3%', '0.0%', '99.7%']
+[4, 4, 2]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[5, 3, 2]
+Winner Ambas: 
+['98.8%', '0.0%', '1.2%']
+['0.0%', '0.0%', '100.0%']
+[2, 4, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Puntarenas FC VS AD Guanacasteca
+Pais: Costa-Rica - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-28 17:35:52
+
+Winner Home: 
+['0.0%', '5.2%', '94.8%']
+[7, 1, 2]
+Winner Away: 
+['3.3%', '80.9%', '15.7%']
+[3, 2, 5]
+Winner Ambas: 
+['0.0%', '43.7%', '56.3%']
+['92.2%', '7.8%', '0.0%']
+[6, 1, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Philadelphia Union VS New England Revolution
+Pais: USA - Liga: Major League Soccer - Season: 2023
+Data da analise: 2023-10-28 17:37:46
+
+Winner Home: 
+['0.0%', '0.0%', '99.9%']
+[4, 5, 1]
+Winner Away: 
+['17.4%', '0.0%', '82.6%']
+[3, 5, 2]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['89.2%', '0.0%', '10.8%']
+[1, 8, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Union Omaha VS Charlotte Independence
+Pais: USA - Liga: USL League One - Season: 2023
+Data da analise: 2023-10-28 17:39:40
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[9, 1, 0]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[5, 4, 1]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['100.0%', '0.0%', '0.0%']
+[5, 3, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Nacional Asuncion VS Sportivo Ameliano
+Pais: Paraguay - Liga: Division Profesional - Clausura - Season: 2023
+Data da analise: 2023-10-28 17:41:45
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[4, 2, 4]
+Winner Away: 
+['3.9%', '96.1%', '0.0%']
+[3, 1, 6]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['0.0%', '99.5%', '0.4%']
+[3, 3, 4]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: America Mineiro VS Gremio
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 18:35:01
+
+Winner Home: 
+['84.1%', '0.0%', '15.9%']
+['100.0%', '0.0%', '0.0%']
+[7, 5, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palmeiras VS Bahia
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 18:38:18
+
+Winner Home: 
+['0.3%', '0.0%', '99.7%']
+['100.0%', '0.0%', '0.0%']
+[9, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Vila Nova VS Atletico Goianiense
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-28 18:41:26
+
+Winner Home: 
+['0.0%', '2.7%', '97.3%']
+['100.0%', '0.0%', '0.0%']
+[7, 5, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Boca Juniors VS Estudiantes L.P.
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-28 18:44:29
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+['100.0%', '0.0%', '0.0%']
+[9, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Forge VS Cavalry FC
+Pais: Canada - Liga: Canadian Premier League - Season: 2023
+Data da analise: 2023-10-28 18:47:38
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+['1.8%', '98.1%', '0.1%']
+[9, 1, 5]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Perez Zeledon VS Municipal Grecia
+Pais: Costa-Rica - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-28 19:02:24
+
+Winner Home: 
+['64.2%', '1.7%', '34.1%']
+['89.6%', '0.0%', '10.4%']
+[14, 1, 0]
+Winner Away: 
+['6.3%', '0.0%', '93.7%']
+[6, 3, 1]
+Winner Ambas: 
+['94.2%', '0.6%', '5.1%']
+['100.0%', '0.0%', '0.0%']
+[5, 4, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Emelec VS Universidad Catolica
+Pais: Ecuador - Liga: Liga Pro - Season: 2023
+Data da analise: 2023-10-28 19:05:58
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+['0.0%', '0.0%', '100.0%']
+[11, 1, 3]
+Winner Away: 
+['99.3%', '0.1%', '0.7%']
+[5, 5, 0]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['0.0%', '0.0%', '100.0%']
+[6, 3, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Charleston Battery VS Birmingham Legion
+Pais: USA - Liga: USL Championship - Season: 2023
+Data da analise: 2023-10-28 19:09:10
+
+Winner Home: 
+['0.4%', '0.0%', '99.6%']
+['98.3%', '0.0%', '1.7%']
+[5, 1, 9]
+Winner Away: 
+['99.8%', '0.0%', '0.1%']
+[2, 2, 6]
+Winner Ambas: 
+['100.0%', '0.0%', '0.0%']
+['100.0%', '0.0%', '0.0%']
+[4, 0, 6]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Louisville City VS Detroit City
+Pais: USA - Liga: USL Championship - Season: 2023
+Data da analise: 2023-10-28 19:12:13
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+['100.0%', '0.0%', '0.0%']
+[7, 1, 7]
+Winner Away: 
+['17.0%', '83.0%', '0.0%']
+[4, 1, 5]
+Winner Ambas: 
+['28.0%', '72.0%', '0.0%']
+['85.4%', '14.6%', '0.0%']
+[4, 2, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: North Carolina VS Northern Colorado
+Pais: USA - Liga: USL League One - Season: 2023
+Data da analise: 2023-10-28 19:15:13
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+['99.1%', '0.0%', '0.9%']
+[7, 5, 3]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[4, 4, 2]
+Winner Ambas: 
+['76.4%', '0.9%', '22.7%']
+['99.9%', '0.1%', '0.0%']
+[4, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Cruz Azul VS Leon
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-28 19:18:33
+
+Winner Home: 
+['1.6%', '0.0%', '98.4%']
+['0.0%', '0.0%', '100.0%']
+[6, 2, 7]
+Winner Away: 
+['99.7%', '0.0%', '0.3%']
+[4, 2, 4]
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%']
+['0.0%', '0.0%', '100.0%']
+[4, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Club Guarani VS Guairena FC
+Pais: Paraguay - Liga: Division Profesional - Clausura - Season: 2023
+Data da analise: 2023-10-28 19:21:41
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+['0.0%', '100.0%', '0.0%']
+[11, 4, 0]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[4, 4, 2]
+Winner Ambas: 
+['0.6%', '0.0%', '99.4%']
+['100.0%', '0.0%', '0.0%']
+[7, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Atletico-MG VS Fluminense
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 19:56:23
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+['0.0%', '99.0%', '1.0%']
+[6, 2, 7]
+Winner Away: 
+['93.1%', '0.0%', '6.9%']
+[4, 3, 3]
+Winner Ambas: 
+['0.4%', '94.4%', '5.2%']
+[4, 4, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Quilmes VS Gimnasia M.
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-28 20:00:12
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+['100.0%', '0.0%', '0.0%']
+[7, 0, 8]
+Winner Away: 
+['94.9%', '0.0%', '5.1%']
+[4, 3, 3]
+Winner Ambas: 
+['20.2%', '79.5%', '0.4%']
+[6, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Instituto Cordoba VS Velez Sarsfield
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-28 20:03:20
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+['93.5%', '0.0%', '6.5%']
+[8, 3, 4]
+Winner Away: 
+['7.9%', '92.1%', '0.0%']
+[4, 6, 0]
+Winner Ambas: 
+['95.9%', '3.8%', '0.3%']
+[6, 3, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: AD Cofutpa VS AD Sarchí
+Pais: Costa-Rica - Liga: Liga de Ascenso - Season: 2023
+Data da analise: 2023-10-28 20:06:17
+
+Winner Home: 
+['74.7%', '25.3%', '0.0%']
+['0.0%', '0.9%', '99.1%']
+[11, 1, 3]
+Winner Away: 
+['0.0%', '0.1%', '99.9%']
+[5, 3, 2]
+Winner Ambas: 
+['2.3%', '97.7%', '0.0%']
+[6, 4, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Los Angeles FC VS Vancouver Whitecaps
+Pais: USA - Liga: Major League Soccer - Season: 2023
+Data da analise: 2023-10-28 20:09:03
+
+Winner Home: 
+['0.0%', '99.6%', '0.4%']
+['0.0%', '100.0%', '0.0%']
+[5, 4, 6]
+Winner Away: 
+['0.0%', '0.5%', '99.5%']
+[2, 5, 3]
+Winner Ambas: 
+['0.2%', '28.4%', '71.4%']
+[3, 5, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Aserri FC VS Escorpiones Belén
+Pais: Costa-Rica - Liga: Liga de Ascenso - Season: 2023
+Data da analise: 2023-10-28 21:13:51
+
+Winner Home: 
+['0.0%', '99.4%', '0.0%', '0.0%']
+['0.0%', '99.6%', '0.1%', '0.0%']
+[13, 14, 11, 14, 15]
+Winner Away: 
+['0.0%', '100.0%', '89.6%', '0.0%']
+[4, 4, 5, 10, 10]
+Winner Ambas: 
+['6.9%', '13.7%', '85.6%', '0.3%']
+[6, 7, 7, 8, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Cimarrones VS Venados FC
+Pais: Mexico - Liga: Liga de Expansión MX - Season: 2023
+Data da analise: 2023-10-28 21:16:52
+
+Winner Home: 
+['0.0%', '100.0%', '78.0%', '0.0%']
+['0.0%', '100.0%', '74.9%', '0.0%']
+[11, 12, 11, 13, 15]
+Winner Away: 
+['0.0%', '64.9%', '27.8%', '0.0%']
+[5, 4, 1, 10, 10]
+Winner Ambas: 
+['1.1%', '92.4%', '0.0%', '0.4%']
+[5, 6, 10, 9, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Pachuca VS Puebla
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-28 21:19:45
+
+Winner Home: 
+['51.6%', '11.1%', '0.0%', '0.0%']
+['56.6%', '3.4%', '0.1%', '0.0%']
+[12, 11, 12, 15, 15]
+Winner Away: 
+['0.0%', '40.0%', '31.6%', '0.5%']
+[8, 5, 4, 8, 10]
+Winner Ambas: 
+['23.4%', '1.8%', '11.0%', '0.0%']
+[8, 7, 4, 8, 10]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Guadalajara Chivas VS Tigres UANL
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-28 21:22:58
+
+Winner Home: 
+['0.1%', '0.0%', '66.9%', '0.0%']
+['0.0%', '0.1%', '63.8%', '0.0%']
+[11, 10, 12, 15, 15]
+Winner Away: 
+['94.8%', '0.0%', '4.3%', '9.3%']
+[7, 2, 5, 8, 10]
+Winner Ambas: 
+['0.1%', '0.1%', '100.0%', '0.0%']
+[7, 3, 7, 10, 10]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Atletico-MG VS Fluminense
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 23:18:48
+
+Winner Ambas: 
+['0.0%', '0.0%', '100.0%', '0.0%']
+['0.0%', '0.0%', '100.0%', '0.0%']
+[13, 14, 12, 15, 15]
+Winner Home: 
+['1.0%', '98.3%', '27.9%']
+[6, 3, 3, 10]
+Winner Away: 
+['0.0%', '100.0%', '82.1%']
+[6, 3, 7, 10]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Atletico-MG VS Fluminense
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-28 23:29:11
+
+Winner Ambas: 
+['3.2%', '0.0%', '49.0%', '0.0%']
+['2.2%', '0.0%', '47.5%', '0.0%']
+[11, 12, 10, 14, 15]
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[5, 2, 3]
+Winner Away: 
+['39.4%', '33.6%', '27.0%']
+[3, 6, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Quilmes VS Gimnasia M.
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-28 23:30:19
+
+Winner Ambas: 
+['99.3%', '0.1%', '0.1%', '28.6%']
+['99.2%', '0.2%', '0.2%', '25.7%']
+[12, 7, 4, 11, 15]
+Winner Home: 
+['4.2%', '0.0%', '95.8%']
+[6, 3, 1]
+Winner Away: 
+['0.0%', '77.0%', '23.0%']
+[8, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Instituto Cordoba VS Velez Sarsfield
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-28 23:31:33
+
+Winner Ambas: 
+['0.1%', '98.2%', '0.0%', '0.0%']
+['0.1%', '98.3%', '0.0%', '0.0%']
+[13, 9, 9, 10, 15]
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[3, 5, 2]
+Winner Away: 
+['0.1%', '99.9%', '0.0%']
+[5, 4, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: AD Cofutpa VS AD Sarchí
+Pais: Costa-Rica - Liga: Liga de Ascenso - Season: 2023
+Data da analise: 2023-10-28 23:33:01
+
+Winner Ambas: 
+['1.0%', '4.5%', '99.3%', '0.0%']
+['1.2%', '3.5%', '99.3%', '0.0%']
+[11, 8, 8, 13, 15]
+Winner Home: 
+['0.3%', '0.4%', '99.3%']
+[6, 2, 2]
+Winner Away: 
+['0.0%', '99.9%', '0.1%']
+[5, 3, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Los Angeles FC VS Vancouver Whitecaps
+Pais: USA - Liga: Major League Soccer - Season: 2023
+Data da analise: 2023-10-28 23:33:47
+
+Winner Ambas: 
+['0.0%', '99.0%', '99.0%', '0.0%']
+['0.0%', '99.2%', '98.9%', '0.0%']
+[11, 7, 9, 10, 15]
+Winner Home: 
+['75.8%', '22.7%', '1.5%']
+[2, 3, 5]
+Winner Away: 
+['99.9%', '0.1%', '0.0%']
+[2, 6, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Los Cabos United VS Tritons Vallarta
+Pais: Mexico - Liga: Liga Premier Serie A - Season: 2023
+Data da analise: 2023-10-28 23:45:23
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[5, 3, 2]
+Winner Away: 
+['21.5%', '78.5%', '0.0%']
+[1, 7, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Monterrey VS Club America
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-28 23:45:54
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[4, 2, 4]
+Winner Away: 
+['0.0%', '91.5%', '8.5%']
+[4, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Los Cabos United VS Tritons Vallarta
+Pais: Mexico - Liga: Liga Premier Serie A - Season: 2023
+Data da analise: 2023-10-28 23:47:54
+
+Winner Home: 
+['0.0%', '0.0%', '99.9%']
+[5, 2, 3]
+Winner Away: 
+['0.0%', '87.5%', '12.5%']
+[5, 4, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Monterrey VS Club America
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-28 23:48:19
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[5, 1, 4]
+Winner Away: 
+['0.9%', '12.5%', '86.6%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+footGolsHomeB = ViviFoot(id_team_home=jogo.id_team_home, id_team_away=None, isAmbas=False,
+                                     isAgruparTeams=False, idTypeReturn=4, isFiltrarTeams=True, isRecurrent=True,
+                                     funcAtiv='softmax', isPassadaTempoDupla=True, qtdeDados=40)
+com 1 LSTM 128 neuronioss
+Prevendo Jogo: Central Coast Mariners VS Macarthur
+Pais: Australia - Liga: A-League - Season: 2023
+Data da analise: 2023-10-28 23:51:01
+
+Winner Home: 
+['99.6%', '0.0%', '0.4%']
+[5, 2, 3]
+Winner Away: 
+['0.0%', '0.1%', '99.9%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Oita Trinita VS Blaublitz Akita
+Pais: Japan - Liga: J2 League - Season: 2023
+Data da analise: 2023-10-28 23:51:28
+
+Winner Home: 
+['80.3%', '0.0%', '19.7%']
+[4, 2, 4]
+Winner Away: 
+['0.2%', '0.0%', '99.8%']
+[5, 5, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Fukushima United VS Kagoshima United
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-28 23:51:57
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[4, 3, 3]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[4, 2, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Imabari VS Grulla Morioka
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-28 23:52:29
+
+Winner Home: 
+['5.3%', '89.4%', '5.4%']
+[2, 5, 3]
+Winner Away: 
+['0.0%', '100.0%', '0.0%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Tegevajaro Miyazaki VS FC Ryukyu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-28 23:53:02
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[2, 6, 2]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 4, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Jeonnam Dragons VS Cheongju
+Pais: South-Korea - Liga: K League 2 - Season: 2023
+Data da analise: 2023-10-28 23:53:48
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[5, 3, 2]
+Winner Away: 
+['38.1%', '10.3%', '51.6%']
+[3, 5, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+footGolsHomeB = ViviFoot(id_team_home=jogo.id_team_home, id_team_away=None, isAmbas=False,
+                                     isAgruparTeams=False, idTypeReturn=5, isFiltrarTeams=True, isRecurrent=True,
+                                     funcAtiv='softmax', isPassadaTempoDupla=True, qtdeDados=40)
+com  LSTM de 64
+Prevendo Jogo: Machida Zelvia VS Kanazawa
+Pais: Japan - Liga: J2 League - Season: 2023
+Data da analise: 2023-10-29 00:00:46
+
+Winner Home: 
+['0.0%', '0.1%', '1.6%', '0.0%', '98.3%']
+[1, 5, 4]
+Winner Away: 
+['100.0%', '0.0%', '0.0%', '0.0%', '0.0%']
+[3, 2, 5]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Fagiano Okayama VS Tochigi SC
+Pais: Japan - Liga: J2 League - Season: 2023
+Data da analise: 2023-10-29 00:01:23
+
+Winner Home: 
+['0.0%', '1.6%', '0.0%', '98.4%', '0.0%']
+[2, 2, 6]
+Winner Away: 
+['16.8%', '0.0%', '0.0%', '83.2%', '0.0%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Montedio Yamagata VS Thespakusatsu Gunma
+Pais: Japan - Liga: J2 League - Season: 2023
+Data da analise: 2023-10-29 00:02:12
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%', '0.0%', '0.0%']
+[3, 2, 5]
+Winner Away: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[4, 2, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Omiya Ardija VS Ventforet Kofu
+Pais: Japan - Liga: J2 League - Season: 2023
+Data da analise: 2023-10-29 00:03:10
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%', '0.0%', '0.0%']
+[2, 3, 5]
+Winner Away: 
+['16.3%', '0.7%', '83.0%', '0.0%', '0.0%']
+[2, 6, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: JEF United Chiba VS Iwaki
+Pais: Japan - Liga: J2 League - Season: 2023
+Data da analise: 2023-10-29 00:04:18
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%', '0.0%', '0.0%']
+[3, 4, 3]
+Winner Away: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[2, 8, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Vanraure Hachinohe VS Kamatamare Sanuki
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 00:05:21
+
+Winner Home: 
+['14.0%', '0.1%', '0.0%', '85.9%', '0.0%']
+[2, 3, 5]
+Winner Away: 
+['3.4%', '96.6%', '0.1%', '0.0%', '0.0%']
+[4, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Parceiro Nagano VS Azul Claro Numazu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 00:06:21
+
+Winner Home: 
+['0.4%', '0.1%', '0.0%', '0.0%', '99.5%']
+[3, 4, 3]
+Winner Away: 
+['0.0%', '100.0%', '0.0%', '0.0%', '0.0%']
+[3, 2, 5]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Kataller Toyama VS FC Gifu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 00:07:23
+
+Winner Home: 
+['0.1%', '8.1%', '0.4%', '91.0%', '0.4%']
+[2, 0, 8]
+Winner Away: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Kitakyushu VS YSCC
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 00:08:28
+
+Winner Home: 
+['99.5%', '0.0%', '0.3%', '0.2%', '0.0%']
+[2, 3, 5]
+Winner Away: 
+['63.3%', '36.0%', '0.0%', '0.0%', '0.7%']
+[3, 2, 5]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Ulsan Hyundai FC VS Daegu FC
+Pais: South-Korea - Liga: K League 1 - Season: 2023
+Data da analise: 2023-10-29 00:11:45
+
+Winner Home: 
+['99.8%', '0.0%', '0.0%', '0.0%', '0.1%']
+[1, 5, 4]
+Winner Away: 
+['82.0%', '16.6%', '0.0%', '0.0%', '1.4%']
+[1, 7, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Suwon Bluewings VS Daejeon Citizen
+Pais: South-Korea - Liga: K League 1 - Season: 2023
+Data da analise: 2023-10-29 00:12:44
+
+Winner Home: 
+['0.1%', '4.5%', '0.0%', '95.4%', '0.0%']
+[1, 6, 3]
+Winner Away: 
+['0.0%', '0.3%', '99.7%', '0.0%', '0.0%']
+[3, 6, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Melbourne Victory VS Newcastle Jets
+Pais: Australia - Liga: A-League - Season: 2023
+Data da analise: 2023-10-29 02:39:59
+
+Winner Home: 
+['11.8%', '0.0%', '88.2%']
+[3, 3, 4]
+Winner Away: 
+['98.2%', '0.1%', '1.7%']
+[3, 4, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Kashiwa Reysol VS Kawasaki Frontale
+Pais: Japan - Liga: J1 League - Season: 2023
+Data da analise: 2023-10-29 02:40:24
+
+Winner Home: 
+['0.5%', '65.1%', '34.3%']
+[4, 6, 0]
+Winner Away: 
+['2.2%', '0.0%', '97.8%']
+[4, 4, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Busan I Park VS Bucheon FC 1995
+Pais: South-Korea - Liga: K League 2 - Season: 2023
+Data da analise: 2023-10-29 02:40:58
+
+Winner Home: 
+['99.8%', '0.2%', '0.0%']
+[2, 5, 3]
+Winner Away: 
+['25.0%', '75.0%', '0.0%']
+[4, 5, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Adelaide United VS Melbourne City
+Pais: Australia - Liga: A-League - Season: 2023
+Data da analise: 2023-10-29 02:41:32
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[1, 7, 2]
+Winner Away: 
+['0.0%', '49.8%', '50.2%']
+[4, 3, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Příbram II VS Petřín Plzeň
+Pais: Czech-Republic - Liga: 4. liga - Divizie A - Season: 2023
+Data da analise: 2023-10-29 02:42:20
+
+Winner Home: 
+['7.9%', '91.9%', '0.2%']
+[3, 6, 1]
+Winner Away: 
+['74.1%', '0.1%', '25.8%']
+[2, 4, 4]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Wuhan Three Towns VS Shenzhen Ruby FC
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:47:50
+
+Winner Home: 
+['86.9%', '0.0%', '13.1%']
+[4, 3, 3]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[9, 1, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Hangzhou Greentown VS Shijiazhuang Y. J.
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:48:15
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[4, 4, 2]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[3, 1, 6]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: SHANGHAI SIPG VS Shandong Luneng
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:48:38
+
+Winner Home: 
+['0.1%', '0.0%', '99.9%']
+[6, 2, 2]
+Winner Away: 
+['82.2%', '0.5%', '17.3%']
+[3, 5, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Beijing Guoan VS Chengdu Better City
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:49:03
+
+Winner Home: 
+['39.5%', '0.2%', '60.3%']
+[3, 5, 2]
+Winner Away: 
+['0.0%', '99.2%', '0.8%']
+[3, 3, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Henan Jianye VS Changchun Yatai
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:49:28
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[7, 3, 0]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[6, 4, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Wuhan Three Towns VS Shenzhen Ruby FC
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:51:54
+
+Winner Home: 
+['90.6%', '0.0%', '9.4%']
+[3, 1, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[5, 0, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Hangzhou Greentown VS Shijiazhuang Y. J.
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:52:10
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[2, 2, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 0, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: SHANGHAI SIPG VS Shandong Luneng
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:52:27
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[3, 1, 1]
+Winner Away: 
+['99.6%', '0.0%', '0.4%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Beijing Guoan VS Chengdu Better City
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:52:45
+
+Winner Home: 
+['95.4%', '0.0%', '4.5%']
+[1, 3, 1]
+Winner Away: 
+['0.5%', '72.8%', '26.6%']
+[0, 3, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Henan Jianye VS Changchun Yatai
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:53:04
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[4, 1, 0]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Qingdao Jonoon VS Dalian Aerbin
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:53:23
+
+Winner Home: 
+['93.5%', '6.5%', '0.0%']
+[2, 0, 3]
+Winner Away: 
+['4.9%', '94.8%', '0.3%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Tianjin Teda VS Shanghai Shenhua
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:53:44
+
+Winner Home: 
+['99.6%', '0.0%', '0.4%']
+[4, 1, 0]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Meizhou Kejia VS Nantong Zhiyun
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:54:06
+
+Winner Home: 
+['51.7%', '47.7%', '0.5%']
+[2, 3, 0]
+Winner Away: 
+['0.5%', '99.5%', '0.0%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Shandong Luneng VS Henan Jianye
+Pais: China - Liga: Super League - Season: 2023
+Data da analise: 2023-10-29 02:54:28
+
+Winner Home: 
+['47.9%', '0.1%', '51.9%']
+[1, 3, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[4, 1, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Malženice VS Spišská Nová Ves
+Pais: Slovakia - Liga: 2. liga - Season: 2023
+Data da analise: 2023-10-29 02:58:16
+
+Winner Home: 
+['66.7%', '10.9%', '22.4%']
+[2, 2, 1]
+Winner Away: 
+['94.3%', '4.7%', '1.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Petržalka VS Komárno
+Pais: Slovakia - Liga: 2. liga - Season: 2023
+Data da analise: 2023-10-29 02:58:44
+
+Winner Home: 
+['0.6%', '99.3%', '0.1%']
+[3, 2, 0]
+Winner Away: 
+['37.5%', '0.0%', '62.5%']
+[4, 1, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Šamorín VS Spartak Myjava
+Pais: Slovakia - Liga: 2. liga - Season: 2023
+Data da analise: 2023-10-29 03:00:01
+
+Winner Home: 
+['99.9%', '0.0%', '0.1%']
+[5, 0, 0]
+Winner Away: 
+['55.6%', '0.0%', '44.4%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Sparta Praha II VS Sigma Olomouc II
+Pais: Czech-Republic - Liga: FNL - Season: 2023
+Data da analise: 2023-10-29 03:00:31
+
+Winner Home: 
+['0.1%', '99.9%', '0.1%']
+[1, 4, 0]
+Winner Away: 
+['97.6%', '0.6%', '1.8%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Gimcheon Sangmu FC VS Gimpo Citizen
+Pais: South-Korea - Liga: K League 2 - Season: 2023
+Data da analise: 2023-10-29 03:01:05
+
+Winner Home: 
+['91.5%', '8.3%', '0.1%']
+[3, 0, 2]
+Winner Away: 
+['0.0%', '100.0%', '0.0%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Suwon Bluewings VS Daejeon Citizen
+Pais: South-Korea - Liga: K League 1 - Season: 2023
+Data da analise: 2023-10-29 03:02:29
+
+Winner Home: 
+['0.3%', '0.0%', '99.7%']
+[1, 4, 0]
+Winner Away: 
+['8.4%', '91.6%', '0.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Parceiro Nagano VS Azul Claro Numazu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 03:04:17
+
+Winner Home: 
+['99.6%', '0.2%', '0.1%']
+[1, 3, 1]
+Winner Away: 
+['99.4%', '0.0%', '0.6%']
+[3, 0, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Parceiro Nagano VS Azul Claro Numazu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 03:07:53
+
+Winner Home: 
+['44.8%', '0.2%', '55.0%']
+[1, 3, 1]
+Winner Away: 
+['99.8%', '0.1%', '0.1%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Parceiro Nagano VS Azul Claro Numazu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 03:08:54
+
+Winner Home: 
+['99.5%', '0.1%', '0.4%']
+[1, 3, 1]
+Winner Away: 
+['96.3%', '0.1%', '3.5%']
+[1, 1, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Suwon Bluewings VS Daejeon Citizen
+Pais: South-Korea - Liga: K League 1 - Season: 2023
+Data da analise: 2023-10-29 03:10:07
+
+Winner Home: 
+['1.1%', '0.0%', '98.9%']
+[1, 3, 1]
+Winner Away: 
+['0.0%', '100.0%', '0.0%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Suwon Bluewings VS Daejeon Citizen
+Pais: South-Korea - Liga: K League 1 - Season: 2023
+Data da analise: 2023-10-29 03:11:44
+
+Winner Home: 
+['13.7%', '0.4%', '85.9%']
+[0, 0, 0]
+Winner Away: 
+['0.0%', '100.0%', '0.0%']
+[0, 0, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Parceiro Nagano VS Azul Claro Numazu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 03:12:50
+
+Winner Home: 
+['0.4%', '0.1%', '99.5%']
+[1, 3, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[3, 0, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Parceiro Nagano VS Azul Claro Numazu
+Pais: Japan - Liga: J3 League - Season: 2023
+Data da analise: 2023-10-29 03:14:21
+
+Winner Home: 
+['83.6%', '0.0%', '16.4%']
+[1, 3, 1]
+Winner Away: 
+['81.6%', '0.3%', '18.0%']
+[2, 0, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Suwon Bluewings VS Daejeon Citizen
+Pais: South-Korea - Liga: K League 1 - Season: 2023
+Data da analise: 2023-10-29 03:14:57
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[1, 4, 0]
+Winner Away: 
+['2.3%', '97.7%', '0.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 11:43:30
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%', '0.0%', '0.0%']
+[1, 0, 4]
+Winner Away: 
+['0.0%', '100.0%', '0.0%', '0.0%', '0.0%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 11:48:00
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '0.0%', '100.0%']
+[1, 0, 4]
+Winner Away: 
+['0.0%', '3.0%', '0.0%', '97.0%', '0.0%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 11:49:38
+
+Winner Home: 
+['0.0%', '0.1%', '0.2%', '56.0%', '43.7%']
+[1, 3, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%', '0.0%', '0.0%']
+[1, 1, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Verl VS VfB Lubeck
+Pais: Germany - Liga: 3. Liga - Season: 2023
+Data da analise: 2023-10-29 11:52:20
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[1, 3, 1]
+Winner Away: 
+['5.3%', '94.7%', '0.0%', '0.0%', '0.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Silkeborg VS Odense
+Pais: Denmark - Liga: Superliga - Season: 2023
+Data da analise: 2023-10-29 11:55:55
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%', '0.0%', '0.0%']
+[2, 2, 1]
+Winner Away: 
+['0.0%', '1.5%', '0.0%', '98.5%', '0.0%']
+[1, 1, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Huesca VS Albacete
+Pais: Spain - Liga: Segunda División - Season: 2023
+Data da analise: 2023-10-29 12:01:19
+
+Winner Home: 
+['0.1%', '99.5%', '0.2%', '0.2%', '0.0%']
+[1, 3, 1]
+Winner Away: 
+['99.5%', '0.5%', '0.0%', '0.0%', '0.0%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Asteras Tripolis VS Lamia
+Pais: Greece - Liga: Super League 1 - Season: 2023
+Data da analise: 2023-10-29 12:09:07
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[0, 2, 3]
+Winner Away: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[1, 3, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:11:41
+
+Winner Home: 
+['0.0%', '0.0%', '12.8%', '0.0%', '87.2%']
+[0, 3, 2]
+Winner Away: 
+['0.0%', '0.0%', '0.0%', '100.0%', '0.0%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:13:08
+
+Winner Home: 
+['98.7%', '0.0%', '1.2%', '0.0%', '0.0%']
+[0, 3, 2]
+Winner Away: 
+['0.0%', '100.0%', '0.0%', '0.0%', '0.0%']
+[0, 0, 5]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Venezia VS Pisa
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:14:03
+
+Winner Home: 
+['96.3%', '3.2%', '0.1%', '0.0%', '0.4%']
+[1, 1, 3]
+Winner Away: 
+['94.4%', '0.0%', '0.0%', '5.6%', '0.0%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Brescia VS Bari
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:15:00
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '100.0%', '0.0%']
+[2, 3, 0]
+Winner Away: 
+['0.0%', '0.0%', '0.0%', '100.0%', '0.0%']
+[3, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:40:46
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[1, 3, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:42:32
+
+Winner Home: 
+['0.0%', '0.4%', '99.6%']
+[1, 2, 2]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[1, 3, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:44:31
+
+Winner Home: 
+['98.3%', '0.1%', '1.6%']
+[1, 3, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 3, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:45:02
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[0, 2, 3]
+Winner Away: 
+['0.0%', '99.7%', '0.2%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Venezia VS Pisa
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:45:27
+
+Winner Home: 
+['0.0%', '0.0%', '99.9%']
+[1, 2, 2]
+Winner Away: 
+['0.0%', '0.1%', '99.9%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:47:35
+
+Winner Home: 
+['0.0%', '45.3%', '54.7%']
+[0, 4, 1]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:48:14
+
+Winner Home: 
+['0.0%', '97.7%', '2.3%']
+[2, 2, 1]
+Winner Away: 
+['0.0%', '100.0%', '0.0%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Venezia VS Pisa
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:48:49
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[2, 2, 1]
+Winner Away: 
+['99.6%', '0.0%', '0.4%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:50:05
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[1, 4, 0]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:50:55
+
+Winner Home: 
+['0.0%', '0.0%', '100.0%']
+[0, 3, 2]
+Winner Away: 
+['0.0%', '35.2%', '64.8%']
+[2, 0, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Venezia VS Pisa
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:51:37
+
+Winner Home: 
+['90.5%', '0.1%', '9.4%']
+[0, 3, 2]
+Winner Away: 
+['99.8%', '0.2%', '0.0%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 12:52:49
+
+Winner Home: 
+['0.0%', '1.6%', '98.4%']
+[1, 4, 0]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 12:55:26
+
+Winner Home: 
+['100.0%', '0.0%', '0.0%']
+[1, 4, 0]
+Winner Away: 
+['0.0%', '0.0%', '100.0%']
+[3, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:56:39
+
+Winner Home: 
+['0.0%', '100.0%', '0.0%']
+[0, 3, 2]
+Winner Away: 
+['100.0%', '0.0%', '0.0%']
+[2, 3, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:57:26
+
+Winner Home: 
+['0.0%', '0.5%', '99.5%']
+[2, 1, 2]
+Winner Away: 
+['88.1%', '0.5%', '11.4%']
+[0, 2, 3]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Venezia VS Pisa
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 12:58:12
+
+Winner Home: 
+['0.0%', '0.1%', '99.8%']
+[2, 1, 2]
+Winner Away: 
+['98.2%', '0.2%', '1.5%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 13:01:11
+
+Winner Home: 
+['0.0%', '99.8%', '0.2%', '0.0%', '0.0%']
+[0, 2, 3]
+Winner Away: 
+['0.0%', '0.0%', '0.0%', '100.0%', '0.0%']
+[1, 2, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Modena VS Ternana
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 13:02:32
+
+Winner Home: 
+['0.0%', '9.2%', '90.8%', '0.0%', '0.0%']
+[0, 3, 2]
+Winner Away: 
+['0.0%', '0.0%', '0.0%', '100.0%', '0.0%']
+[0, 4, 1]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Palermo VS Lecco
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 13:03:09
+
+Winner Home: 
+['88.2%', '9.0%', '2.8%', '0.0%', '0.0%']
+[1, 1, 3]
+Winner Away: 
+['0.0%', '0.0%', '0.0%', '2.1%', '97.9%']
+[0, 1, 4]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Venezia VS Pisa
+Pais: Italy - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 13:03:44
+
+Winner Home: 
+['0.0%', '99.8%', '0.0%', '0.1%', '0.0%']
+[0, 3, 2]
+Winner Away: 
+['0.0%', '0.0%', '94.3%', '5.6%', '0.2%']
+[2, 2, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 13:04:37
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '98.9%', '1.1%']
+[2, 3, 0]
+Winner Away: 
+['0.9%', '99.1%', '0.0%', '0.0%', '0.0%']
+[3, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 13:06:10
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '99.9%', '0.1%']
+[2, 3, 0]
+Winner Away: 
+['0.0%', '100.0%', '0.0%', '0.0%', '0.0%']
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 13:07:59
+
+Winner Home: 
+['1.0%', '0.0%', '4.9%', '90.0%', '4.0%']
+[2, 2, 1]
+Winner Away: 
+['0.4%', '99.3%', '0.0%', '0.3%', '0.0%']
+[2, 1, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 13:08:34
+
+Winner Home: 
+['0.0%', '6.9%', '0.0%', '90.9%', '2.2%']
+[2, 3, 0]
+Winner Away: 
+['0.3%', '99.7%', '0.0%', '0.0%', '0.0%']
+[3, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:09:22
+
+Winner Home: 
+['0.0%', '0.0%', '0.1%', '90.9%', '9.0%']
+[3, 0, 2]
+Winner Away: 
+['92.2%', '0.0%', '0.0%', '7.8%', '0.0%']
+[2, 0, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 13:11:49
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '99.6%', '0.4%']
+[1, 3, 1]
+Winner Away: 
+['0.0%', '0.0%', '100.0%', '0.0%', '0.0%']
+[1, 1, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Rayo Vallecano VS Real Sociedad
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 13:12:48
+
+Winner Home: 
+['0.2%', '0.7%', '2.7%', '36.7%', '59.7%']
+[2, 3, 0]
+Winner Away: 
+['0.1%', '99.9%', '0.0%', '0.0%', '0.0%']
+[3, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:13:50
+
+Winner Home: 
+['0.0%', '0.0%', '0.1%', '69.0%', '30.9%']
+[3, 0, 2]
+Winner Away: 
+['97.9%', '0.0%', '0.0%', '2.1%', '0.0%']
+[3, 0, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:14:53
+
+Winner Home: 
+['0.0%', '0.0%', '0.2%', '68.4%', '31.4%']
+[3, 0, 2]
+Winner Away: 
+['63.3%', '0.1%', '0.0%', '36.2%', '0.4%']
+[1, 0, 4]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:16:03
+
+Winner Home: 
+['0.0%', '0.1%', '0.9%', '29.1%', '69.9%']
+[2, 1, 2]
+Winner Away: 
+['55.2%', '0.1%', '0.0%', '44.6%', '0.0%']
+[3, 0, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:17:16
+
+Winner Home: 
+['0.0%', '0.0%', '0.1%', '63.5%', '36.4%']
+[2, 1, 2]
+Winner Away: 
+['98.3%', '0.0%', '0.0%', '1.7%', '0.0%']
+[4, 0, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:18:13
+
+Winner Home: 
+['0.0%', '0.0%', '0.1%', '49.4%', '50.4%']
+[2, 0, 3]
+Winner Away: 
+['7.4%', '0.0%', '0.0%', '92.6%', '0.0%']
+[1, 0, 4]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:19:22
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '0.4%', '99.6%']
+[1, 0, 4]
+Winner Away: 
+['0.3%', '0.1%', '0.0%', '99.6%', '0.0%']
+[2, 0, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Manchester United VS Manchester City
+Pais: England - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 13:20:59
+
+Winner Home: 
+['0.0%', '0.0%', '0.0%', '4.8%', '95.2%']
+[1, 1, 3]
+Winner Away: 
+['0.0%', '0.4%', '0.0%', '99.6%', '0.0%']
+[3, 0, 2]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Atletico Madrid VS Alaves
+Pais: Spain - Liga: La Liga - Season: 2023
+Data da analise: 2023-10-29 15:52:07
+
+Wiiner Home: 
+[[0.9496899247169495, 0.05030830577015877, 7.842658966694671e-09, 5.6422009286904995e-09, 1.7743301441441872e-06]]
+[5, 0, 0]
+Wiiner Away: 
+[[3.403871744467324e-07, 1.3889793759602753e-09, 0.9998670816421509, 7.937694317661226e-05, 5.3148130973568186e-05]]
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Marseille VS Lyon
+Pais: France - Liga: Ligue 1 - Season: 2023
+Data da analise: 2023-10-29 16:14:58
+
+Wiiner Home: 
+[[0.7004880309104919, 0.0001867451355792582, 0.2990904152393341, 4.753941539092921e-06, 0.0002301262429682538]]
+[3, 1, 1]
+Wiiner Away: 
+[[1.5813196796443663e-07, 1.8028660633717664e-05, 0.9990257024765015, 0.0008486038423143327, 0.00010736384137999266]]
+[3, 2, 0]
+
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Napoli VS AC Milan
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 16:26:43
+
+Wiiner Home: 
+[[0.9931743741035461, 0.006549311336129904, 7.139947797440982e-07, 3.352987550897524e-05, 0.00024207911337725818]]
+[3, 1, 1]
+Wiiner Away: 
+[[2.6704359612494954e-08, 0.023739667609333992, 1.3067554505141743e-07, 0.9665115475654602, 0.009748609736561775]]
+[3, 1, 1]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Internacional VS Coritiba
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 17:03:47
+
+ Tentativa 0 levou 24.24408 segundos.
+ Tentativa 1 levou 23.674613 segundos.
+ Tentativa 2 levou 28.021185 segundos.
+ Tentativa 3 levou 27.517901 segundos.
+ Tentativa 0 levou 33.366473 segundos.
+ Tentativa 1 levou 33.378892 segundos.
+ Tentativa 2 levou 40.874606 segundos.
+ Tentativa 3 levou 48.139227 segundos.
+
+Wiiner Home: 
+[[7.459582320734626e-06, 0.8795813918113708, 2.711257593546179e-06, 0.12029550969600677, 0.00011293131683487445]]
+[1, 3, 1]
+Wiiner Away: 
+[[4.0201633688674576e-10, 3.008845169460983e-06, 7.652575732208788e-06, 0.9999740123748779, 1.5318462828872725e-05]]
+[2, 0, 3]
+
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Corinthians VS Santos
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 17:18:06
+
+ Tentativa 0/4 do(s) id(s): [11] levou 38.872544 segundos.
+ Tentativa 1/4 do(s) id(s): [11] levou 34.737264 segundos.
+ Tentativa 2/4 do(s) id(s): [11] levou 31.264671 segundos.
+ Tentativa 3/4 do(s) id(s): [11] levou 40.77857 segundos.
+ team Corinthians - 11:
+Winner Home: 
+[[0.588215708732605, 9.408250321030209e-07, 0.36646220088005066, 0.045320987701416016, 1.6170977801266417e-07]]
+[4, 1, 0]
+
+ Tentativa 0/4 do(s) id(s): [9] levou 46.286364 segundos.
+ Tentativa 1/4 do(s) id(s): [9] levou 48.036402 segundos.
+ Tentativa 2/4 do(s) id(s): [9] levou 52.234933 segundos.
+ Tentativa 3/4 do(s) id(s): [9] levou 58.411355 segundos.
+ team Santos - 9:
+Winner Away: 
+[[1.0482298193892348e-06, 1.777335967290128e-07, 1.988764779525809e-07, 4.0284763258569e-07, 0.9999982118606567]]
+[3, 1, 1]
+--------------------------------------------------------------------------- 
+
+Prevendo Jogo: Internacional VS Coritiba
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 17:24:56
+
+ Tentativa 0/4 do(s) id(s): [2] levou 57.490962 segundos.
+ Tentativa 1/4 do(s) id(s): [2] levou 66.74613 segundos.
+ Tentativa 2/4 do(s) id(s): [2] levou 69.206522 segundos.
+ Tentativa 3/4 do(s) id(s): [2] levou 80.712502 segundos.
+ team Internacional - 2:
+Winner Home: 
+[[0.02175978198647499, 0.9781071543693542, 1.1854087711427042e-09, 0.00013300630962476134, 1.1212254236170338e-08]]
+[1, 4, 0]
+
+ Tentativa 0/4 do(s) id(s): [15] levou 79.161969 segundos.
+ Tentativa 1/4 do(s) id(s): [15] levou 83.175717 segundos.
+ Tentativa 2/4 do(s) id(s): [15] levou 89.864869 segundos.
+ Tentativa 3/4 do(s) id(s): [15] levou 93.659099 segundos.
+ team Coritiba - 15:
+Winner Away: 
+[[0.0026321024633944035, 0.009038042277097702, 0.00035939295776188374, 0.4181194007396698, 0.5698510408401489]]
+[2, 1, 2]
+--------------------------------------------------------------------------- 
+
+##################################### new List ########################################
+Prevendo Jogo: Londrina VS CRB
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 17:37:18
+
+#### Team Londrina - 62: ####
+
+Tentativa 0/4 do(s) id(s): [62] levou 30.85438 segundos.
+Tentativa 1/4 do(s) id(s): [62] levou 24.970422 segundos.
+Tentativa 2/4 do(s) id(s): [62] levou 25.486144 segundos.
+Tentativa 3/4 do(s) id(s): [62] levou 27.180126 segundos.Winner Home: 
+[[0.024276265874505043, 0.0010154935298487544, 0.11971088498830795, 6.950918032089248e-05, 0.8549278974533081]]
+[4, 1, 0]
+
+#### Team CRB - 61: ####
+
+Tentativa 0/4 do(s) id(s): [61] levou 22.743544 segundos.
+Tentativa 1/4 do(s) id(s): [61] levou 29.392881 segundos.
+Tentativa 2/4 do(s) id(s): [61] levou 32.775978 segundos.
+Tentativa 3/4 do(s) id(s): [61] levou 28.937738 segundos.Winner Away: 
+[[0.010127678513526917, 0.04914713650941849, 0.8335399031639099, 0.10067504644393921, 0.006510235834866762]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Almirante Brown VS Independ. Rivadavia
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-29 17:45:06
+
+#### Team Almirante Brown - 577: ####
+
+Tentativa 0/4 do(s) id(s): [577] levou 35.780273 segundos.
+Tentativa 1/4 do(s) id(s): [577] levou 27.738591 segundos.
+Tentativa 2/4 do(s) id(s): [577] levou 35.634228 segundos.
+Tentativa 3/4 do(s) id(s): [577] levou 28.856891 segundos.
+Winner Home: 
+[[0.010819654911756516, 0.5616623759269714, 0.15791019797325134, 0.13311253488063812, 0.13649533689022064]]
+[3, 1, 1]
+
+#### Team Independ. Rivadavia - 552: ####
+
+Tentativa 0/4 do(s) id(s): [552] levou 26.691805 segundos.
+Tentativa 1/4 do(s) id(s): [552] levou 26.238718 segundos.
+Tentativa 2/4 do(s) id(s): [552] levou 22.977046 segundos.
+Tentativa 3/4 do(s) id(s): [552] levou 24.285216 segundos.
+Winner Away: 
+[[5.719643922930118e-06, 0.9143545031547546, 7.122832903405651e-05, 0.0003316728980280459, 0.08523701876401901]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Vitoria VS Juventude
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 17:52:55
+
+#### Team Vitoria - 52: ####
+
+Tentativa 0/4 do(s) id(s): [52] levou 27.454928 segundos.
+Tentativa 1/4 do(s) id(s): [52] levou 28.941354 segundos.
+Tentativa 2/4 do(s) id(s): [52] levou 27.000141 segundos.
+Tentativa 3/4 do(s) id(s): [52] levou 28.263957 segundos.
+Winner Home: 
+[[0.9903488159179688, 0.00965067744255066, 4.0262088418785424e-07, 9.415450819005855e-08, 4.6121616747996086e-08]]
+[3, 1, 1]
+
+#### Team Juventude - 68: ####
+
+Tentativa 0/4 do(s) id(s): [68] levou 28.041071 segundos.
+Tentativa 1/4 do(s) id(s): [68] levou 26.91144 segundos.
+Tentativa 2/4 do(s) id(s): [68] levou 29.575174 segundos.
+Tentativa 3/4 do(s) id(s): [68] levou 21.448904 segundos.
+Winner Away: 
+[[0.5708975195884705, 0.00011433950567152351, 0.03978542983531952, 2.8274382657400565e-07, 0.3892024755477905]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Estudiantes de Rio Cuarto VS Atletico Mitre
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-29 17:57:25
+
+#### Team Estudiantes de Rio Cuarto - 596: ####
+
+Tentativa 0/4 do(s) id(s): [596] levou 30.639512 segundos.
+Tentativa 1/4 do(s) id(s): [596] levou 25.414335 segundos.
+Tentativa 2/4 do(s) id(s): [596] levou 26.102088 segundos.
+Tentativa 3/4 do(s) id(s): [596] levou 26.861439 segundos.
+Winner Home: 
+[[0.004537020809948444, 0.9897444844245911, 0.00440168846398592, 0.0009973952546715736, 0.00031941477209329605]]
+[3, 0, 2]
+
+#### Team Atletico Mitre - 1462: ####
+
+Tentativa 0/4 do(s) id(s): [1462] levou 29.331857 segundos.
+Tentativa 1/4 do(s) id(s): [1462] levou 27.283624 segundos.
+Tentativa 2/4 do(s) id(s): [1462] levou 21.652467 segundos.
+Tentativa 3/4 do(s) id(s): [1462] levou 23.714815 segundos.
+Winner Away: 
+[[2.324105844309088e-05, 0.001194379641674459, 1.3629799866521353e-07, 0.9987770915031433, 5.061842330178479e-06]]
+[2, 1, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Deportivo Saprissa VS San Carlos
+Pais: Costa-Rica - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-29 18:01:56
+
+#### Team Deportivo Saprissa - 2835: ####
+
+Tentativa 0/4 do(s) id(s): [2835] levou 21.576888 segundos.
+Tentativa 1/4 do(s) id(s): [2835] levou 29.099841 segundos.
+Tentativa 2/4 do(s) id(s): [2835] levou 26.694158 segundos.
+Tentativa 3/4 do(s) id(s): [2835] levou 24.138739 segundos.
+Winner Home: 
+[[0.9999392032623291, 5.95172714383807e-05, 1.145908868238621e-06, 1.8093299303245658e-08, 1.605670973958695e-07]]
+[4, 1, 0]
+
+#### Team San Carlos - 2840: ####
+
+Tentativa 0/4 do(s) id(s): [2840] levou 24.170196 segundos.
+Tentativa 1/4 do(s) id(s): [2840] levou 26.403698 segundos.
+Tentativa 2/4 do(s) id(s): [2840] levou 27.589037 segundos.
+Tentativa 3/4 do(s) id(s): [2840] levou 24.814568 segundos.
+Winner Away: 
+[[0.00023042919929139316, 8.237428119173273e-05, 0.0003015307884197682, 0.9990348815917969, 0.00035090663004666567]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Houston Dynamo VS Real Salt Lake
+Pais: USA - Liga: Major League Soccer - Season: 2023
+Data da analise: 2023-10-29 18:05:49
+
+#### Team Houston Dynamo - 2586: ####
+
+Tentativa 0/4 do(s) id(s): [2586] levou 25.210927 segundos.
+Tentativa 1/4 do(s) id(s): [2586] levou 29.700265 segundos.
+Tentativa 2/4 do(s) id(s): [2586] levou 29.865651 segundos.
+Tentativa 3/4 do(s) id(s): [2586] levou 23.162035 segundos.
+Winner Home: 
+[[0.7760370373725891, 2.0412755930010462e-07, 0.21302957832813263, 0.00848961528390646, 0.0024435766972601414]]
+[3, 1, 1]
+
+#### Team Real Salt Lake - 2590: ####
+
+Tentativa 0/4 do(s) id(s): [2590] levou 31.300138 segundos.
+Tentativa 1/4 do(s) id(s): [2590] levou 32.860127 segundos.
+Tentativa 2/4 do(s) id(s): [2590] levou 26.696254 segundos.
+Tentativa 3/4 do(s) id(s): [2590] levou 24.465553 segundos.
+Winner Away: 
+[[0.008147664368152618, 0.9130910634994507, 0.0015272967284545302, 0.011903325095772743, 0.06533069163560867]]
+[2, 1, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Tacuarembo VS Fenix
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-29 18:10:29
+
+#### Team Tacuarembo - 487: ####
+##################################### new List ########################################
+Prevendo Jogo: Tacuarembo VS Fenix
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-29 18:11:04
+
+#### Team Tacuarembo - 487: ####
+
+Tentativa 0/4 do(s) id(s): [487] levou 34.868776 segundos.
+Tentativa 1/4 do(s) id(s): [487] levou 34.451676 segundos.
+Tentativa 2/4 do(s) id(s): [487] levou 26.970803 segundos.
+Tentativa 3/4 do(s) id(s): [487] levou 37.152409 segundos.
+Winner Home: 
+[[0.05094131827354431, 0.0018027066253125668, 0.7792191505432129, 0.06906081736087799, 0.09897608309984207]]
+[2, 2, 1]
+
+#### Team Fenix - 338: ####
+
+Tentativa 0/4 do(s) id(s): [338] levou 26.54399 segundos.
+Tentativa 1/4 do(s) id(s): [338] levou 27.298856 segundos.
+Tentativa 2/4 do(s) id(s): [338] levou 28.280895 segundos.
+Tentativa 3/4 do(s) id(s): [338] levou 32.941784 segundos.
+Winner Away: 
+[[0.00057123793521896, 1.4982855418566032e-06, 0.998137354850769, 1.5926238461361208e-07, 0.0012898324057459831]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Potencia VS Club Nacional
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-29 18:15:41
+
+#### Team Potencia - 518: ####
+
+Tentativa 0/4 do(s) id(s): [518] levou 24.744359 segundos.
+Tentativa 1/4 do(s) id(s): [518] levou 35.521765 segundos.
+Tentativa 2/4 do(s) id(s): [518] levou 29.429528 segundos.
+Tentativa 3/4 do(s) id(s): [518] levou 28.159704 segundos.
+Winner Home: 
+[[9.875692486005505e-10, 0.9999929666519165, 2.6917286108374405e-11, 7.020569228188833e-06, 1.0862152521637727e-15]]
+[4, 1, 0]
+
+#### Team Club Nacional - 248: ####
+
+Tentativa 0/4 do(s) id(s): [248] levou 21.58542 segundos.
+Tentativa 1/4 do(s) id(s): [248] levou 26.966564 segundos.
+Tentativa 2/4 do(s) id(s): [248] levou 31.57853 segundos.
+Tentativa 3/4 do(s) id(s): [248] levou 28.018869 segundos.
+Winner Away: 
+[[4.043195076519623e-06, 0.0027022394351661205, 0.9963834285736084, 0.0005966509925201535, 0.00031368338386528194]]
+[2, 1, 2]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Botafogo VS Cuiaba
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 18:24:52
+
+#### Team Botafogo - 3: ####
+
+Tentativa 0/4 do(s) id(s): [3] levou 31.769132 segundos.
+Tentativa 1/4 do(s) id(s): [3] levou 29.854567 segundos.
+Tentativa 2/4 do(s) id(s): [3] levou 43.273123 segundos.
+Tentativa 3/4 do(s) id(s): [3] levou 36.397511 segundos.
+Winner Home: 
+[[0.0013952372828498483, 4.7761201130924746e-05, 0.998536229133606, 1.7685824786894955e-05, 3.0921216875867685e-06]]
+[2, 2, 1]
+
+#### Team Cuiaba - 20: ####
+
+Tentativa 0/4 do(s) id(s): [20] levou 35.271572 segundos.
+Tentativa 1/4 do(s) id(s): [20] levou 32.694955 segundos.
+Tentativa 2/4 do(s) id(s): [20] levou 33.994319 segundos.
+Tentativa 3/4 do(s) id(s): [20] levou 25.275125 segundos.
+Winner Away: 
+[[0.5163726210594177, 0.4302341938018799, 6.627597581854161e-09, 0.010021883063018322, 0.04337126761674881]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Orense SC VS Barcelona SC
+Pais: Ecuador - Liga: Liga Pro - Season: 2023
+Data da analise: 2023-10-29 18:30:24
+
+#### Team Orense SC - 1944: ####
+
+Tentativa 0/4 do(s) id(s): [1944] levou 32.269745 segundos.
+Tentativa 1/4 do(s) id(s): [1944] levou 37.032436 segundos.
+Tentativa 2/4 do(s) id(s): [1944] levou 28.916867 segundos.
+Tentativa 3/4 do(s) id(s): [1944] levou 25.118996 segundos.
+Winner Home: 
+[[0.0005933454376645386, 0.0005757681210525334, 0.8301525115966797, 0.16856002807617188, 0.00011832807649625465]]
+[3, 2, 0]
+
+#### Team Barcelona SC - 237: ####
+
+Tentativa 0/4 do(s) id(s): [237] levou 30.293889 segundos.
+Tentativa 1/4 do(s) id(s): [237] levou 32.230975 segundos.
+Tentativa 2/4 do(s) id(s): [237] levou 23.856723 segundos.
+Tentativa 3/4 do(s) id(s): [237] levou 40.338471 segundos.
+Winner Away: 
+[[6.21432576508596e-08, 0.0043306415900588036, 0.6298307180404663, 0.3653982877731323, 0.0004401887708809227]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Leones Negros UDG VS Tlaxcala
+Pais: Mexico - Liga: Liga de Expansión MX - Season: 2023
+Data da analise: 2023-10-29 18:35:04
+
+#### Team Leones Negros UDG - 644: ####
+
+Tentativa 0/4 do(s) id(s): [644] levou 28.32407 segundos.
+Tentativa 1/4 do(s) id(s): [644] levou 26.722645 segundos.
+Tentativa 2/4 do(s) id(s): [644] levou 23.65365 segundos.
+Tentativa 3/4 do(s) id(s): [644] levou 27.381875 segundos.
+Winner Home: 
+[[0.9461715221405029, 0.053587038069963455, 2.2020719470106087e-08, 3.585679735351732e-07, 0.00024119295994751155]]
+[4, 1, 0]
+
+#### Team Tlaxcala - 652: ####
+
+Tentativa 0/4 do(s) id(s): [652] levou 23.924449 segundos.
+Tentativa 1/4 do(s) id(s): [652] levou 19.069054 segundos.
+Tentativa 2/4 do(s) id(s): [652] levou 27.990614 segundos.
+Tentativa 3/4 do(s) id(s): [652] levou 24.622153 segundos.
+Winner Away: 
+[[0.049122367054224014, 1.5716672407961596e-08, 0.0005573262460529804, 0.9502584338188171, 6.183054210850969e-05]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Puerto Cabello VS Deportivo Tachira FC
+Pais: Venezuela - Liga: Primera División - Season: 2023
+Data da analise: 2023-10-29 18:39:04
+
+#### Team Puerto Cabello - 344: ####
+
+Tentativa 0/4 do(s) id(s): [344] levou 22.411555 segundos.
+Tentativa 1/4 do(s) id(s): [344] levou 25.637094 segundos.
+Tentativa 2/4 do(s) id(s): [344] levou 20.531977 segundos.
+Tentativa 3/4 do(s) id(s): [344] levou 24.710121 segundos.
+Winner Home: 
+[[8.12893922557123e-05, 0.00031442911131307483, 0.02016737312078476, 0.9794074296951294, 2.939031764981337e-05]]
+[3, 2, 0]
+
+#### Team Deportivo Tachira FC - 256: ####
+
+Tentativa 0/4 do(s) id(s): [256] levou 24.037416 segundos.
+Tentativa 1/4 do(s) id(s): [256] levou 24.603096 segundos.
+Tentativa 2/4 do(s) id(s): [256] levou 25.405027 segundos.
+Tentativa 3/4 do(s) id(s): [256] levou 23.909861 segundos.
+Winner Away: 
+[[0.00023397954646497965, 0.9936234354972839, 0.006135814823210239, 2.7784112717199605e-06, 4.193132099317154e-06]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Napoli VS AC Milan
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 18:54:58
+
+#### Team Napoli - 1198: ####
+
+Tentativa 0/4 do(s) id(s): [1198] levou 38.348337 segundos.
+Tentativa 1/4 do(s) id(s): [1198] levou 27.177535 segundos.
+Tentativa 2/4 do(s) id(s): [1198] levou 28.677509 segundos.
+Tentativa 3/4 do(s) id(s): [1198] levou 31.328495 segundos.
+Winner Home: 
+[[0.9948510527610779, 0.00023639552819076926, 0.00011944986908929422, 0.00012699556828010827, 0.0046661002561450005]]
+[3, 1, 1]
+
+#### Team AC Milan - 1137: ####
+
+Tentativa 0/4 do(s) id(s): [1137] levou 25.656446 segundos.
+Tentativa 1/4 do(s) id(s): [1137] levou 24.182153 segundos.
+Tentativa 2/4 do(s) id(s): [1137] levou 26.090842 segundos.
+Tentativa 3/4 do(s) id(s): [1137] levou 27.606651 segundos.
+Winner Away: 
+[[1.4879668697176385e-06, 0.9895309209823608, 2.4119161025737412e-05, 0.010402703657746315, 4.0793045627651736e-05]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Corinthians VS Santos
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 23:04:03
+
+#### Team Corinthians - 11: ####
+##################################### new List ########################################
+Prevendo Jogo: Corinthians VS Santos
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 23:05:36
+
+#### Team Corinthians - 11: ####
+
+Tentativa 0/5 do(s) id(s): [11, 9] levou 45.349811 segundos.
+Tentativa 1/5 do(s) id(s): [11, 9] levou 57.791237 segundos.
+Tentativa 2/5 do(s) id(s): [11, 9] levou 47.909242 segundos.
+Tentativa 3/5 do(s) id(s): [11, 9] levou 52.106862 segundos.
+Tentativa 4/5 do(s) id(s): [11, 9] levou 49.680136 segundos.
+Winner Home: 
+[[0.6177852153778076, 0.37866830825805664, 0.003546566003933549]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Internacional VS Coritiba
+Pais: Brazil - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-29 23:10:44
+
+#### Team Internacional - 2: ####
+
+Tentativa 0/5 do(s) id(s): [2, 15] levou 44.366772 segundos.
+Tentativa 1/5 do(s) id(s): [2, 15] levou 49.801857 segundos.
+Tentativa 2/5 do(s) id(s): [2, 15] levou 43.439385 segundos.
+Tentativa 3/5 do(s) id(s): [2, 15] levou 39.892526 segundos.
+Tentativa 4/5 do(s) id(s): [2, 15] levou 36.535604 segundos.
+Winner Home: 
+[[0.8395618200302124, 2.873618359444663e-05, 0.16040939092636108]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Londrina VS CRB
+Pais: Brazil - Liga: Serie B - Season: 2023
+Data da analise: 2023-10-29 23:15:10
+
+#### Team Londrina - 62: ####
+
+Tentativa 0/5 do(s) id(s): [62, 61] levou 39.130268 segundos.
+Tentativa 1/5 do(s) id(s): [62, 61] levou 34.114337 segundos.
+Tentativa 2/5 do(s) id(s): [62, 61] levou 46.168679 segundos.
+Tentativa 3/5 do(s) id(s): [62, 61] levou 35.298446 segundos.
+Tentativa 4/5 do(s) id(s): [62, 61] levou 37.174121 segundos.
+Winner Home: 
+[[0.05352688208222389, 0.7329227924346924, 0.21355020999908447]]
+[1, 2, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Almirante Brown VS Independ. Rivadavia
+Pais: Argentina - Liga: Primera Nacional - Season: 2023
+Data da analise: 2023-10-29 23:18:51
+
+#### Team Almirante Brown - 577: ####
+
+Tentativa 0/5 do(s) id(s): [577, 552] levou 38.037767 segundos.
+Tentativa 1/5 do(s) id(s): [577, 552] levou 39.753383 segundos.
+Tentativa 2/5 do(s) id(s): [577, 552] levou 49.979584 segundos.
+Tentativa 3/5 do(s) id(s): [577, 552] levou 27.686591 segundos.
+Tentativa 4/5 do(s) id(s): [577, 552] levou 30.785596 segundos.
+Winner Home: 
+[[0.001628427067771554, 0.00017478695372119546, 0.9981967806816101]]
+[5, 0, 0]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Club Tijuana VS Atlas
+Pais: Mexico - Liga: Liga MX - Season: 2023
+Data da analise: 2023-10-29 23:23:47
+
+#### Team Club Tijuana - 660: ####
+
+Tentativa 0/5 do(s) id(s): [660, 662] levou 50.867082 segundos.
+Tentativa 1/5 do(s) id(s): [660, 662] levou 35.048993 segundos.
+Tentativa 2/5 do(s) id(s): [660, 662] levou 33.990881 segundos.
+Tentativa 3/5 do(s) id(s): [660, 662] levou 31.611189 segundos.
+Tentativa 4/5 do(s) id(s): [660, 662] levou 34.006944 segundos.
+Winner Home: 
+[[0.9999912977218628, 8.692262781551108e-06, 3.5768441541961238e-09]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Delhi FC VS TRAU
+Pais: India - Liga: I-League - Season: 2023
+Data da analise: 2023-10-29 23:32:05
+
+#### Team Delhi FC - 9209: ####
+
+Tentativa 0/5 do(s) id(s): [9209, 9157] levou 46.764496 segundos.
+Tentativa 1/5 do(s) id(s): [9209, 9157] levou 44.576256 segundos.
+Tentativa 2/5 do(s) id(s): [9209, 9157] levou 49.316304 segundos.
+Tentativa 3/5 do(s) id(s): [9209, 9157] levou 52.313954 segundos.
+Tentativa 4/5 do(s) id(s): [9209, 9157] levou 45.862099 segundos.
+Winner Home: 
+[[9.583986937400368e-09, 3.0968869850767078e-06, 0.9999969005584717]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Cilegon United VS PSM Makassar
+Pais: Indonesia - Liga: Liga 1 - Season: 2023
+Data da analise: 2023-10-29 23:36:34
+
+#### Team Cilegon United - 5151: ####
+
+Tentativa 0/5 do(s) id(s): [5151, 5141] levou 50.322234 segundos.
+Tentativa 1/5 do(s) id(s): [5151, 5141] levou 41.940578 segundos.
+Tentativa 2/5 do(s) id(s): [5151, 5141] levou 49.013187 segundos.
+Tentativa 3/5 do(s) id(s): [5151, 5141] levou 50.301555 segundos.
+Tentativa 4/5 do(s) id(s): [5151, 5141] levou 48.752332 segundos.
+Winner Home: 
+[[1.8267428458784707e-05, 3.182899777076642e-10, 0.9999817609786987]]
+[3, 0, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Sandecja Nowy Sącz U19 VS Odra Opole U19
+Pais: Poland - Liga: Central Youth League - Season: 2023
+Data da analise: 2023-10-29 23:40:54
+
+#### Team Sandecja Nowy Sącz U19 - 12278: ####
+
+Tentativa 0/5 do(s) id(s): [12278, 12277] levou 46.5424 segundos.
+Tentativa 1/5 do(s) id(s): [12278, 12277] levou 37.482971 segundos.
+Tentativa 2/5 do(s) id(s): [12278, 12277] levou 45.928619 segundos.
+Tentativa 3/5 do(s) id(s): [12278, 12277] levou 43.447603 segundos.
+Tentativa 4/5 do(s) id(s): [12278, 12277] levou 47.36684 segundos.
+Winner Home: 
+[[0.9784871935844421, 0.02060084417462349, 0.0009119863389059901]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Al Baten VS Al Bukayriyah
+Pais: Saudi-Arabia - Liga: Division 1 - Season: 2023
+Data da analise: 2023-10-29 23:50:57
+
+#### Team Al Baten - 5073: ####
+
+Tentativa 0/5 do(s) id(s): [5073, 10724] levou 45.867889 segundos.
+Tentativa 1/5 do(s) id(s): [5073, 10724] levou 36.710296 segundos.
+Tentativa 2/5 do(s) id(s): [5073, 10724] levou 31.89925 segundos.
+Tentativa 3/5 do(s) id(s): [5073, 10724] levou 39.756853 segundos.
+Tentativa 4/5 do(s) id(s): [5073, 10724] levou 41.343735 segundos.
+Winner Home: 
+[[0.1525643765926361, 0.8473720550537109, 6.352384662022814e-05]]
+[5, 0, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Bali United VS Persita
+Pais: Indonesia - Liga: Liga 1 - Season: 2023
+Data da analise: 2023-10-29 23:54:24
+
+#### Team Bali United - 954: ####
+
+Tentativa 0/5 do(s) id(s): [954, 5154] levou 36.404641 segundos.
+Tentativa 1/5 do(s) id(s): [954, 5154] levou 29.416134 segundos.
+Tentativa 2/5 do(s) id(s): [954, 5154] levou 39.640833 segundos.
+Tentativa 3/5 do(s) id(s): [954, 5154] levou 33.698986 segundos.
+Tentativa 4/5 do(s) id(s): [954, 5154] levou 33.307958 segundos.
+Winner Home: 
+[[0.9996801614761353, 4.113890099688433e-06, 0.0003156678576488048]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Artsakh VS Alashkert
+Pais: Armenia - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-29 23:57:47
+
+#### Team Artsakh - 1346: ####
+
+Tentativa 0/5 do(s) id(s): [1346, 1157] levou 30.835187 segundos.
+Tentativa 1/5 do(s) id(s): [1346, 1157] levou 33.100131 segundos.
+Tentativa 2/5 do(s) id(s): [1346, 1157] levou 32.599095 segundos.
+Tentativa 3/5 do(s) id(s): [1346, 1157] levou 41.077232 segundos.
+Tentativa 4/5 do(s) id(s): [1346, 1157] levou 31.461016 segundos.
+Winner Home: 
+[[0.9798164963722229, 0.0003432180092204362, 0.019840288907289505]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Jarun VS Zrinski Jurjevac
+Pais: Croatia - Liga: First NL - Season: 2023
+Data da analise: 2023-10-30 00:01:40
+
+#### Team Jarun - 10421: ####
+
+Tentativa 0/5 do(s) id(s): [10421, 10419] levou 36.087469 segundos.
+Tentativa 1/5 do(s) id(s): [10421, 10419] levou 31.335829 segundos.
+Tentativa 2/5 do(s) id(s): [10421, 10419] levou 30.757177 segundos.
+Tentativa 3/5 do(s) id(s): [10421, 10419] levou 28.4954 segundos.
+Tentativa 4/5 do(s) id(s): [10421, 10419] levou 33.100462 segundos.
+Winner Home: 
+[[0.00015217502368614078, 0.9994760155677795, 0.0003718908119481057]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Niki Volos VS Kampaniakos Chalastra
+Pais: Greece - Liga: Super League 2 - Season: 2023
+Data da analise: 2023-10-30 00:06:13
+
+#### Team Niki Volos - 9296: ####
+
+Tentativa 0/5 do(s) id(s): [9296, 13047] levou 39.065535 segundos.
+Tentativa 1/5 do(s) id(s): [9296, 13047] levou 34.539776 segundos.
+Tentativa 2/5 do(s) id(s): [9296, 13047] levou 34.140991 segundos.
+Tentativa 3/5 do(s) id(s): [9296, 13047] levou 36.694972 segundos.
+Tentativa 4/5 do(s) id(s): [9296, 13047] levou 27.383118 segundos.
+Winner Home: 
+[[0.02063649147748947, 0.0024128700606524944, 0.9769506454467773]]
+[3, 0, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Slatina VS Unirea Slobozia
+Pais: Romania - Liga: Liga II - Season: 2023
+Data da analise: 2023-10-30 00:09:45
+
+#### Team Slatina - 7213: ####
+
+Tentativa 0/5 do(s) id(s): [7213, 7202] levou 35.879157 segundos.
+Tentativa 1/5 do(s) id(s): [7213, 7202] levou 31.002182 segundos.
+Tentativa 2/5 do(s) id(s): [7213, 7202] levou 28.295976 segundos.
+Tentativa 3/5 do(s) id(s): [7213, 7202] levou 32.016275 segundos.
+Tentativa 4/5 do(s) id(s): [7213, 7202] levou 33.014989 segundos.
+Winner Home: 
+[[5.770870757260127e-06, 0.7028865218162537, 0.2971077263355255]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Viktoriya Mykolaivka VS Shakhtar Donetsk
+Pais: Ukraine - Liga: Cup - Season: 2023
+Data da analise: 2023-10-30 00:13:38
+
+#### Team Viktoriya Mykolaivka - 3336: ####
+
+Tentativa 0/5 do(s) id(s): [3336, 1146] levou 26.214729 segundos.
+Tentativa 1/5 do(s) id(s): [3336, 1146] levou 31.694968 segundos.
+Tentativa 2/5 do(s) id(s): [3336, 1146] levou 27.022176 segundos.
+Tentativa 3/5 do(s) id(s): [3336, 1146] levou 33.159375 segundos.
+Tentativa 4/5 do(s) id(s): [3336, 1146] levou 36.101356 segundos.
+Winner Home: 
+[[0.9852834939956665, 0.0018975441344082355, 0.01281888410449028]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+##################################### new List ########################################
+Prevendo Jogo: Cork City VS Shamrock Rovers
+Pais: Ireland - Liga: Premier Division - Season: 2023
+Data da analise: 2023-10-30 12:59:24
+
+#### Team Cork City - 3610: ####
+
+Tentativa 0/5 do(s) id(s): [3610, 1169] levou 39.649646 segundos.
+Tentativa 1/5 do(s) id(s): [3610, 1169] levou 39.305608 segundos.
+Tentativa 2/5 do(s) id(s): [3610, 1169] levou 31.597974 segundos.
+Tentativa 3/5 do(s) id(s): [3610, 1169] levou 33.027461 segundos.
+Tentativa 4/5 do(s) id(s): [3610, 1169] levou 33.876447 segundos.
+Winner Home: 
+[[6.043843677616678e-05, 1.1134849046356976e-05, 0.9999284744262695]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Empoli VS Atalanta
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-30 13:07:55
+
+#### Team Empoli - 6112: ####
+
+Tentativa 0/5 do(s) id(s): [6112, 1139] levou 43.803825 segundos.
+Tentativa 1/5 do(s) id(s): [6112, 1139] levou 39.56581 segundos.
+Tentativa 2/5 do(s) id(s): [6112, 1139] levou 43.406913 segundos.
+Tentativa 3/5 do(s) id(s): [6112, 1139] levou 38.807789 segundos.
+Tentativa 4/5 do(s) id(s): [6112, 1139] levou 38.082433 segundos.
+Winner Home: 
+[[1.3678906007896785e-08, 0.979259729385376, 0.02074030600488186]]
+[2, 2, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: National Bank of Egypt VS Coca-Cola
+Pais: Egypt - Liga: Premier League - Season: 2023
+Data da analise: 2023-10-30 13:12:02
+
+#### Team National Bank of Egypt - 12061: ####
+
+Tentativa 0/5 do(s) id(s): [12061, 10845] levou 38.291694 segundos.
+Tentativa 1/5 do(s) id(s): [12061, 10845] levou 36.679375 segundos.
+Tentativa 2/5 do(s) id(s): [12061, 10845] levou 30.946781 segundos.
+Tentativa 3/5 do(s) id(s): [12061, 10845] levou 31.225262 segundos.
+Tentativa 4/5 do(s) id(s): [12061, 10845] levou 30.842683 segundos.
+Winner Home: 
+[[1.7587555703357793e-05, 0.999729573726654, 0.00025278530665673316]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: AEK Athens FC VS PAOK
+Pais: Greece - Liga: Super League 1 - Season: 2023
+Data da analise: 2023-10-30 13:15:07
+
+#### Team AEK Athens FC - 1292: ####
+
+Tentativa 0/5 do(s) id(s): [1292, 1301] levou 31.689651 segundos.
+Tentativa 1/5 do(s) id(s): [1292, 1301] levou 28.131751 segundos.
+Tentativa 2/5 do(s) id(s): [1292, 1301] levou 28.34298 segundos.
+Tentativa 3/5 do(s) id(s): [1292, 1301] levou 30.12035 segundos.
+Tentativa 4/5 do(s) id(s): [1292, 1301] levou 35.752065 segundos.
+Winner Home: 
+[[0.031464725732803345, 0.0032989580649882555, 0.9652363061904907]]
+[5, 0, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Bodo/Glimt VS Lillestrom
+Pais: Norway - Liga: Eliteserien - Season: 2023
+Data da analise: 2023-10-30 13:18:37
+
+#### Team Bodo/Glimt - 1131: ####
+
+Tentativa 0/5 do(s) id(s): [1131, 1369] levou 32.494518 segundos.
+Tentativa 1/5 do(s) id(s): [1131, 1369] levou 32.579004 segundos.
+Tentativa 2/5 do(s) id(s): [1131, 1369] levou 33.66247 segundos.
+Tentativa 3/5 do(s) id(s): [1131, 1369] levou 25.529054 segundos.
+Tentativa 4/5 do(s) id(s): [1131, 1369] levou 23.321659 segundos.
+Winner Home: 
+[[0.0026919471565634012, 1.2198824173026424e-08, 0.9973080158233643]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Znicz Pruszków VS Miedz Legnica
+Pais: Poland - Liga: I Liga - Season: 2023
+Data da analise: 2023-10-30 13:22:20
+
+#### Team Znicz Pruszków - 6798: ####
+
+Tentativa 0/5 do(s) id(s): [6798, 6752] levou 35.186421 segundos.
+Tentativa 1/5 do(s) id(s): [6798, 6752] levou 30.72011 segundos.
+Tentativa 2/5 do(s) id(s): [6798, 6752] levou 29.89861 segundos.
+Tentativa 3/5 do(s) id(s): [6798, 6752] levou 32.126488 segundos.
+Tentativa 4/5 do(s) id(s): [6798, 6752] levou 32.565664 segundos.
+Winner Home: 
+[[0.004693861119449139, 0.019278544932603836, 0.9760276079177856]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Al-Hilal Saudi FC VS Al-Hazm
+Pais: Saudi-Arabia - Liga: King's Cup - Season: 2024
+Data da analise: 2023-10-30 13:42:09
+
+#### Team Al-Hilal Saudi FC - 383: ####
+
+Tentativa 0/5 do(s) id(s): [383, 5084] levou 43.157278 segundos.
+Tentativa 1/5 do(s) id(s): [383, 5084] levou 37.472915 segundos.
+Tentativa 2/5 do(s) id(s): [383, 5084] levou 34.837463 segundos.
+Tentativa 3/5 do(s) id(s): [383, 5084] levou 44.76359 segundos.
+Tentativa 4/5 do(s) id(s): [383, 5084] levou 47.741668 segundos.
+Winner Home: 
+[[0.9999706745147705, 2.9247592465253547e-05, 6.46213678123786e-08]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Sportivo Barracas VS Lugano
+Pais: Argentina - Liga: Primera D - Season: 2023
+Data da analise: 2023-10-30 13:46:25
+
+#### Team Sportivo Barracas - 481: ####
+
+Tentativa 0/5 do(s) id(s): [481, 2108] levou 31.698706 segundos.
+Tentativa 1/5 do(s) id(s): [481, 2108] levou 43.669591 segundos.
+Tentativa 2/5 do(s) id(s): [481, 2108] levou 46.710515 segundos.
+Tentativa 3/5 do(s) id(s): [481, 2108] levou 48.325698 segundos.
+Tentativa 4/5 do(s) id(s): [481, 2108] levou 50.734163 segundos.
+Winner Home: 
+[[1.6950998826814612e-07, 0.9983029365539551, 0.0016969682183116674]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Aarhus VS Randers FC
+Pais: Denmark - Liga: Superliga - Season: 2023
+Data da analise: 2023-10-30 13:50:33
+
+#### Team Aarhus - 1286: ####
+
+Tentativa 0/5 do(s) id(s): [1286, 1248] levou 42.042857 segundos.
+Tentativa 1/5 do(s) id(s): [1286, 1248] levou 39.025332 segundos.
+Tentativa 2/5 do(s) id(s): [1286, 1248] levou 41.130071 segundos.
+Tentativa 3/5 do(s) id(s): [1286, 1248] levou 35.160163 segundos.
+Tentativa 4/5 do(s) id(s): [1286, 1248] levou 32.867796 segundos.
+Winner Home: 
+[[0.00575836980715394, 0.9936286807060242, 0.000613032840192318]]
+[2, 2, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Vilaverdense VS FC Porto B
+Pais: Portugal - Liga: Segunda Liga - Season: 2023
+Data da analise: 2023-10-30 13:54:44
+
+#### Team Vilaverdense - 8636: ####
+
+Tentativa 0/5 do(s) id(s): [8636, 8797] levou 26.955675 segundos.
+Tentativa 1/5 do(s) id(s): [8636, 8797] levou 31.856331 segundos.
+Tentativa 2/5 do(s) id(s): [8636, 8797] levou 32.756801 segundos.
+Tentativa 3/5 do(s) id(s): [8636, 8797] levou 34.23922 segundos.
+Tentativa 4/5 do(s) id(s): [8636, 8797] levou 34.116588 segundos.
+Winner Home: 
+[[0.004124279599636793, 0.008553141728043556, 0.9873226284980774]]
+[1, 3, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: CFR 1907 Cluj VS Farul Constanta
+Pais: Romania - Liga: Liga I - Season: 2023
+Data da analise: 2023-10-30 13:57:51
+
+#### Team CFR 1907 Cluj - 1178: ####
+
+Tentativa 0/5 do(s) id(s): [1178, 1232] levou 32.766308 segundos.
+Tentativa 1/5 do(s) id(s): [1178, 1232] levou 36.490178 segundos.
+Tentativa 2/5 do(s) id(s): [1178, 1232] levou 34.308202 segundos.
+Tentativa 3/5 do(s) id(s): [1178, 1232] levou 31.903476 segundos.
+Tentativa 4/5 do(s) id(s): [1178, 1232] levou 31.721519 segundos.
+Winner Home: 
+[[0.9305747151374817, 0.06796473264694214, 0.0014605375472456217]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Hammarby FF VS Sirius
+Pais: Sweden - Liga: Allsvenskan - Season: 2023
+Data da analise: 2023-10-30 14:01:51
+
+#### Team Hammarby FF - 962: ####
+
+Tentativa 0/5 do(s) id(s): [962, 966] levou 33.013835 segundos.
+Tentativa 1/5 do(s) id(s): [962, 966] levou 31.482844 segundos.
+Tentativa 2/5 do(s) id(s): [962, 966] levou 33.599199 segundos.
+Tentativa 3/5 do(s) id(s): [962, 966] levou 33.020519 segundos.
+Tentativa 4/5 do(s) id(s): [962, 966] levou 28.084007 segundos.
+Winner Home: 
+[[0.0012602844508364797, 0.9986953139305115, 4.445193917490542e-05]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: IFK Goteborg VS IF elfsborg
+Pais: Sweden - Liga: Allsvenskan - Season: 2023
+Data da analise: 2023-10-30 14:05:01
+
+#### Team IFK Goteborg - 964: ####
+
+Tentativa 0/5 do(s) id(s): [964, 968] levou 29.910568 segundos.
+Tentativa 1/5 do(s) id(s): [964, 968] levou 34.108221 segundos.
+Tentativa 2/5 do(s) id(s): [964, 968] levou 30.360324 segundos.
+Tentativa 3/5 do(s) id(s): [964, 968] levou 31.95296 segundos.
+Tentativa 4/5 do(s) id(s): [964, 968] levou 30.326266 segundos.
+Winner Home: 
+[[0.9979569911956787, 3.2921303500188515e-05, 0.0020100108813494444]]
+[2, 0, 3]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: GIF Sundsvall VS Orgryte IS
+Pais: Sweden - Liga: Superettan - Season: 2023
+Data da analise: 2023-10-30 14:08:09
+
+#### Team GIF Sundsvall - 980: ####
+
+Tentativa 0/5 do(s) id(s): [980, 985] levou 31.144761 segundos.
+Tentativa 1/5 do(s) id(s): [980, 985] levou 29.970539 segundos.
+Tentativa 2/5 do(s) id(s): [980, 985] levou 32.541224 segundos.
+Tentativa 3/5 do(s) id(s): [980, 985] levou 39.025882 segundos.
+Tentativa 4/5 do(s) id(s): [980, 985] levou 30.767348 segundos.
+Winner Home: 
+[[0.001552938367240131, 0.03995460644364357, 0.9584924578666687]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Lazio VS Fiorentina
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-30 14:34:43
+
+#### Team Lazio - 1249: ####
+
+Tentativa 0/5 do(s) id(s): [1249, 1374] levou 29.427238 segundos.
+Tentativa 1/5 do(s) id(s): [1249, 1374] levou 30.25419 segundos.
+Tentativa 2/5 do(s) id(s): [1249, 1374] levou 29.852018 segundos.
+Tentativa 3/5 do(s) id(s): [1249, 1374] levou 31.341573 segundos.
+Tentativa 4/5 do(s) id(s): [1249, 1374] levou 34.610177 segundos.
+Winner Home: 
+[[0.9999818801879883, 8.461563993478194e-06, 9.697800123831257e-06]]
+[3, 0, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Talleres Cordoba VS Banfield
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-30 14:38:50
+
+#### Team Talleres Cordoba - 267: ####
+
+Tentativa 0/5 do(s) id(s): [267, 350] levou 30.217384 segundos.
+Tentativa 1/5 do(s) id(s): [267, 350] levou 28.308627 segundos.
+Tentativa 2/5 do(s) id(s): [267, 350] levou 30.429458 segundos.
+Tentativa 3/5 do(s) id(s): [267, 350] levou 31.313309 segundos.
+Tentativa 4/5 do(s) id(s): [267, 350] levou 33.12145 segundos.
+Winner Home: 
+[[0.6989372372627258, 0.29182228446006775, 0.009240447543561459]]
+[2, 2, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Libertad VS Bolívar
+Pais: Bolivia - Liga: Copa de la División Profesional - Season: 2023
+Data da analise: 2023-10-30 14:42:20
+
+#### Team Libertad - 1551: ####
+
+Tentativa 0/5 do(s) id(s): [1551, 262] levou 32.196034 segundos.
+Tentativa 1/5 do(s) id(s): [1551, 262] levou 28.958163 segundos.
+Tentativa 2/5 do(s) id(s): [1551, 262] levou 26.910454 segundos.
+Tentativa 3/5 do(s) id(s): [1551, 262] levou 27.137011 segundos.
+Tentativa 4/5 do(s) id(s): [1551, 262] levou 29.913966 segundos.
+Winner Home: 
+[[0.02886265516281128, 0.0025332930963486433, 0.9686040282249451]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Puerto Golfito VS AD Carmelita
+Pais: Costa-Rica - Liga: Liga de Ascenso - Season: 2023
+Data da analise: 2023-10-30 14:45:24
+
+#### Team Puerto Golfito - 2897: ####
+
+Tentativa 0/5 do(s) id(s): [2897, 2890] levou 32.515958 segundos.
+Tentativa 1/5 do(s) id(s): [2897, 2890] levou 28.78625 segundos.
+Tentativa 2/5 do(s) id(s): [2897, 2890] levou 24.348315 segundos.
+Tentativa 3/5 do(s) id(s): [2897, 2890] levou 28.37782 segundos.
+Tentativa 4/5 do(s) id(s): [2897, 2890] levou 30.657494 segundos.
+Winner Home: 
+[[0.002359107369557023, 8.622933478363848e-07, 0.9976400136947632], [0.9860906600952148, 5.265376898933027e-07, 0.01390890497714281]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Saint Etienne VS Angers
+Pais: France - Liga: Ligue 2 - Season: 2023
+Data da analise: 2023-10-30 14:48:25
+
+#### Team Saint Etienne - 5843: ####
+
+Tentativa 0/5 do(s) id(s): [5843, 5812] levou 36.085415 segundos.
+Tentativa 1/5 do(s) id(s): [5843, 5812] levou 34.496598 segundos.
+Tentativa 2/5 do(s) id(s): [5843, 5812] levou 39.148799 segundos.
+Tentativa 3/5 do(s) id(s): [5843, 5812] levou 29.601159 segundos.
+Tentativa 4/5 do(s) id(s): [5843, 5812] levou 31.361747 segundos.
+Winner Home: 
+[[0.2402513325214386, 0.4324849545955658, 0.3272637128829956]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: OFI VS Olympiakos Piraeus
+Pais: Greece - Liga: Super League 1 - Season: 2023
+Data da analise: 2023-10-30 14:51:38
+
+#### Team OFI - 9267: ####
+
+Tentativa 0/5 do(s) id(s): [9267, 1147] levou 35.424634 segundos.
+Tentativa 1/5 do(s) id(s): [9267, 1147] levou 30.70109 segundos.
+Tentativa 2/5 do(s) id(s): [9267, 1147] levou 34.853043 segundos.
+Tentativa 3/5 do(s) id(s): [9267, 1147] levou 33.751176 segundos.
+Tentativa 4/5 do(s) id(s): [9267, 1147] levou 31.064358 segundos.
+Winner Home: 
+[[0.06932248920202255, 0.9133616089820862, 0.017315927892923355]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Jong Utrecht VS MVV
+Pais: Netherlands - Liga: Eerste Divisie - Season: 2023
+Data da analise: 2023-10-30 14:54:55
+
+#### Team Jong Utrecht - 7808: ####
+
+Tentativa 0/5 do(s) id(s): [7808, 7699] levou 33.687762 segundos.
+Tentativa 1/5 do(s) id(s): [7808, 7699] levou 29.601478 segundos.
+Tentativa 2/5 do(s) id(s): [7808, 7699] levou 30.097857 segundos.
+Tentativa 3/5 do(s) id(s): [7808, 7699] levou 29.743573 segundos.
+Tentativa 4/5 do(s) id(s): [7808, 7699] levou 25.642491 segundos.
+Winner Home: 
+[[0.9986101388931274, 0.0011694194981828332, 0.00022044943762011826]]
+[2, 3, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Bognor Regis Town VS Gosport Borough
+Pais: England - Liga: FA Trophy - Season: 2023
+Data da analise: 2023-10-30 14:59:04
+
+#### Team Bognor Regis Town - 9717: ####
+
+Tentativa 0/5 do(s) id(s): [9717, 9731] levou 35.023117 segundos.
+Tentativa 1/5 do(s) id(s): [9717, 9731] levou 34.895914 segundos.
+Tentativa 2/5 do(s) id(s): [9717, 9731] levou 35.381313 segundos.
+Tentativa 3/5 do(s) id(s): [9717, 9731] levou 38.856579 segundos.
+Tentativa 4/5 do(s) id(s): [9717, 9731] levou 34.739757 segundos.
+Winner Home: 
+[[0.31370019912719727, 0.6484079957008362, 0.037891749292612076]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Uruguay Montevideo VS Plaza Colonia
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-30 15:04:40
+
+#### Team Uruguay Montevideo - 495: ####
+
+Tentativa 0/5 do(s) id(s): [495, 276] levou 31.753427 segundos.
+Tentativa 1/5 do(s) id(s): [495, 276] levou 34.225247 segundos.
+Tentativa 2/5 do(s) id(s): [495, 276] levou 26.705685 segundos.
+Tentativa 3/5 do(s) id(s): [495, 276] levou 31.074718 segundos.
+Tentativa 4/5 do(s) id(s): [495, 276] levou 34.561708 segundos.
+Winner Home: 
+[[0.07902708649635315, 0.014968503266572952, 0.9060044288635254]]
+[2, 2, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Oriental VS Racing Montevideo
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-30 15:07:44
+
+#### Team Oriental - 489: ####
+
+Tentativa 0/5 do(s) id(s): [489, 477] levou 30.361187 segundos.
+Tentativa 1/5 do(s) id(s): [489, 477] levou 40.250374 segundos.
+Tentativa 2/5 do(s) id(s): [489, 477] levou 35.258338 segundos.
+Tentativa 3/5 do(s) id(s): [489, 477] levou 36.304668 segundos.
+Tentativa 4/5 do(s) id(s): [489, 477] levou 41.529704 segundos.
+Winner Home: 
+[[0.9973869919776917, 0.0010429448448121548, 0.0015700310468673706]]
+[2, 1, 2]
+
+---------------------------------------------------------------------------
+
+##################################### new List ########################################
+Prevendo Jogo: Lazio VS Fiorentina
+Pais: Italy - Liga: Serie A - Season: 2023
+Data da analise: 2023-10-30 15:12:58
+
+#### Team Lazio - 1249: ####
+
+Tentativa 0/5 do(s) id(s): [1249] levou 25.310999 segundos.
+Tentativa 1/5 do(s) id(s): [1249] levou 30.240407 segundos.
+Tentativa 2/5 do(s) id(s): [1249] levou 35.42375 segundos.
+Tentativa 3/5 do(s) id(s): [1249] levou 38.5244 segundos.
+Tentativa 4/5 do(s) id(s): [1249] levou 34.250595 segundos.
+Winner Home: 
+[[0.06438007205724716, 0.0006011096411384642, 0.93501877784729]]
+[4, 0, 1]
+
+#### Team Fiorentina - 1374: ####
+
+Tentativa 0/5 do(s) id(s): [1374] levou 41.171775 segundos.
+Tentativa 1/5 do(s) id(s): [1374] levou 32.316619 segundos.
+Tentativa 2/5 do(s) id(s): [1374] levou 26.62072 segundos.
+Tentativa 3/5 do(s) id(s): [1374] levou 30.840718 segundos.
+Tentativa 4/5 do(s) id(s): [1374] levou 27.081789 segundos.
+Winner Away: 
+[[0.9764502644538879, 0.000422645709477365, 0.023127088323235512]]
+[4, 0, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Talleres Cordoba VS Banfield
+Pais: Argentina - Liga: Copa de la Liga Profesional - Season: 2023
+Data da analise: 2023-10-30 15:19:33
+
+#### Team Talleres Cordoba - 267: ####
+
+Tentativa 0/5 do(s) id(s): [267] levou 30.974589 segundos.
+Tentativa 1/5 do(s) id(s): [267] levou 26.574233 segundos.
+Tentativa 2/5 do(s) id(s): [267] levou 26.172589 segundos.
+Tentativa 3/5 do(s) id(s): [267] levou 26.44988 segundos.
+Tentativa 4/5 do(s) id(s): [267] levou 29.389897 segundos.
+Winner Home: 
+[[0.8553577661514282, 0.14327207207679749, 0.0013702190481126308]]
+[4, 1, 0]
+
+#### Team Banfield - 350: ####
+
+Tentativa 0/5 do(s) id(s): [350] levou 20.720894 segundos.
+Tentativa 1/5 do(s) id(s): [350] levou 25.450401 segundos.
+Tentativa 2/5 do(s) id(s): [350] levou 20.000405 segundos.
+Tentativa 3/5 do(s) id(s): [350] levou 21.067438 segundos.
+Tentativa 4/5 do(s) id(s): [350] levou 20.198334 segundos.
+Winner Away: 
+[[0.1349463313817978, 0.27216097712516785, 0.5928926467895508]]
+[2, 3, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Libertad VS Bolívar
+Pais: Bolivia - Liga: Copa de la División Profesional - Season: 2023
+Data da analise: 2023-10-30 15:24:40
+
+#### Team Libertad - 1551: ####
+
+Tentativa 0/5 do(s) id(s): [1551] levou 22.279113 segundos.
+Tentativa 1/5 do(s) id(s): [1551] levou 22.139696 segundos.
+Tentativa 2/5 do(s) id(s): [1551] levou 20.845763 segundos.
+Tentativa 3/5 do(s) id(s): [1551] levou 23.070675 segundos.
+Tentativa 4/5 do(s) id(s): [1551] levou 19.728792 segundos.
+Winner Home: 
+[[0.2849362790584564, 0.3274807333946228, 0.3875829875469208]]
+[3, 1, 1]
+
+#### Team Bolívar - 262: ####
+
+Tentativa 0/5 do(s) id(s): [262] levou 21.041216 segundos.
+Tentativa 1/5 do(s) id(s): [262] levou 20.179889 segundos.
+Tentativa 2/5 do(s) id(s): [262] levou 17.84081 segundos.
+Tentativa 3/5 do(s) id(s): [262] levou 19.217366 segundos.
+Tentativa 4/5 do(s) id(s): [262] levou 21.954193 segundos.
+Winner Away: 
+[[0.2709701657295227, 0.00114271673373878, 0.7278871536254883]]
+[5, 0, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Puerto Golfito VS Quepos Cambute
+Pais: Costa-Rica - Liga: Liga de Ascenso - Season: 2023
+Data da analise: 2023-10-30 15:28:43
+
+#### Team Puerto Golfito - 2897: ####
+
+Tentativa 0/5 do(s) id(s): [2897] levou 19.744586 segundos.
+Tentativa 1/5 do(s) id(s): [2897] levou 19.919516 segundos.
+Tentativa 2/5 do(s) id(s): [2897] levou 18.813359 segundos.
+Tentativa 3/5 do(s) id(s): [2897] levou 19.573838 segundos.
+Tentativa 4/5 do(s) id(s): [2897] levou 18.690205 segundos.
+Winner Home: 
+[[0.9999932050704956, 3.986737738159718e-06, 2.914582637458807e-06]]
+[5, 0, 0]
+
+#### Team Quepos Cambute - 2904: ####
+
+Tentativa 0/5 do(s) id(s): [2904] levou 22.366577 segundos.
+Tentativa 1/5 do(s) id(s): [2904] levou 20.550227 segundos.
+Tentativa 2/5 do(s) id(s): [2904] levou 19.519458 segundos.
+Tentativa 3/5 do(s) id(s): [2904] levou 19.804715 segundos.
+Tentativa 4/5 do(s) id(s): [2904] levou 20.126514 segundos.
+Winner Away: 
+[[0.5201460719108582, 0.03783627226948738, 0.44201764464378357]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Saint Etienne VS Angers
+Pais: France - Liga: Ligue 2 - Season: 2023
+Data da analise: 2023-10-30 15:32:15
+
+#### Team Saint Etienne - 5843: ####
+
+Tentativa 0/5 do(s) id(s): [5843] levou 19.34265 segundos.
+Tentativa 1/5 do(s) id(s): [5843] levou 19.150617 segundos.
+Tentativa 2/5 do(s) id(s): [5843] levou 20.484479 segundos.
+Tentativa 3/5 do(s) id(s): [5843] levou 19.290396 segundos.
+Tentativa 4/5 do(s) id(s): [5843] levou 19.394679 segundos.
+Winner Home: 
+[[0.0018017897382378578, 0.9932443499565125, 0.0049539064057171345]]
+[5, 0, 0]
+
+#### Team Angers - 5812: ####
+
+Tentativa 0/5 do(s) id(s): [5812] levou 19.946129 segundos.
+Tentativa 1/5 do(s) id(s): [5812] levou 20.672812 segundos.
+Tentativa 2/5 do(s) id(s): [5812] levou 19.094259 segundos.
+Tentativa 3/5 do(s) id(s): [5812] levou 19.652197 segundos.
+Tentativa 4/5 do(s) id(s): [5812] levou 19.162283 segundos.
+Winner Away: 
+[[0.44064319133758545, 2.94296546599071e-06, 0.5593538880348206]]
+[3, 1, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: OFI VS Olympiakos Piraeus
+Pais: Greece - Liga: Super League 1 - Season: 2023
+Data da analise: 2023-10-30 15:36:03
+
+#### Team OFI - 9267: ####
+
+Tentativa 0/5 do(s) id(s): [9267] levou 18.960137 segundos.
+Tentativa 1/5 do(s) id(s): [9267] levou 18.856243 segundos.
+Tentativa 2/5 do(s) id(s): [9267] levou 19.765263 segundos.
+Tentativa 3/5 do(s) id(s): [9267] levou 21.011113 segundos.
+Tentativa 4/5 do(s) id(s): [9267] levou 24.06176 segundos.
+Winner Home: 
+[[6.830285883552278e-07, 4.450509550224524e-06, 0.9999948740005493]]
+[3, 2, 0]
+
+#### Team Olympiakos Piraeus - 1147: ####
+
+Tentativa 0/5 do(s) id(s): [1147] levou 22.585518 segundos.
+Tentativa 1/5 do(s) id(s): [1147] levou 19.640524 segundos.
+Tentativa 2/5 do(s) id(s): [1147] levou 19.623147 segundos.
+Tentativa 3/5 do(s) id(s): [1147] levou 20.869704 segundos.
+Tentativa 4/5 do(s) id(s): [1147] levou 20.943182 segundos.
+Winner Away: 
+[[0.011009065434336662, 0.6741051077842712, 0.3148857653141022]]
+[3, 2, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Jong Utrecht VS MVV
+Pais: Netherlands - Liga: Eerste Divisie - Season: 2023
+Data da analise: 2023-10-30 15:40:01
+
+#### Team Jong Utrecht - 7808: ####
+
+Tentativa 0/5 do(s) id(s): [7808] levou 19.067541 segundos.
+Tentativa 1/5 do(s) id(s): [7808] levou 18.468828 segundos.
+Tentativa 2/5 do(s) id(s): [7808] levou 20.97058 segundos.
+Tentativa 3/5 do(s) id(s): [7808] levou 18.160532 segundos.
+Tentativa 4/5 do(s) id(s): [7808] levou 20.257137 segundos.
+Winner Home: 
+[[0.005640930496156216, 0.9895399212837219, 0.004819147288799286]]
+[4, 1, 0]
+
+#### Team MVV - 7699: ####
+
+Tentativa 0/5 do(s) id(s): [7699] levou 19.733321 segundos.
+Tentativa 1/5 do(s) id(s): [7699] levou 19.138177 segundos.
+Tentativa 2/5 do(s) id(s): [7699] levou 21.154426 segundos.
+Tentativa 3/5 do(s) id(s): [7699] levou 20.778912 segundos.
+Tentativa 4/5 do(s) id(s): [7699] levou 20.367462 segundos.
+Winner Away: 
+[[0.9715389013290405, 0.02831844426691532, 0.00014265273057390004]]
+[2, 2, 1]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Bognor Regis Town VS Gosport Borough
+Pais: England - Liga: FA Trophy - Season: 2023
+Data da analise: 2023-10-30 15:43:46
+
+#### Team Bognor Regis Town - 9717: ####
+##################################### new List ########################################
+Prevendo Jogo: Bognor Regis Town VS Gosport Borough
+Pais: England - Liga: FA Trophy - Season: 2023
+Data da analise: 2023-10-30 15:44:16
+
+#### Team Bognor Regis Town - 9717: ####
+
+Tentativa 0/5 do(s) id(s): [9717] levou 22.575903 segundos.
+Tentativa 1/5 do(s) id(s): [9717] levou 24.768801 segundos.
+Tentativa 2/5 do(s) id(s): [9717] levou 20.997857 segundos.
+Tentativa 3/5 do(s) id(s): [9717] levou 18.295653 segundos.
+Tentativa 4/5 do(s) id(s): [9717] levou 20.688615 segundos.
+Winner Home: 
+[[0.01636689342558384, 0.03598787263035774, 0.9476452469825745]]
+[2, 2, 1]
+
+#### Team Gosport Borough - 9731: ####
+
+Tentativa 0/5 do(s) id(s): [9731] levou 20.144554 segundos.
+Tentativa 1/5 do(s) id(s): [9731] levou 18.86586 segundos.
+Tentativa 2/5 do(s) id(s): [9731] levou 19.867451 segundos.
+Tentativa 3/5 do(s) id(s): [9731] levou 19.372034 segundos.
+Tentativa 4/5 do(s) id(s): [9731] levou 18.574461 segundos.
+Winner Away: 
+[[0.011578232049942017, 0.00018227435066364706, 0.9882395267486572]]
+[4, 1, 0]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Uruguay Montevideo VS Plaza Colonia
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-30 15:51:04
+
+#### Team Uruguay Montevideo - 495: ####
+
+Tentativa 0/5 do(s) id(s): [495] levou 20.316945 segundos.
+Tentativa 1/5 do(s) id(s): [495] levou 19.402142 segundos.
+Tentativa 2/5 do(s) id(s): [495] levou 20.030405 segundos.
+Tentativa 3/5 do(s) id(s): [495] levou 18.633154 segundos.
+Tentativa 4/5 do(s) id(s): [495] levou 19.886415 segundos.
+Winner Home: 
+[[0.057053010910749435, 0.014222631230950356, 0.9287243485450745]]
+[2, 2, 1]
+
+#### Team Plaza Colonia - 276: ####
+
+Tentativa 0/5 do(s) id(s): [276] levou 20.210911 segundos.
+Tentativa 1/5 do(s) id(s): [276] levou 19.116554 segundos.
+Tentativa 2/5 do(s) id(s): [276] levou 18.768951 segundos.
+Tentativa 3/5 do(s) id(s): [276] levou 19.094101 segundos.
+Tentativa 4/5 do(s) id(s): [276] levou 21.294258 segundos.
+Winner Away: 
+[[1.0842078381756437e-06, 0.57587730884552, 0.4241216480731964]]
+[1, 2, 2]
+
+---------------------------------------------------------------------------
+
+Prevendo Jogo: Oriental VS Racing Montevideo
+Pais: Uruguay - Liga: Copa Uruguay - Season: 2023
+Data da analise: 2023-10-30 15:54:40
+
+#### Team Oriental - 489: ####
+
+Tentativa 0/5 do(s) id(s): [489] levou 22.102918 segundos.
+Tentativa 1/5 do(s) id(s): [489] levou 24.577435 segundos.
+Tentativa 2/5 do(s) id(s): [489] levou 20.459093 segundos.
+Tentativa 3/5 do(s) id(s): [489] levou 21.189476 segundos.
+Tentativa 4/5 do(s) id(s): [489] levou 20.394159 segundos.
+Winner Home: 
+[[0.0644974485039711, 0.7332279086112976, 0.20227470993995667]]
+[4, 0, 1]
+
+#### Team Racing Montevideo - 477: ####
+
+Tentativa 0/5 do(s) id(s): [477] levou 20.838942 segundos.
+Tentativa 1/5 do(s) id(s): [477] levou 20.394369 segundos.
+Tentativa 2/5 do(s) id(s): [477] levou 18.584179 segundos.
+Tentativa 3/5 do(s) id(s): [477] levou 21.25811 segundos.
+Tentativa 4/5 do(s) id(s): [477] levou 21.259605 segundos.
+Winner Away: 
+[[0.968515157699585, 0.02770589105784893, 0.003778981976211071]]
+[1, 2, 2]
+
+---------------------------------------------------------------------------
+

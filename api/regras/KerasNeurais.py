@@ -32,7 +32,7 @@ class KerasNeurais:
             patience = 1500 if isAgruparTeams else 1500
             if isFiltrarTeams:
                 qtdeDados = 30 if isAmbas else 15
-                nEpocas = 1200 if isAmbas else 1200
+                nEpocas = 800 if isAmbas else 800
             else:
                 qtdeDados = 430 if isAgruparTeams else 860
                 nEpocas = 5000 if isAgruparTeams else 5500
@@ -80,7 +80,7 @@ class KerasNeurais:
             inputL = Input(shape=(1 if isReccurent else None, nNeuroniosEntrada))
             qtdeSaida = len(rotulos[0])
             if isReccurent:
-                ocultaLOne = SimpleRNN(units=int(nNeuroniosEntrada * 0.5), activation="tanh")(inputL)
+                ocultaLOne = SimpleRNN(units=int(nNeuroniosEntrada), activation="tanh")(inputL)
                 # ocultaLTwo = SimpleRNN(units=int(nNeuroniosEntrada * 0.2), activation="tanh")(ocultaLOne)
                 # ocultaLThree = LSTM(units=int(nNeuroniosEntrada * 0.5), activation="tanh")(ocultaLTwo)  # , return_sequences=True
                 saidaL = Dense(units=qtdeSaida, name="saidaLOne", activation=funcAtivacao)(ocultaLOne)
