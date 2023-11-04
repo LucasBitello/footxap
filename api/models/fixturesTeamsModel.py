@@ -38,15 +38,24 @@ class FixturesTeamsModel(Model):
             id_team_home = self.teamsModel.obterIdByReferenceIdApi(data_fixture_api["teams"]["home"]["id"])
             id_team_away = self.teamsModel.obterIdByReferenceIdApi(data_fixture_api["teams"]["away"]["id"])
 
-
-
         newTeamHome = FixtureTeams()
         newTeamHome.id = self.obterIdByIdFixtureTeam(id_fixture=id_fixture, id_team=id_team_home)
         newTeamHome.id_fixture = id_fixture
         newTeamHome.id_team = id_team_home
         newTeamHome.is_winner = data_fixture_api["teams"]["home"]["winner"]
         newTeamHome.is_home = 1
+
         newTeamHome.goals = data_fixture_api["goals"]["home"]
+        newTeamHome.goals_halftime = data_fixture_api["score"]["halftime"]["home"]
+        newTeamHome.goals_fulltime = data_fixture_api["score"]["fulltime"]["home"]
+        newTeamHome.goals_extratime = data_fixture_api["score"]["extratime"]["home"]
+        newTeamHome.goals_penalty = data_fixture_api["score"]["penalty"]["home"]
+
+        newTeamHome.goals_conceded = data_fixture_api["goals"]["away"]
+        newTeamHome.goals_halftime_conceded = data_fixture_api["score"]["halftime"]["away"]
+        newTeamHome.goals_fulltime_conceded = data_fixture_api["score"]["fulltime"]["away"]
+        newTeamHome.goals_extratime_conceded = data_fixture_api["score"]["extratime"]["away"]
+        newTeamHome.goals_penalty_conceded = data_fixture_api["score"]["penalty"]["away"]
         self.salvar(data=[newTeamHome])
 
         newTeamAway = FixtureTeams()
@@ -55,7 +64,20 @@ class FixturesTeamsModel(Model):
         newTeamAway.id_team = id_team_away
         newTeamAway.is_winner = data_fixture_api["teams"]["away"]["winner"]
         newTeamAway.is_home = 0
+
         newTeamAway.goals = data_fixture_api["goals"]["away"]
+        newTeamAway.goals_halftime = data_fixture_api["score"]["halftime"]["away"]
+        newTeamAway.goals_fulltime = data_fixture_api["score"]["fulltime"]["away"]
+        newTeamAway.goals_extratime = data_fixture_api["score"]["extratime"]["away"]
+        newTeamAway.goals_penalty = data_fixture_api["score"]["penalty"]["away"]
+
+        newTeamAway.goals_conceded = data_fixture_api["goals"]["home"]
+        newTeamAway.goals_halftime_conceded = data_fixture_api["score"]["halftime"]["home"]
+        newTeamAway.goals_fulltime_conceded = data_fixture_api["score"]["fulltime"]["home"]
+        newTeamAway.goals_extratime_conceded = data_fixture_api["score"]["extratime"]["home"]
+        newTeamAway.goals_penalty_conceded = data_fixture_api["score"]["penalty"]["home"]
+
+
         self.salvar(data=[newTeamAway])
 
 
@@ -82,6 +104,11 @@ class FixturesTeamsModel(Model):
             `goals_fulltime` INT NOT NULL DEFAULT 0,
             `goals_extratime` INT NOT NULL DEFAULT 0,
             `goals_penalty` INT NOT NULL DEFAULT 0,
+            `goals_conceded` INT NOT NULL DEFAULT 0,
+            `goals_halftime_conceded` INT NOT NULL DEFAULT 0,
+            `goals_fulltime_conceded` INT NOT NULL DEFAULT 0,
+            `goals_extratime_conceded` INT NOT NULL DEFAULT 0,
+            `goals_penalty_conceded` INT NOT NULL DEFAULT 0,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
                 INDEX `id_team_fte_fix_idx` (`id_team` ASC) VISIBLE,
@@ -108,6 +135,15 @@ class FixtureTeams(ClassModel):
         self.is_winner: int = None
         self.is_home: int = None
         self.goals: int = 0
+        self.goals_halftime: int = 0
+        self.goals_fulltime: int = 0
+        self.goals_extratime: int = 0
+        self.goals_penalty: int = 0
+        self.goals_conceded: int = 0
+        self.goals_halftime_conceded: int = 0
+        self.goals_fulltime_conceded: int = 0
+        self.goals_extratime_conceded: int = 0
+        self.goals_penalty_conceded: int = 0
         self.last_modification: str = None
 
         super().__init__(dado=fixtureTeams)

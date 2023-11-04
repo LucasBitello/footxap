@@ -88,7 +88,6 @@ class FixturesModel(Model):
 
         return responseData
 
-
     def atualizarDBFixtures(self, idSeason: int):
         season: Season = self.seasonsModel.obterByColumnsID([idSeason])[0]
         league: League = self.leaguesModel.obterByColumnsID([season.id_league])[0]
@@ -128,6 +127,7 @@ class FixturesModel(Model):
             `round` VARCHAR(255) NOT NULL,
             `status` VARCHAR(255) NOT NULL,
             `time_elapsed` VARCHAR(255) NULL,
+            `has_statistics_fixture`TINYINT(1) NOT NULL DEFAULT 0,
             `last_get_statistics_api` DATETIME NULL,
             `last_get_lineups_api` DATETIME NULL,
             `last_modification` DATETIME NOT NULL,
@@ -142,7 +142,7 @@ class FixturesModel(Model):
 
         self.executarQuery(query=query, params=[])
 
-    def atualizarDados(self, id_season: int = None, arr_ids_team: list= [], qtde_dados_estatisticas: int = 15):
+    def atualizarDados(self, id_season: int = None, arr_ids_team: list = [], qtde_dados_estatisticas: int = 30):
         dateNow = datetime.now().strftime("%Y-%m-%d")
 
         if id_season is not None:
@@ -211,13 +211,15 @@ class FixturesModel(Model):
                     self.obterFixturesOrderDataBy(id_team=id_team, isASC=False, limit=qtde_dados_estatisticas,
                                                   isApenasConcluidas=True, isApenasComStatistics=True))
 
-                #for fixture in arrFixturesForStatistics:
-                    #seasonFixture: Season = self.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
-                    #if fixture.last_get_statistics_api is None and seasonFixture.has_statistics_fixtures == 1:
-                        #self.fixturesTeamsStatisticsModel.atualizarDados(id_fixture=fixture.id)
+                for fixture in arrFixturesForStatistics:
+                    seasonFixture: Season = self.seasonsModel.obterByColumnsID(arrDados=[fixture.id_season])[0]
+                    if (fixture.last_get_statistics_api is None and seasonFixture.has_statistics_fixtures == 1 and
+                            fixture.status in ['FT', 'AET', 'PEN']):
+                        isHasStatistics = self.fixturesTeamsStatisticsModel.atualizarDados(id_fixture=fixture.id)
 
-                        #fixture.last_get_statistics_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
-                        #self.salvar(data=[fixture])
+                        fixture.last_get_statistics_api = datetime.now().strftime(self.formato_datetime_YYYY_MM_DD_H_M_S)
+                        fixture.has_statistics_fixture = isHasStatistics
+                        self.salvar(data=[fixture])
 
     def obterFixturesOrderDataBy(self, id_season: int = None, id_team: int = None, isASC: bool = True, limit: int = None,
                                  isApenasConcluidas: bool = True, isApenasComStatistics: bool = False, isApenasEmAberto: bool = False) -> list:
@@ -282,7 +284,7 @@ class FixturesModel(Model):
         query = f"SELECT fix.* from {self.name_table} as fix" \
                 f" JOIN fixture_teams as fte on fte.id_fixture = fix.id" \
                 f" WHERE (fix.status <> 'FT' AND fix.status <> 'AET' AND fix.status <> 'PEN' AND fix.status <> 'CANC' " \
-                f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD')" \
+                f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD' AND fix.status <> 'ABD')" \
                 f" {sqlIdSeason} AND fte.id_team = {id_team}" \
                 f" {sqlIdsIgnorar}" \
                 f" ORDER BY fix.date ASC LIMIT 1"
@@ -300,6 +302,7 @@ class Fixture(ClassModel):
         self.round: str = None
         self.status: str = None
         self.time_elapsed: str = None
+        self.has_statistics_fixture: int = None
         self.last_get_statistics_api: str = None
         self.last_get_lineups_api: str = None
         self.last_modification: str = None

@@ -27,7 +27,6 @@ class TypesFixturesTeamsStatisticsModel(Model):
 
         self.criarTableDataBase()
 
-
     def criarTableDataBase(self):
         query = f"""CREATE TABLE IF NOT EXISTS `type_fixture_team_statistic` (
             `id` INT NOT NULL AUTO_INCREMENT,
@@ -37,7 +36,6 @@ class TypesFixturesTeamsStatisticsModel(Model):
             UNIQUE  (`name_statistic`));"""
 
         self.executarQuery(query=query, params=[])
-
 
     def obterTypesFixturesTeamsStatistics(self, name_type: str) -> TypesFixturesTeamsStatistics:
         arrTypeStatistics: list[TypesFixturesTeamsStatistics] = self.obterByColumns(
@@ -55,3 +53,4 @@ class TypesFixturesTeamsStatisticsModel(Model):
             return newTypeStatistics
         else:
             return arrTypeStatistics[0]
+

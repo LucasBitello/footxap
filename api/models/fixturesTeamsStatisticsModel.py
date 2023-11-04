@@ -54,19 +54,17 @@ class FixturesTeamsStatisticsModel(Model):
 
         return responseData
 
-
-    def atualizarDBFixtureTeamStatistics(self, idFixture: int) -> None:
-        fixtureDB = self.fixtureModel.obterByColumnsID(arrDados=[idFixture])[0]
+    def atualizarDBFixtureTeamStatistics(self, idFixture: int) -> int:
+        fixtureDB: Fixture = self.fixtureModel.obterByColumnsID(arrDados=[idFixture])[0]
         arrResponse = self.fazerConsultaFixturesStatisticsApiFootball(id_fixture=fixtureDB.id_api)
 
         for response in arrResponse:
             arrDataStatistics = response["statistics"]
+            team = self.teamModel.obterByReferenceApi(dadosBusca=[response["team"]["id"]])[0]
 
             for dataStatistic in arrDataStatistics:
                 typeStatisctic: TypesFixturesTeamsStatistics = self.typesFixturesTeamsStatisticsModel.obterTypesFixturesTeamsStatistics(
                     name_type=dataStatistic["type"])
-
-                team = self.teamModel.obterByReferenceApi(dadosBusca=[response["team"]["id"]])[0]
 
                 arrFixtureTeamStatistic = self.obterByColumns(arrNameColuns=["id_fixture", "id_team", "id_type_statistic"],
                                                               arrDados=[fixtureDB.id, team.id, typeStatisctic.id])
@@ -74,7 +72,7 @@ class FixturesTeamsStatisticsModel(Model):
                 if len(arrFixtureTeamStatistic) == 1:
                     newFixtureTeamStatistic = arrFixtureTeamStatistic[0]
                 elif len(arrFixtureTeamStatistic) >= 2:
-                    raise "UEPAAA tem algum erro com essas statisticas: " + str(fixtureDB.id)
+                    raise Exception("UEPAAA tem algum erro com essas statisticas: " + str(fixtureDB.id))
                 else:
                     newFixtureTeamStatistic = FixtureTeamStatistic()
 
@@ -89,6 +87,7 @@ class FixturesTeamsStatisticsModel(Model):
 
                 self.salvar(data=[newFixtureTeamStatistic])
 
+        return 1 if len(arrResponse) >= 1 else 0
 
     def criarTableDataBase(self):
         query = f"""CREATE TABLE IF NOT EXISTS `fixture_team_statistics` (
@@ -96,7 +95,7 @@ class FixturesTeamsStatisticsModel(Model):
             `id_fixture` INT NOT NULL,
             `id_team` INT NOT NULL,
             `id_type_statistic` INT NOT NULL,
-            `value` FLOAT NULL,
+            `value` FLOAT NOT NULL DEFAULT 0,
             `last_modification` DATETIME NOT NULL,
                 PRIMARY KEY (`id`),
                 CONSTRAINT `id_fixture_fts_fix`
@@ -118,9 +117,8 @@ class FixturesTeamsStatisticsModel(Model):
 
         self.executarQuery(query=query, params=[])
 
-
     def atualizarDados(self, id_fixture: int):
-        self.atualizarDBFixtureTeamStatistics(idFixture=id_fixture)
+        return self.atualizarDBFixtureTeamStatistics(idFixture=id_fixture)
 
 
 class FixtureTeamStatistic(ClassModel):
@@ -133,3 +131,4 @@ class FixtureTeamStatistic(ClassModel):
         self.last_modification: str = None
 
         super().__init__(dado=fixtureTeamStatistic)
+
