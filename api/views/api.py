@@ -35,6 +35,7 @@ from api.models.model import Database
 
 from api.regras.KerasSequencialWithDQN import ViviFoot
 from api.regras.KerasSequencialNormal import KerasSequencialNormal
+from api.regras.kerasSequencialInteligente import KerasNeuralInteligente
 
 database = Database()
 
@@ -157,27 +158,6 @@ def obterPrevisaoPartida(request):
             allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeAB.predit[k]]) + "\n"
         # -------
 
-        '''footGols = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=True,
-                            isAgruparTeams=True, idTypeReturn=2, isFiltrarTeams=False, isRecurrent=False,
-                            funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Alls: \n"
-        for k in range(len(footGols.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGols.predit[k]]) + "\n"'''
-
-        '''# -------
-        footGolsA = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamHome, isAmbas=True,
-                             isAgruparTeams=False, idTypeReturn=4, isFiltrarTeams=True, isRecurrent=False,
-                             funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Fora: \n"
-        for k in range(len(footGolsA.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsA.predit[k]]) + "\n"
-        # -------'''
-        '''footGolsHomeAmbas = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=True,
-                                     isAgruparTeams=True, idTypeReturn=1, isFiltrarTeams=False, isRecurrent=False,
-                                     funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Ambas: " + str([str(round(k * 100, 1)) + "%" for k in footGolsHomeAmbas.predit[0]]) + "\n"
-        arrays.append(footGolsHomeAmbas.predit[0])'''
-
         allResults += "\n"
 
         allResults += "--------------------------------------------------------------------------- \n\n"
@@ -199,22 +179,16 @@ def obterPrevisaoPartida(request):
 def obterPrevisaoListaPartida(request):
     fixturesRegras = FixturesRegras()
     nextGamesModel = NextGamesModel()
-    kerasSequencialNormal = KerasSequencialNormal()
 
     try:
-        arrListGames = nextGamesModel.obterByColumns(arrNameColuns=["is_previu"], arrDados=[0])
-        msg = "\n\n#######################################################################################\n"
-        msg += "##################################### new List ########################################\n"
-        msg += "#######################################################################################\n\n"
-        with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados-dqn.txt",
-                  "a", encoding="utf-8") as results:
-            results.write(msg)
-            results.close()
+        arrListGames = nextGamesModel.obterByColumns(arrNameColuns=["is_previu"], arrDados=[0],
+                                                     clausulaOrder=" ORDER BY data_jogo ASC")
+        msgInit = "\n\n#######################################################################################\n"
+        msgInit += "##################################### new List ########################################\n"
+        msgInit += "#######################################################################################\n\n"
 
         for indexJogo in range(len(arrListGames)):
             jogo: NextGames = arrListGames[indexJogo]
-
-            print("------- Treinando Partida -------\n")
             fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[jogo.id_team_home, jogo.id_team_away])
 
             teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_home])[0]
@@ -227,84 +201,91 @@ def obterPrevisaoListaPartida(request):
             country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
                 arrDados=[league.id_country])[0]
 
-            strInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
-            strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
+            msgInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
+            msgInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
                 season.year) + "\n"
-            strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n"
+            msgInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n"
 
-            kerasSequencialNormal.gravarLogs(strInfos)
-            # params
-            qtdeTentativas = 3
-            qtdeRedesPorTentativa = 3
-            funcAtivacao = "softmax"
+            isRedeAntiga = False
+            if isRedeAntiga:
+                if indexJogo == 0:
+                    with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados-dqn.txt",
+                              "a", encoding="utf-8") as results:
+                        results.write(msgInit)
+                        results.close()
+                kerasSequencialNormal = KerasSequencialNormal()
+                kerasSequencialNormal.gravarLogs(msgInfos)
 
-            # ------------------------------------------------------------------------------
+                # ------------------------------------------------------------------------------
 
-            resultadoA = "\n#### Team " + teamHome.name + " - " + str(teamHome.id) + ": ####\n"
-            kerasSequencialNormal.gravarLogs(resultadoA)
-            prdict, arrAcertos = KerasSequencialNormal().getBestRedeNeuralByDataset(
-                arrIdsTeam=[jogo.id_team_home, jogo.id_team_away], isAgruparTeams=False, idTypeReturn=3,
-                isFiltrarTeams=True, isRecurrent=True, funcAtiv="sigmoid", isPassadaTempoDupla=False,
-                nRedes=qtdeRedesPorTentativa, qtdeTentativas=qtdeTentativas, arrIdsExpecficos=[jogo.id_team_home],
-                isDadosUmLadoSo=True)
-            print("blablablabalb")
-            print(prdict)
-            print(arrAcertos)
-            resultadoA = "\nWinner Home: \n"
-            resultadoA += str(prdict) + " / " + str(arrAcertos) + "\n"
-            kerasSequencialNormal.gravarLogs(resultadoA)
+                resultadoA = "\n#### Team Home: " + teamHome.name + " - " + str(teamHome.id) + ": ####\n"
+                resultadoA += "#### Team Away: " + teamAway.name + " - " + str(teamAway.id) + ": ####\n\n"
+                kerasSequencialNormal.gravarLogs(resultadoA)
+                msgHomeA = KerasSequencialNormal().getProbabilidadesWithSigmoid(
+                    arrIdsTeam=[jogo.id_team_home, jogo.id_team_away],
+                    arrIdsExpecficos=[jogo.id_team_home])
 
-            resultadoAH = "\n#### Team " + teamHome.name + " - " + str(teamHome.id) + ": ####\n"
-            kerasSequencialNormal.gravarLogs(resultadoAH)
-            prdict, arrAcertos = KerasSequencialNormal().getBestRedeNeuralByDataset(
-                arrIdsTeam=[jogo.id_team_home, jogo.id_team_away], isAgruparTeams=False, idTypeReturn=4,
-                isFiltrarTeams=True, isRecurrent=True, funcAtiv="sigmoid", isPassadaTempoDupla=False,
-                nRedes=qtdeRedesPorTentativa, qtdeTentativas=qtdeTentativas, arrIdsExpecficos=[jogo.id_team_home],
-                isDadosUmLadoSo=True)
-            print("blablablabalb")
-            print(prdict)
-            print(arrAcertos)
-            resultadoAH = "\nEquilibrado Home: \n"
-            resultadoAH += str(prdict) + " / " + str(arrAcertos) + "\n"
-            kerasSequencialNormal.gravarLogs(resultadoAH)
+                if msgHomeA == False:
+                    msgFim = "\n####################################################\n\n"
+                    kerasSequencialNormal.gravarLogs(msgFim)
+                    jogo.is_previu = 1
+                    nextGamesModel.salvar(data=[jogo.__dict__])
+                    continue
 
-            # ------------------------------------------------------------------------------
+                msgHomeB = KerasSequencialNormal().getProbabilidadesWithSigmoid(
+                    arrIdsTeam=[jogo.id_team_home, jogo.id_team_away],
+                    arrIdsExpecficos=[jogo.id_team_away])
 
-            resultadoB = "\n#### Team " + teamAway.name + " - " + str(teamAway.id) + ": ####\n"
-            kerasSequencialNormal.gravarLogs(resultadoB)
-            prdict, arrAcertos = KerasSequencialNormal().getBestRedeNeuralByDataset(
-                arrIdsTeam=[jogo.id_team_away, jogo.id_team_home], isAgruparTeams=False, idTypeReturn=3,
-                isFiltrarTeams=True, isRecurrent=True, funcAtiv="sigmoid", isPassadaTempoDupla=False,
-                nRedes=qtdeRedesPorTentativa, qtdeTentativas=qtdeTentativas, arrIdsExpecficos=[jogo.id_team_away],
-                isDadosUmLadoSo=True)
+                if msgHomeB == False:
+                    msgFim = "\n####################################################\n\n"
+                    kerasSequencialNormal.gravarLogs(msgFim)
+                    jogo.is_previu = 1
+                    nextGamesModel.salvar(data=[jogo.__dict__])
+                    continue
 
-            print("blablablabalb")
-            print(prdict)
-            print(arrAcertos)
-            resultadoB = "\nWinner Away: \n"
-            resultadoB += str(prdict) + " / " + str(arrAcertos) + "\n"
-            kerasSequencialNormal.gravarLogs(resultadoB)
+                msgHome = "\n-------- PREVISÕES --------\n"
+                msgHome += ("TEAM Ambas -> " + teamHome.name + "-" + str(teamHome.id) + " / " +
+                            teamAway.name + "-" + str(teamAway.id) + "\n\n")
+                msgHome += msgHomeA + msgHomeB + "\n\n"
+                kerasSequencialNormal.gravarLogs(msgHome)
 
-            resultadoBA = "\n#### Team " + teamAway.name + " - " + str(teamAway.id) + ": ####\n"
-            kerasSequencialNormal.gravarLogs(resultadoBA)
-            prdict, arrAcertos = KerasSequencialNormal().getBestRedeNeuralByDataset(
-                arrIdsTeam=[jogo.id_team_away, jogo.id_team_home], isAgruparTeams=False, idTypeReturn=4,
-                isFiltrarTeams=True, isRecurrent=True, funcAtiv="sigmoid", isPassadaTempoDupla=False,
-                nRedes=qtdeRedesPorTentativa, qtdeTentativas=qtdeTentativas, arrIdsExpecficos=[jogo.id_team_away],
-                isDadosUmLadoSo=True)
+                msgFim = "####################################################\n\n"
+                kerasSequencialNormal.gravarLogs(msgFim)
+            else:
+                kerasInteligente = KerasNeuralInteligente()
+                if indexJogo == 0:
+                    kerasInteligente.gravarLogs(msg=msgInit)
+                kerasInteligente.gravarLogs(msg=msgInfos)
+                arrPrevisoesA, arrAcertosA = kerasInteligente.treinarRede(
+                    arrIdsTeam=[teamHome.id, teamAway.id], arrIdsExpecficos=[teamHome.id])
 
-            print("blablablabalb")
-            print(prdict)
-            print(arrAcertos)
-            resultadoBA = "\nEquilibrado Away: \n"
-            resultadoBA += str(prdict) + " / " + str(arrAcertos) + "\n"
-            kerasSequencialNormal.gravarLogs(resultadoBA)
+                msgPrevA = ""
+                for idxPrev in range(len(arrPrevisoesA)):
+                    msgPrevA += "Previão {}/{} \n {} / {}\n\n".format(idxPrev, len(arrPrevisoesA),
+                                                                      arrAcertosA[idxPrev],
+                                                                      arrPrevisoesA[idxPrev])
+                kerasInteligente.gravarLogs(msg=msgPrevA)
 
-            resultado = resultadoA + resultadoAH + resultadoB + resultadoBA
-            kerasSequencialNormal.gravarLogs(resultado)
-            allResults = "\n---------------------------------------------------------------------------\n\n"
-            kerasSequencialNormal.gravarLogs(allResults)
+                # --------------------- TEAM AWAY ---------------------
 
+                arrPrevisoesB, arrAcertosB = kerasInteligente.treinarRede(
+                    arrIdsTeam=[teamHome.id, teamAway.id], arrIdsExpecficos=[teamAway.id])
+
+                msgPrevB = ""
+                for idxPrev in range(len(arrPrevisoesB)):
+                    msgPrevB += "Previão {}/{} \n {} / {}\n\n".format(idxPrev, len(arrPrevisoesB),
+                                                                      arrAcertosB[idxPrev],
+                                                                      arrPrevisoesB[idxPrev])
+                kerasInteligente.gravarLogs(msg=msgPrevB)
+                msgFinal = "<------------------------>\n"
+                msgFinal += "<------> PREVISÃO <------>\n\n"
+                msgFinal += "TEAM HOME: {} - {} \n".format(teamHome.name, teamHome.id)
+                msgFinal += msgPrevA
+
+                msgFinal += "TEAM AWAY: {} - {} \n".format(teamAway.name, teamAway.id)
+                msgFinal += msgPrevB
+                msgFinal += "\n####################################################################################\n\n"
+                kerasInteligente.gravarLogs(msg=msgFinal)
             jogo.is_previu = 1
             nextGamesModel.salvar(data=[jogo.__dict__])
         return JsonResponse({"erro": "SUCESSS Lista de times prevista"}, safe=False)
@@ -424,6 +405,7 @@ def obterPrevisaoTeam(request):
     database.closeConnection()
     return JsonResponse({"response": dictPrevPartida}, safe=False)
 
+
 def obterTabelaPontuacao(request):
     fixturesRegras = FixturesRegras()
     teamRegras = TeamsRegras()
@@ -441,6 +423,7 @@ def obterTabelaPontuacao(request):
     tabelaPontuacaoNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelaPontuacao])[0]
     return JsonResponse({"response": tabelaPontuacaoNormalizada}, safe=True)
 
+
 def obterTabelaJogos(request):
     fixturesRegras = FixturesRegras()
     tabelaJogosRegras = TabelaJogosRegras()
@@ -457,6 +440,7 @@ def obterTabelaJogos(request):
     tabelajogos = tabelaJogosRegras.obterTabelaJogos(id_season=idSeason)
     tabelaJogosNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelajogos])[0]
     return JsonResponse({"response": tabelaJogosNormalizada}, safe=True)
+
 
 def obterEstatisticas(request):
     datasetFixtureRegras = DatasetFixtureRegras()

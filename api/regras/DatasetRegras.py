@@ -168,159 +168,7 @@ class Dataset:
         self.arrIdsTeam = arrIdsTeam
         self.idTypeReturn = idTypeReturn
 
-    def getDatasetA(self, qtdeItensForTeam: int = 20):
-        arrAllInfosTeamFixture = deepcopy(self.arrAllInfosTeamFixture)
-        arrDatasetEntrada = []
-        arrDatasetRotulo = []
-        arrDatasetPrever = []
-        arrIndexPrever = []
-
-        """if len(arrAllInfosTeamFixture) < qtdeDados + 1:
-            raise Exception("Sem dados suficientes para o dataset A, temo só: " + str(len(arrAllInfosTeamFixture)))"""
-
-        for idxArrInfoTeamFixture in range(len(arrAllInfosTeamFixture)):
-            arrInfosTeamFixture = arrAllInfosTeamFixture[idxArrInfoTeamFixture]
-            arrInfosTeamFixture = sorted(arrInfosTeamFixture, key=lambda f: f.date_fixture, reverse=False)
-            for idxInfoTeamFixture in range(len(arrInfosTeamFixture)):
-                if idxInfoTeamFixture == 0 or (idxInfoTeamFixture < len(arrInfosTeamFixture) - qtdeItensForTeam):
-                    continue
-
-                currentAllInfosTeamFixture = arrInfosTeamFixture[idxInfoTeamFixture]
-                lastAllInfosTeamFixture = arrInfosTeamFixture[idxInfoTeamFixture - 1]
-
-                if (not currentAllInfosTeamFixture.is_terminou_fulltime and
-                        currentAllInfosTeamFixture.id_team not in self.arrIdsTeam):
-                    continue
-
-                arrEntrada = self.getArrayDatasetEntradaA(currentInfoFixture=currentAllInfosTeamFixture,
-                                                          lastInfoFixture=lastAllInfosTeamFixture)
-                arrDatasetEntrada.append(arrEntrada)
-
-                arrRotulo = self.getArrayDatasetRotuloA(currentInfoFixture=currentAllInfosTeamFixture)
-                # arrRotulo = self.getArrayDatasetRotuloB(currentInfoFixture=arrAllInfosTeamFixture[idxInfoTeamFixture])
-                arrDatasetRotulo.append(arrRotulo)
-
-                if (not currentAllInfosTeamFixture.is_terminou_fulltime and
-                        currentAllInfosTeamFixture.id_team in self.arrIdsTeam):
-                    arrIndexPrever.append(len(arrDatasetEntrada) - 1)
-
-        arrDatasetEntrada = self.normalizar_z_score(arrDatasetEntrada, axis=0)
-        for idxPrever in reversed(arrIndexPrever):
-            arrDatasetPrever.append(arrDatasetEntrada.pop(idxPrever))
-            arrDatasetRotulo.pop(idxPrever)
-
-        arrDatasetEntrada = sorted(arrDatasetEntrada, key=lambda f: f[1], reverse=False)
-        arrDatasetPrever = sorted(arrDatasetPrever, key=lambda f: f[2], reverse=True)
-        return arrDatasetEntrada, arrDatasetRotulo, arrDatasetPrever
-
-    def getDatasetB(self, qtdeItensForTeam: int = 15):
-        arrAllInfosTeamFixture = deepcopy(self.arrAllInfosTeamFixture)
-        arrIdxFixturePrever = []
-        arrDatasetEntrada = []
-        arrDatasetRotulo = []
-        arrDatasetPrever = []
-
-        for idxAllInfosTeamFixture in range(len(arrAllInfosTeamFixture)):
-            arrInfosTeamFixture = arrAllInfosTeamFixture[idxAllInfosTeamFixture]
-            arrInfosTeamFixture = sorted(arrInfosTeamFixture, key=lambda f: f.date_fixture, reverse=False)
-            for idxInfoTeamFixture in range(len(arrInfosTeamFixture)):
-                currentInfosTeamFixture = arrInfosTeamFixture[idxInfoTeamFixture]
-                lastInfosTeamFixture = None if idxInfoTeamFixture == 0 else arrInfosTeamFixture[idxInfoTeamFixture - 1]
-
-                dataEntrada = self.getArrayDatasetEntradaB(currentInfoFixture=currentInfosTeamFixture,
-                                                           lastInfoFixture=lastInfosTeamFixture)
-                dataRotulo = self.getArrayDatasetRotuloA(currentInfoFixture=currentInfosTeamFixture)
-
-                arrDatasetEntrada.append(dataEntrada)
-                arrDatasetRotulo.append(dataRotulo)
-
-        dataEntradaNormalizado = self.normalizar_z_score(arrDatasetEntrada, axis=0)
-
-        arrDatasetEntradaAgrupada = []
-        arrDatasetRotuloAgrupado = []
-        arrDatasetPreverAgrupado = []
-        arrIdsEncontrados = []
-
-        for idxDataEntradaA in range(len(dataEntradaNormalizado)):
-            dataA = dataEntradaNormalizado[idxDataEntradaA]
-
-            if dataA[4] not in arrIdsEncontrados:
-                for idxDataEntradaB in range(len(dataEntradaNormalizado)):
-                    dataB = dataEntradaNormalizado[idxDataEntradaB]
-
-                    if dataA[4] == dataB[4] and dataA[0] != dataB[0]:
-                        arrIdsEncontrados.append(dataA[4])
-                        if dataA[2] > dataB[2]:
-                            dataAgrupado = numpy.concatenate((dataA, dataB)).tolist()
-                        else:
-                            dataAgrupado = numpy.concatenate((dataB, dataA)).tolist()
-
-                        if dataA[3] < 0:
-                            arrDatasetPreverAgrupado.append(dataAgrupado)
-                        else:
-                            arrDatasetEntradaAgrupada.append(dataAgrupado)
-
-                            if dataA[2] > dataB[2]:
-                                arrDatasetRotuloAgrupado.append(arrDatasetRotulo[idxDataEntradaB])
-                            else:
-                                arrDatasetRotuloAgrupado.append(arrDatasetRotulo[idxDataEntradaA])
-        arrDatasetEntradaAgrupada = sorted(arrDatasetEntradaAgrupada, key=lambda f: f[1], reverse=False)
-        return arrDatasetEntradaAgrupada, arrDatasetRotuloAgrupado, arrDatasetPreverAgrupado
-
-    def getDatasetC(self, qtdeDados: int = 15):
-        arrAllInfosTeamFixture = deepcopy(self.arrAllInfosTeamFixture)
-        arrIdxTeamPrever = []
-        arrDatasetEntrada = []
-        arrDatasetRotulo = []
-        arrDatasetPrever = []
-
-        for idxAllInfosTeamFixture in range(len(arrAllInfosTeamFixture)):
-            arrInfosTeamFixture = arrAllInfosTeamFixture[idxAllInfosTeamFixture]
-            arrInfosTeamFixture = sorted(arrInfosTeamFixture, key=lambda f: f.date_fixture, reverse=False)
-            for idxInfoTeamFixture in range(len(arrInfosTeamFixture)):
-                currentInfosTeamFixture = arrInfosTeamFixture[idxInfoTeamFixture]
-                lastInfosTeamFixture = None if idxInfoTeamFixture == 0 else arrInfosTeamFixture[idxInfoTeamFixture - 1]
-
-                dataEntrada = self.getArrayDatasetEntradaA(currentInfoFixture=currentInfosTeamFixture,
-                                                           lastInfoFixture=lastInfosTeamFixture)
-                dataRotulo = self.getArrayDatasetRotuloA(currentInfoFixture=currentInfosTeamFixture)
-
-                arrDatasetEntrada.append(dataEntrada)
-                arrDatasetRotulo.append(dataRotulo)
-
-                if currentInfosTeamFixture.id_team == self.arrIdsTeam[0]:
-                    arrIdxTeamPrever.append(idxInfoTeamFixture)
-
-        dataEntradaNormalizado = self.normalizar_z_score(arrDatasetEntrada, axis=0)
-
-        arrDatasetEntradaAgrupada = []
-        arrDatasetRotuloAgrupado = []
-        arrDatasetPreverAgrupado = []
-        arrIdsEncontrados = []
-
-        for idxDataEntradaA in range(len(dataEntradaNormalizado)):
-            dataA = dataEntradaNormalizado[idxDataEntradaA]
-
-            if idxDataEntradaA not in arrIdxTeamPrever:
-                continue
-
-            if dataA[4] not in arrIdsEncontrados:
-                for idxDataEntradaB in range(len(dataEntradaNormalizado)):
-                    dataB = dataEntradaNormalizado[idxDataEntradaB]
-
-                    if dataA[4] == dataB[4] and dataA[0] != dataB[0]:
-                        arrIdsEncontrados.append(dataA[4])
-                        dataAgrupado = numpy.concatenate((dataA, dataB)).tolist()
-
-                        if dataA[3] < 0:
-                            arrDatasetPreverAgrupado.append(dataAgrupado)
-                        else:
-                            arrDatasetEntradaAgrupada.append(dataAgrupado)
-                            arrDatasetRotuloAgrupado.append(arrDatasetRotulo[idxDataEntradaA])
-        arrDatasetEntradaAgrupada = sorted(arrDatasetEntradaAgrupada, key=lambda f: f[1], reverse=False)
-        return arrDatasetEntradaAgrupada[-qtdeDados:], arrDatasetRotuloAgrupado[-qtdeDados:], arrDatasetPreverAgrupado
-
-    def getDatasetD(self, isPreverComIdsExpecificos: bool = True, qtdeDados: int = None, isDadosUmLadoSo: bool = True):
+    def obterDatasetAgrupadoEmArrayAndLastFixture(self, isDadosUmLadoSo: bool = True, isOrderReverse: bool = False):
         arrAllInfosFixture = deepcopy(self.arrAllInfosTeamFixture)
         arrInfosFixtures = []
         arrInfosFixturesAgrupadas = []
@@ -371,10 +219,523 @@ class Dataset:
 
                     arrInfosFixturesAgrupadas.append(arrInfoAgrupada)
 
-        arrInfosFixturesAgrupadas = sorted(arrInfosFixturesAgrupadas, key=lambda f: f[0].date_fixture, reverse=False)
+        arrInfosFixturesAgrupadas = sorted(arrInfosFixturesAgrupadas, key=lambda f: f[0].date_fixture,
+                                           reverse=isOrderReverse)
+        return arrInfosFixturesAgrupadas
+
+    def getDatasetA(self, qtdeDados: int, isDadosUmLadoSo: bool):
+        arrFixturesAgrupadas = self.obterDatasetAgrupadoEmArrayAndLastFixture(isDadosUmLadoSo=isDadosUmLadoSo,
+                                                                              isOrderReverse=False)
+
+        arrDatasetsEntradas = []
+        arrDatasetsRotulos = []
+        arrIdxTeamObterTreino = []
+        arrIdxTeamObterPrever = []
+
+        for idxFixtureAgrupada in range(len(arrFixturesAgrupadas)):
+            teamA = arrFixturesAgrupadas[idxFixtureAgrupada][0]
+            teamB = arrFixturesAgrupadas[idxFixtureAgrupada][1]
+
+            arrA = self.getEntradaA(teamA=teamA, teamB=teamB)
+
+            if len(arrDatasetsEntradas) == 0:
+                arrDatasetsEntradas = [[] for _ in range(len(arrA))]
+                arrDatasetsRotulos = [[] for _ in range(len(arrA))]
+
+            for idxA in range(len(arrA)):
+                arrDatasetsEntradas[idxA].append(arrA[idxA][0])
+                arrDatasetsRotulos[idxA].append(arrA[idxA][1])
+
+            if teamA.id_team in self.arrIdsTeam:
+                if teamA.is_terminou_fulltime == 1:
+                    arrIdxTeamObterTreino.append(len(arrDatasetsEntradas[0]) - 1)
+                else:
+                    arrIdxTeamObterPrever.append(len(arrDatasetsEntradas[0]) - 1)
+
+            arrB = self.getEntradaA(teamA=teamB, teamB=teamA)
+
+            for idxB in range(len(arrB)):
+                arrDatasetsEntradas[idxB].append(arrB[idxB][0])
+                arrDatasetsRotulos[idxB].append(arrB[idxB][1])
+
+            if teamB.id_team in self.arrIdsTeam:
+                if teamB.is_terminou_fulltime == 1:
+                    arrIdxTeamObterTreino.append(len(arrDatasetsEntradas[0]) - 1)
+                else:
+                    arrIdxTeamObterPrever.append(len(arrDatasetsEntradas[0]) - 1)
+
+        arrDatasetsEntradasNormalizados = [self.normalizar_z_score(ent, axis=0) for ent in arrDatasetsEntradas]
+
+        if len(arrDatasetsEntradasNormalizados) != len(arrDatasetsRotulos):
+            raise Exception("Array difecrentiados")
+
+        arrDatasetsEntradasRetornar = [[] for _ in arrDatasetsEntradasNormalizados]
+        arrDatasetsRotulosRetornar = [[] for _ in arrDatasetsEntradasNormalizados]
+        arrDatasetsPreverRetornar = [[] for _ in arrDatasetsEntradasNormalizados]
+
+        for idxType in range(len(arrDatasetsEntradasNormalizados)):
+            for idx in range(len(arrDatasetsEntradasNormalizados[idxType])):
+                if idx in arrIdxTeamObterTreino:
+                    arrDatasetsEntradasRetornar[idxType].append(arrDatasetsEntradasNormalizados[idxType][idx])
+                    arrDatasetsRotulosRetornar[idxType].append(arrDatasetsRotulos[idxType][idx])
+                elif idx in arrIdxTeamObterPrever:
+                    arrDatasetsPreverRetornar[idxType].append(arrDatasetsEntradasNormalizados[idxType][idx])
+
+        qtdeDadosForTeam = qtdeDados * len(self.arrIdsTeam)
+        arrEntradaCortada = [entrada[-qtdeDadosForTeam:] for entrada in arrDatasetsEntradasRetornar]
+        arrRotuloCortado = [rotulo[-qtdeDadosForTeam:] for rotulo in arrDatasetsRotulosRetornar]
+
+        return arrEntradaCortada, arrRotuloCortado, arrDatasetsPreverRetornar
+
+    @staticmethod
+    def getEntradaA(teamA: InfoTeamFixture, teamB: InfoTeamFixture):
+        statsAA = [
+            (teamA.media_passes_accurate
+             if teamA.media_passes_accurate is not None else
+             teamA.lastInfoTeamFixture.media_passes_accurate
+             if teamA.lastInfoTeamFixture.media_passes_accurate is not None else 0),
+            (teamA.media_ball_possession
+             if teamA.media_ball_possession is not None else
+             teamA.lastInfoTeamFixture.media_ball_possession
+             if teamA.lastInfoTeamFixture.media_ball_possession is not None else 0),
+            (teamA.media_goalkeeper_saves
+             if teamA.media_goalkeeper_saves is not None else
+             teamA.lastInfoTeamFixture.media_goalkeeper_saves
+             if teamA.lastInfoTeamFixture.media_goalkeeper_saves is not None else 0),
+            (teamA.media_corner_kicks
+             if teamA.media_corner_kicks is not None else
+             teamA.lastInfoTeamFixture.media_corner_kicks
+             if teamA.lastInfoTeamFixture.media_corner_kicks is not None else 0)
+        ]
+        statsAAA = [
+            (teamA.media_cards_yellow
+             if teamA.media_cards_yellow is not None else
+             teamA.lastInfoTeamFixture.media_cards_yellow
+             if teamA.lastInfoTeamFixture.media_cards_yellow is not None else 0),
+            (teamA.media_cards_red
+             if teamA.media_cards_red is not None else
+             teamA.lastInfoTeamFixture.media_cards_red
+             if teamA.lastInfoTeamFixture.media_cards_red is not None else 0),
+            (teamA.media_fouls
+             if teamA.media_fouls is not None else
+             teamA.lastInfoTeamFixture.media_fouls
+             if teamA.lastInfoTeamFixture.media_fouls is not None else 0),
+        ]
+        statsAB = [
+            (teamB.media_passes_accurate
+             if teamB.media_passes_accurate is not None else
+             teamB.lastInfoTeamFixture.media_passes_accurate
+             if teamB.lastInfoTeamFixture.media_passes_accurate is not None else 0),
+            (teamB.media_ball_possession
+             if teamB.media_ball_possession is not None else
+             teamB.lastInfoTeamFixture.media_ball_possession
+             if teamB.lastInfoTeamFixture.media_ball_possession is not None else 0),
+            (teamB.media_goalkeeper_saves
+             if teamB.media_goalkeeper_saves is not None else
+             teamB.lastInfoTeamFixture.media_goalkeeper_saves
+             if teamB.lastInfoTeamFixture.media_goalkeeper_saves is not None else 0),
+            (teamB.media_corner_kicks
+             if teamB.media_corner_kicks is not None else
+             teamB.lastInfoTeamFixture.media_corner_kicks
+             if teamB.lastInfoTeamFixture.media_corner_kicks is not None else 0)
+        ]
+        statsAAB = [
+            (teamB.media_cards_yellow
+             if teamB.media_cards_yellow is not None else
+             teamB.lastInfoTeamFixture.media_cards_yellow
+             if teamB.lastInfoTeamFixture.media_cards_yellow is not None else 0),
+            (teamB.media_cards_red
+             if teamB.media_cards_red is not None else
+             teamB.lastInfoTeamFixture.media_cards_red
+             if teamB.lastInfoTeamFixture.media_cards_red is not None else 0),
+            (teamB.media_fouls
+             if teamB.media_fouls is not None else
+             teamB.lastInfoTeamFixture.media_fouls
+             if teamB.lastInfoTeamFixture.media_fouls is not None else 0),
+        ]
+
+        array = [
+            teamA.id_team,
+            teamA.date_fixture.timestamp() * 1000,
+            teamA.is_home, teamA.pontos_season, teamA.saldo_goals_season,
+            teamA.pontos_team, teamA.saldo_goals_team
+        ]
+        isMaisPontos = int(teamA.pontos_season >= teamB.pontos_season)
+        isMediaVitoriaMelhor = int(teamA.media_vitorias >= teamB.media_vitorias)
+        isMediaEmpateMelhor = int(teamA.media_empates >= teamB.media_empates)
+        isMediaDerrotaMelhor = int(teamA.media_derrotas >= teamB.media_derrotas)
+        isMarcaMaisGols = int(teamA.media_goals_fulltime >= teamB.media_goals_fulltime)
+        isSofreMaisGols = int(teamA.media_goals_fulltime_conceded >= teamB.media_goals_fulltime_conceded)
+        isMelhoresEstatisticasA = int(sum(statsAA) >= sum(statsAB))
+        isMelhoresEstatisticasAA = int(sum(statsAAA) <= sum(statsAAB))
+
+        array.append(isMaisPontos)
+        array.append(isMediaVitoriaMelhor)
+        array.append(isMediaEmpateMelhor)
+        array.append(isMediaDerrotaMelhor)
+        array.append(isMarcaMaisGols)
+        array.append(isSofreMaisGols)
+        array.append(isMelhoresEstatisticasA)
+        array.append(isMelhoresEstatisticasAA)
+
+        arrayB = [
+            teamA.id_team, teamB.id_team,
+            teamA.date_fixture.timestamp() * 1000,
+            teamA.is_home, teamA.pontos_season, teamA.saldo_goals_season,
+            teamA.pontos_team, teamA.saldo_goals_team,
+            teamB.pontos_season, teamB.saldo_goals_season,
+            teamB.pontos_team, teamB.saldo_goals_team
+        ]
+        isMaisPontosB = int(teamB.pontos_season >= teamA.pontos_season)
+        isMediaVitoriaMelhorB = int(teamB.media_vitorias >= teamA.media_vitorias)
+        isMediaEmpateMelhorB = int(teamB.media_empates >= teamA.media_empates)
+        isMediaDerrotaMelhorB = int(teamB.media_derrotas >= teamA.media_derrotas)
+        isMarcaMaisGolsB = int(teamB.media_goals_fulltime >= teamA.media_goals_fulltime)
+        isSofreMaisGolsB = int(teamB.media_goals_fulltime_conceded >= teamA.media_goals_fulltime_conceded)
+        isMelhoresEstatisticasAB = int(sum(statsAB) >= sum(statsAA))
+        isMelhoresEstatisticasAAB = int(sum(statsAAB) <= sum(statsAAA))
+
+        arrayB.append(isMaisPontos)
+        arrayB.append(isMediaVitoriaMelhor)
+        arrayB.append(isMediaEmpateMelhor)
+        arrayB.append(isMediaDerrotaMelhor)
+        arrayB.append(isMarcaMaisGols)
+        arrayB.append(isSofreMaisGols)
+        arrayB.append(isMelhoresEstatisticasA)
+        arrayB.append(isMelhoresEstatisticasAA)
+
+        arrayB.append(isMaisPontosB)
+        arrayB.append(isMediaVitoriaMelhorB)
+        arrayB.append(isMediaEmpateMelhorB)
+        arrayB.append(isMediaDerrotaMelhorB)
+        arrayB.append(isMarcaMaisGolsB)
+        arrayB.append(isSofreMaisGolsB)
+        arrayB.append(isMelhoresEstatisticasAB)
+        arrayB.append(isMelhoresEstatisticasAAB)
+
+        '''AA = [arrayB,
+              [teamA.is_vitoria if teamA.is_home else teamB.is_vitoria]]
+
+        BA = [arrayB,
+              [int(abs(teamA.goals_fulltime - teamA.goals_fulltime_conceded) <= 1)]]'''
+
+        AA = [array,
+              [teamA.is_vitoria]]
+        BA = [array,
+              [int(abs(teamA.goals_fulltime - teamA.goals_fulltime_conceded) <= 1)]]
+
+        arrs = [AA, BA]
+        return arrs
+
+    @staticmethod
+    def getEntradaAB(teamA: InfoTeamFixture, teamB: InfoTeamFixture):
+        statsA = [
+            (teamA.media_passes_accurate
+             if teamA.media_passes_accurate is not None else
+             teamA.lastInfoTeamFixture.media_passes_accurate
+             if teamA.lastInfoTeamFixture.media_passes_accurate is not None else 0),
+            (teamA.media_ball_possession
+             if teamA.media_ball_possession is not None else
+             teamA.lastInfoTeamFixture.media_ball_possession
+             if teamA.lastInfoTeamFixture.media_ball_possession is not None else 0),
+            (teamA.media_goalkeeper_saves
+             if teamA.media_goalkeeper_saves is not None else
+             teamA.lastInfoTeamFixture.media_goalkeeper_saves
+             if teamA.lastInfoTeamFixture.media_goalkeeper_saves is not None else 0),
+            (teamA.media_corner_kicks
+             if teamA.media_corner_kicks is not None else
+             teamA.lastInfoTeamFixture.media_corner_kicks
+             if teamA.lastInfoTeamFixture.media_corner_kicks is not None else 0)
+        ]
+        statsAA = [
+            (teamA.media_cards_yellow
+             if teamA.media_cards_yellow is not None else
+             teamA.lastInfoTeamFixture.media_cards_yellow
+             if teamA.lastInfoTeamFixture.media_cards_yellow is not None else 0),
+            (teamA.media_cards_red
+             if teamA.media_cards_red is not None else
+             teamA.lastInfoTeamFixture.media_cards_red
+             if teamA.lastInfoTeamFixture.media_cards_red is not None else 0),
+            (teamA.media_fouls
+             if teamA.media_fouls is not None else
+             teamA.lastInfoTeamFixture.media_fouls
+             if teamA.lastInfoTeamFixture.media_fouls is not None else 0),
+        ]
+        statsB = [
+            (teamB.media_passes_accurate
+             if teamB.media_passes_accurate is not None else
+             teamB.lastInfoTeamFixture.media_passes_accurate
+             if teamB.lastInfoTeamFixture.media_passes_accurate is not None else 0),
+            (teamB.media_ball_possession
+             if teamB.media_ball_possession is not None else
+             teamB.lastInfoTeamFixture.media_ball_possession
+             if teamB.lastInfoTeamFixture.media_ball_possession is not None else 0),
+            (teamB.media_goalkeeper_saves
+             if teamB.media_goalkeeper_saves is not None else
+             teamB.lastInfoTeamFixture.media_goalkeeper_saves
+             if teamB.lastInfoTeamFixture.media_goalkeeper_saves is not None else 0),
+            (teamB.media_corner_kicks
+             if teamB.media_corner_kicks is not None else
+             teamB.lastInfoTeamFixture.media_corner_kicks
+             if teamB.lastInfoTeamFixture.media_corner_kicks is not None else 0)
+        ]
+        statsBB = [
+            (teamB.media_cards_yellow
+             if teamB.media_cards_yellow is not None else
+             teamB.lastInfoTeamFixture.media_cards_yellow
+             if teamB.lastInfoTeamFixture.media_cards_yellow is not None else 0),
+            (teamB.media_cards_red
+             if teamB.media_cards_red is not None else
+             teamB.lastInfoTeamFixture.media_cards_red
+             if teamB.lastInfoTeamFixture.media_cards_red is not None else 0),
+            (teamB.media_fouls
+             if teamB.media_fouls is not None else
+             teamB.lastInfoTeamFixture.media_fouls
+             if teamB.lastInfoTeamFixture.media_fouls is not None else 0),
+        ]
+        isMelhoresEstatisticasA = int(sum(statsA) >= sum(statsB))
+        isMelhoresEstatisticasAA = int(sum(statsAA) <= sum(statsBB))
+
+        A = [[teamA.is_home,
+              isMelhoresEstatisticasA, isMelhoresEstatisticasAA,
+              teamA.date_fixture.timestamp() * 1000,
+              int(teamA.pontos_team >= teamB.pontos_team),
+              int(teamA.pontos_season >= teamB.pontos_season),
+              int(teamA.saldo_goals_season >= teamB.saldo_goals_season),
+              int(teamA.saldo_goals_team >= teamB.saldo_goals_team),
+              int(teamA.media_vitorias >= teamB.media_vitorias),
+              int(teamA.media_empates >= teamB.media_empates),
+              int(teamA.media_derrotas >= teamB.media_derrotas),
+              int(teamA.media_goals_halftime >= teamB.media_goals_halftime),
+              int(teamA.media_goals_halftime_conceded >= teamB.media_goals_halftime_conceded),
+              int(teamA.media_goals_fulltime >= teamB.media_goals_fulltime),
+              int(teamA.media_goals_fulltime_conceded >= teamB.media_goals_fulltime_conceded)],
+             [teamA.is_vitoria]]
+
+        B = [[teamA.is_home,
+              isMelhoresEstatisticasA, isMelhoresEstatisticasAA,
+              teamA.date_fixture.timestamp() * 1000,
+              int(teamA.pontos_team >= teamB.pontos_team),
+              int(teamA.pontos_season >= teamB.pontos_season),
+              int(teamA.saldo_goals_season >= teamB.saldo_goals_season),
+              int(teamA.saldo_goals_team >= teamB.saldo_goals_team),
+              int(teamA.media_vitorias >= teamB.media_vitorias),
+              int(teamA.media_empates >= teamB.media_empates),
+              int(teamA.media_derrotas >= teamB.media_derrotas),
+              int(teamA.media_goals_halftime >= teamB.media_goals_halftime),
+              int(teamA.media_goals_halftime_conceded >= teamB.media_goals_halftime_conceded),
+              int(teamA.media_goals_fulltime >= teamB.media_goals_fulltime),
+              int(teamA.media_goals_fulltime_conceded >= teamB.media_goals_fulltime_conceded)],
+             [int(teamA.goals_fulltime - teamB.goals_fulltime_conceded >= 2)]]
+
+        C = [[teamA.is_home,
+              isMelhoresEstatisticasA, isMelhoresEstatisticasAA,
+              teamA.date_fixture.timestamp() * 1000,
+              int(teamA.pontos_team >= teamB.pontos_team),
+              int(teamA.pontos_season >= teamB.pontos_season),
+              int(teamA.saldo_goals_season >= teamB.saldo_goals_season),
+              int(teamA.saldo_goals_team >= teamB.saldo_goals_team),
+              int(teamA.media_vitorias >= teamB.media_vitorias),
+              int(teamA.media_empates >= teamB.media_empates),
+              int(teamA.media_derrotas >= teamB.media_derrotas),
+              int(teamA.media_goals_halftime >= teamB.media_goals_halftime),
+              int(teamA.media_goals_halftime_conceded >= teamB.media_goals_halftime_conceded),
+              int(teamA.media_goals_fulltime >= teamB.media_goals_fulltime),
+              int(teamA.media_goals_fulltime_conceded >= teamB.media_goals_fulltime_conceded)],
+             [teamA.is_empate]]
+
+        D = [[teamA.is_home,
+              isMelhoresEstatisticasA, isMelhoresEstatisticasAA,
+              teamA.date_fixture.timestamp() * 1000,
+              int(teamA.pontos_team >= teamB.pontos_team),
+              int(teamA.pontos_season >= teamB.pontos_season),
+              int(teamA.saldo_goals_season >= teamB.saldo_goals_season),
+              int(teamA.saldo_goals_team >= teamB.saldo_goals_team),
+              int(teamA.media_vitorias >= teamB.media_vitorias),
+              int(teamA.media_empates >= teamB.media_empates),
+              int(teamA.media_derrotas >= teamB.media_derrotas),
+              int(teamA.media_goals_halftime >= teamB.media_goals_halftime),
+              int(teamA.media_goals_halftime_conceded >= teamB.media_goals_halftime_conceded),
+              int(teamA.media_goals_fulltime >= teamB.media_goals_fulltime),
+              int(teamA.media_goals_fulltime_conceded >= teamB.media_goals_fulltime_conceded)],
+             [int(abs(teamA.goals_fulltime - teamB.goals_fulltime_conceded) <= 1)]]
+
+        arrs = [A, B, C, D]
+        return arrs
+
+    @staticmethod
+    def getEntradaABackup(teamA: InfoTeamFixture, teamB: InfoTeamFixture):
+        A = [[teamA.id_team, teamB.id_team], [teamA.is_vitoria, teamA.is_empate, teamA.is_derrota]]
+        B = [[teamA.is_home], [teamA.is_vitoria, teamA.is_empate, teamA.is_derrota]]
+        C = [[teamA.pontos_team, teamB.pontos_team], [int(teamA.pontos_team >= teamB.pontos_team)]]
+        D = [[teamA.pontos_season, teamB.pontos_season], [int(teamA.pontos_season >= teamB.pontos_season)]]
+        E = [[teamA.saldo_goals_season, teamB.saldo_goals_season],
+             [int(teamA.saldo_goals_season >= teamB.saldo_goals_season)]]
+        F = [[teamA.saldo_goals_team, teamB.saldo_goals_team], [int(teamA.saldo_goals_team >= teamB.saldo_goals_team)]]
+        G = [[teamA.media_vitorias, teamB.media_vitorias], [int(teamA.media_vitorias >= teamB.media_vitorias)]]
+        H = [[teamA.media_empates, teamB.media_empates], [int(teamA.media_empates >= teamB.media_empates)]]
+        I = [[teamA.media_derrotas, teamB.media_derrotas], [int(teamA.media_derrotas >= teamB.media_derrotas)]]
+        J = [[teamA.media_goals_halftime, teamB.media_goals_halftime],
+             [int(teamA.media_goals_halftime >= teamB.media_goals_halftime)]]
+        K = [[teamA.media_goals_halftime_conceded, teamB.media_goals_halftime_conceded],
+             [int(teamA.media_goals_halftime_conceded >= teamB.media_goals_halftime_conceded)]]
+        L = [[teamA.media_goals_fulltime, teamB.media_goals_fulltime],
+             [int(teamA.media_goals_fulltime >= teamB.media_goals_fulltime)]]
+        M = [[teamA.media_goals_fulltime_conceded, teamB.media_goals_fulltime_conceded],
+             [int(teamA.media_goals_fulltime_conceded >= teamB.media_goals_fulltime_conceded)]]
+
+        arrs = [A, B, C, D, E, F, G, H, I, J, K, L, M]
+        return arrs
+
+    @staticmethod
+    def getArrayDatasetEntradaA(currentInfoFixtureA: InfoTeamFixture, currentInfoFixtureB: InfoTeamFixture,
+                                lastInfoFixtureA: InfoTeamFixture = None):
+        array = [
+            currentInfoFixtureA.id_team, currentInfoFixtureA.date_fixture.timestamp() * 1000,
+            currentInfoFixtureA.is_home, currentInfoFixtureA.is_terminou_fulltime, currentInfoFixtureA.id_fixture,
+            currentInfoFixtureA.pontos_season, currentInfoFixtureA.saldo_goals_season,
+            currentInfoFixtureA.pontos_team, currentInfoFixtureA.saldo_goals_team
+        ]
+        isMaisPontos = int(currentInfoFixtureA.pontos_season >= currentInfoFixtureB.pontos_season)
+        isMediaVitoriaMelhor = int(currentInfoFixtureA.media_vitorias >= currentInfoFixtureB.media_vitorias)
+        isMediaEmpateMelhor = int(currentInfoFixtureA.media_empates >= currentInfoFixtureB.media_empates)
+        isMediaDerrotaMelhor = int(currentInfoFixtureA.media_derrotas >= currentInfoFixtureB.media_derrotas)
+        isMarcaMaisGols = int(currentInfoFixtureA.media_goals_fulltime >= currentInfoFixtureB.media_goals_fulltime)
+        isSofreMaisGols = int(currentInfoFixtureA.media_goals_fulltime_conceded >=
+                              currentInfoFixtureB.media_goals_fulltime_conceded)
+        statsA = [
+            (currentInfoFixtureA.media_passes_accurate
+             if currentInfoFixtureA.media_passes_accurate is not None else
+             lastInfoFixtureA.media_passes_accurate
+             if lastInfoFixtureA.media_passes_accurate is not None else 0),
+            (currentInfoFixtureA.media_ball_possession
+             if currentInfoFixtureA.media_ball_possession is not None else
+             lastInfoFixtureA.media_ball_possession
+             if lastInfoFixtureA.media_ball_possession is not None else 0),
+            (currentInfoFixtureA.media_goalkeeper_saves
+             if currentInfoFixtureA.media_goalkeeper_saves is not None else
+             lastInfoFixtureA.media_goalkeeper_saves
+             if lastInfoFixtureA.media_goalkeeper_saves is not None else 0),
+            (currentInfoFixtureA.media_corner_kicks
+             if currentInfoFixtureA.media_corner_kicks is not None else
+             lastInfoFixtureA.media_corner_kicks
+             if lastInfoFixtureA.media_corner_kicks is not None else 0),
+        ]
+        statsAA = [
+            (currentInfoFixtureA.media_cards_yellow
+             if currentInfoFixtureA.media_cards_yellow is not None else
+             lastInfoFixtureA.media_cards_yellow
+             if lastInfoFixtureA.media_cards_yellow is not None else 0),
+            (currentInfoFixtureA.media_cards_red
+             if currentInfoFixtureA.media_cards_red is not None else
+             lastInfoFixtureA.media_cards_red
+             if lastInfoFixtureA.media_cards_red is not None else 0),
+            (currentInfoFixtureA.media_fouls
+             if currentInfoFixtureA.media_fouls is not None else
+             lastInfoFixtureA.media_fouls
+             if lastInfoFixtureA.media_fouls is not None else 0),
+        ]
+        statsB = [
+            (currentInfoFixtureB.media_passes_accurate
+             if currentInfoFixtureB.media_passes_accurate is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_passes_accurate
+             if currentInfoFixtureB.lastInfoTeamFixture.media_passes_accurate is not None else 0),
+            (currentInfoFixtureB.media_ball_possession
+             if currentInfoFixtureB.media_ball_possession is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_ball_possession
+             if currentInfoFixtureB.lastInfoTeamFixture.media_ball_possession is not None else 0),
+            (currentInfoFixtureB.media_goalkeeper_saves
+             if currentInfoFixtureB.media_goalkeeper_saves is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_goalkeeper_saves
+             if currentInfoFixtureB.lastInfoTeamFixture.media_goalkeeper_saves is not None else 0),
+            (currentInfoFixtureB.media_corner_kicks
+             if currentInfoFixtureB.media_corner_kicks is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_corner_kicks
+             if currentInfoFixtureB.lastInfoTeamFixture.media_corner_kicks is not None else 0)
+        ]
+        statsBB = [
+            (currentInfoFixtureB.media_cards_yellow
+             if currentInfoFixtureB.media_cards_yellow is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_cards_yellow
+             if currentInfoFixtureB.lastInfoTeamFixture.media_cards_yellow is not None else 0),
+            (currentInfoFixtureB.media_cards_red
+             if currentInfoFixtureB.media_cards_red is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_cards_red
+             if currentInfoFixtureB.lastInfoTeamFixture.media_cards_red is not None else 0),
+            (currentInfoFixtureB.media_fouls
+             if currentInfoFixtureB.media_fouls is not None else
+             currentInfoFixtureB.lastInfoTeamFixture.media_fouls
+             if currentInfoFixtureB.lastInfoTeamFixture.media_fouls is not None else 0),
+        ]
+        isMelhoresEstatisticas = sum(statsA) >= sum(statsB)
+        isMelhoresEstatisticasA = sum(statsAA) <= sum(statsBB)
+        array.append(isMaisPontos)
+        array.append(isMediaVitoriaMelhor)
+        array.append(isMediaEmpateMelhor)
+        array.append(isMediaDerrotaMelhor)
+        array.append(isMarcaMaisGols)
+        array.append(isSofreMaisGols)
+        array.append(isMelhoresEstatisticas)
+        array.append(isMelhoresEstatisticasA)
+
+        return array
+
+    def getDatasetB(self, qtdeDados: int = None, isDadosUmLadoSo: bool = True):
+        arrInfosFixturesAgrupadas = self.obterDatasetAgrupadoEmArrayAndLastFixture(isDadosUmLadoSo=isDadosUmLadoSo,
+                                                                                   isOrderReverse=False)
+        arrDadosEntrada = []
+        arrDadosRotulo = []
+        arrIndexObterArrDados = []
+        for arrFixtureAgrupada in arrInfosFixturesAgrupadas:
+            fixtureA = arrFixtureAgrupada[0]
+            fixtureB = arrFixtureAgrupada[1]
+
+            entradaA = self.getArrayDatasetEntradaA(currentInfoFixtureA=fixtureA, currentInfoFixtureB=fixtureB,
+                                                    lastInfoFixtureA=fixtureA.lastInfoTeamFixture)
+            entradaB = self.getArrayDatasetEntradaA(currentInfoFixtureA=fixtureB, currentInfoFixtureB=fixtureA,
+                                                    lastInfoFixtureA=fixtureB.lastInfoTeamFixture)
+
+            rotuloA = self.getArrayDatasetRotuloA(currentInfoFixture=fixtureA)
+            rotuloB = self.getArrayDatasetRotuloA(currentInfoFixture=fixtureB)
+
+            arrDadosEntrada.append(entradaA)
+            arrDadosRotulo.append(rotuloA)
+            if fixtureA.id_team in self.arrIdsTeam:
+                arrIndexObterArrDados.append(len(arrDadosEntrada) - 1)
+
+            arrDadosEntrada.append(entradaB)
+            arrDadosRotulo.append(rotuloB)
+            if fixtureB.id_team in self.arrIdsTeam:
+                arrIndexObterArrDados.append(len(arrDadosEntrada) - 1)
+
+        arrDadosEntradaNormalizado = self.normalizar_z_score(array=arrDadosEntrada, axis=0)
+        if len(arrDadosEntradaNormalizado) != len(arrDadosRotulo):
+            raise Exception("Array difecrentiados")
+
+        arrDadosEntradaRetornar = []
+        arrDadosRotuloRetornar = []
+        arrDadosPreverRetornar = []
+
+        for idxArrDados in range(len(arrDadosEntradaNormalizado)):
+            if idxArrDados in arrIndexObterArrDados:
+                if arrDadosEntradaNormalizado[idxArrDados][3] < 0:
+                    arrDadosPreverRetornar.append(arrDadosEntradaNormalizado[idxArrDados])
+                else:
+                    arrDadosEntradaRetornar.append(arrDadosEntradaNormalizado[idxArrDados])
+                    arrDadosRotuloRetornar.append(arrDadosRotulo[idxArrDados])
+
+        qtdeDadosRetornar = qtdeDados * len(self.arrIdsTeam)
+        return (arrDadosEntradaRetornar[-qtdeDadosRetornar:], arrDadosRotuloRetornar[-qtdeDadosRetornar:],
+                arrDadosPreverRetornar)
+
+    # Dataset agrupado com time A e B
+    def getDatasetD(self, isPreverComIdsExpecificos: bool = True, qtdeDados: int = None, isDadosUmLadoSo: bool = True,
+                    idTypeRotulo: int = 1):
+        arrInfosFixturesAgrupadas = self.obterDatasetAgrupadoEmArrayAndLastFixture(isDadosUmLadoSo=isDadosUmLadoSo,
+                                                                                   isOrderReverse=False)
         if isPreverComIdsExpecificos:
             arrEntrada, arrRotulo, arrPrever = self.getDatasetDTeamsExpecificos(
-                arrInfosAgrupadas=arrInfosFixturesAgrupadas, isDadosUmLadoSo=isDadosUmLadoSo)
+                arrInfosAgrupadas=arrInfosFixturesAgrupadas, isDadosUmLadoSo=isDadosUmLadoSo, idTypeRotulo=idTypeRotulo)
 
             qtdeDatas = int(len(self.arrIdsTeam) * qtdeDados)
             if qtdeDados is None:
@@ -385,32 +746,35 @@ class Dataset:
         return [], [], []
 
     def getDatasetDTeamsExpecificos(self, arrInfosAgrupadas: List[List[InfoTeamFixture]], isDadosUmLadoSo,
-                                    isAgruparTeams: bool = True):
+                                    isAgruparTeams: bool = True, idTypeRotulo: int = 1):
         arrIdsExpcf = self.arrIdsTeam
         arrInfosNormalizarEntrada = []
         arrInfosNormalizarRotulo = []
 
         arrIdsInfosGetArrayEntrada = []
         arrIdsInfosGetArrayRotulo = []
+        arrIdsTeamRotulo = []
 
         for idxInfoAgrupada in range(len(arrInfosAgrupadas)):
             infoHome = arrInfosAgrupadas[idxInfoAgrupada][0]
             infoAway = arrInfosAgrupadas[idxInfoAgrupada][1]
 
-            infoEntradaHome = self.getArrayDatasetEntradaE(
-                currentInfoFixture=infoHome, lastInfoFixture=infoHome.lastInfoTeamFixture)
-            infoEntradaAway = self.getArrayDatasetEntradaE(
-                currentInfoFixture=infoAway, lastInfoFixture=infoAway.lastInfoTeamFixture)
+            infoEntradaHome = self.getArrayDatasetEntradaA(currentInfoFixtureA=infoHome,
+                                                           currentInfoFixtureB=infoAway,
+                                                           lastInfoFixtureA=infoHome.lastInfoTeamFixture)
+            infoEntradaAway = self.getArrayDatasetEntradaA(currentInfoFixtureA=infoAway,
+                                                           currentInfoFixtureB=infoHome,
+                                                           lastInfoFixtureA=infoAway.lastInfoTeamFixture)
 
             if self.idTypeReturn == 1:
                 infoRotuloHome = self.getArrayDatasetRotuloA(currentInfoFixture=infoHome)
                 infoRotuloAway = self.getArrayDatasetRotuloA(currentInfoFixture=infoAway)
             elif self.idTypeReturn == 2:
-                infoRotuloHome = self.getArrayDatasetRotuloD(currentInfoFixture=infoHome)
-                infoRotuloAway = self.getArrayDatasetRotuloD(currentInfoFixture=infoAway)
+                infoRotuloHome = self.getArrayDatasetRotuloB(currentInfoFixture=infoHome)
+                infoRotuloAway = self.getArrayDatasetRotuloB(currentInfoFixture=infoAway)
             elif self.idTypeReturn == 3:
-                infoRotuloHome = self.getArrayDatasetRotuloE(currentInfoFixture=infoHome)
-                infoRotuloAway = self.getArrayDatasetRotuloE(currentInfoFixture=infoAway)
+                infoRotuloHome = self.getArrayDatasetRotuloC(currentInfoFixture=infoHome)
+                infoRotuloAway = self.getArrayDatasetRotuloC(currentInfoFixture=infoAway)
             elif self.idTypeReturn == 4:
                 infoRotuloHome = self.getArrayDatasetRotuloF(currentInfoFixture=infoHome)
                 infoRotuloAway = self.getArrayDatasetRotuloF(currentInfoFixture=infoAway)
@@ -422,6 +786,13 @@ class Dataset:
             arrInfosNormalizarRotulo.append(infoRotuloHome)
             arrInfosNormalizarEntrada.append(infoEntradaAway)
             arrInfosNormalizarRotulo.append(infoRotuloAway)
+
+            if infoHome.id_team in arrIdsExpcf and infoAway.id_team in arrIdsExpcf:
+                arrIdsTeamRotulo.append(len(arrInfosNormalizarRotulo) - 2)
+            elif infoHome.id_team in arrIdsExpcf:
+                arrIdsTeamRotulo.append(len(arrInfosNormalizarRotulo) - 2)
+            elif infoAway.id_team in arrIdsExpcf:
+                arrIdsTeamRotulo.append(len(arrInfosNormalizarRotulo) - 1)
 
             if infoHome.id_team in arrIdsExpcf or infoAway.id_team in arrIdsExpcf:
                 # -2 para pegar o Home e -1 para pegar o Away
@@ -459,175 +830,52 @@ class Dataset:
                         arrInfosAgrupadasEntradas.append(arrConcatenado)
                         arrConcatenado = []
                         if isDadosUmLadoSo:
-                            # Adicionar sempre o rotulo do time d fora para a previsar ficar 1 X 2
-                            arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada - 1])
+                            if idTypeRotulo == 1:
+                                arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada - 1])
+                            elif idTypeRotulo == 2:
+                                arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada])
                         else:
-                            # Adicionar sempre o rotulo do time d fora para a previsar ficar 1 X 2
-                            arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada - 1])
-
+                            if idTypeRotulo == 1:
+                                arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada - 1])
+                            elif idTypeRotulo == 2:
+                                # Adicionar sempre o rotulo do time d fora para a previsar ficar 1 X 2
+                                arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada])
+                            elif idTypeRotulo == 3:
+                                if (idxInfoNormalizada - 1) in arrIdsTeamRotulo:
+                                    arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada - 1])
+                                else:
+                                    arrInfosAgrupadasRotulos.append(arrInfosNormalizarRotulo[idxInfoNormalizada])
             return arrInfosAgrupadasEntradas, arrInfosAgrupadasRotulos, arrInfosAgrupadasPrever
         return [], [], []
 
     @staticmethod
-    def getArrayDatasetEntradaA(currentInfoFixture: InfoTeamFixture, lastInfoFixture: InfoTeamFixture = None):
-        array = [
-            currentInfoFixture.id_team, currentInfoFixture.date_fixture.timestamp() * 1000,
-            currentInfoFixture.is_home, currentInfoFixture.is_terminou_fulltime, currentInfoFixture.id_fixture,
-            currentInfoFixture.pontos_team, currentInfoFixture. saldo_goals_team,
-            currentInfoFixture.media_vitorias, currentInfoFixture.media_empates, currentInfoFixture.media_derrotas,
-            currentInfoFixture.media_gols_primeiro_tempo, currentInfoFixture.media_gols_primeiro_tempo_conceded,
-            currentInfoFixture.media_gols_segundo_tempo, currentInfoFixture.media_gols_segundo_tempo_conceded,
-            currentInfoFixture.media_goals_fulltime, currentInfoFixture.media_goals_fulltime_conceded,
-            0 if lastInfoFixture is None else lastInfoFixture.is_vitoria,
-            0 if lastInfoFixture is None else lastInfoFixture.is_empate,
-            0 if lastInfoFixture is None else lastInfoFixture.is_derrota,
-            0 if lastInfoFixture is None else lastInfoFixture.goals_fulltime,
-            0 if lastInfoFixture is None else lastInfoFixture.goals_fulltime_conceded
-        ]
-
-        '''if currentInfoFixture.is_home:
-            arrHome = [
-                currentInfoFixture.media_vitorias_home,
-                currentInfoFixture.media_empates_home,
-                currentInfoFixture.media_derrotas_home,
-                currentInfoFixture.media_gols_primeiro_tempo_home,
-                currentInfoFixture.media_gols_primeiro_tempo_conceded_home,
-                currentInfoFixture.media_gols_segundo_tempo_home,
-                currentInfoFixture.media_gols_segundo_tempo_conceded_home,
-                currentInfoFixture.media_goals_fulltime_home,
-                currentInfoFixture.media_goals_fulltime_conceded_home
-            ]
-
-            for itmHome in arrHome:
-                array.append(itmHome)
-
-        if not currentInfoFixture.is_home:
-            arrAway = [
-                currentInfoFixture.media_vitorias_away,
-                currentInfoFixture.media_empates_away,
-                currentInfoFixture.media_derrotas_away,
-                currentInfoFixture.media_gols_primeiro_tempo_away,
-                currentInfoFixture.media_gols_primeiro_tempo_conceded_away,
-                currentInfoFixture.media_gols_segundo_tempo_away,
-                currentInfoFixture.media_gols_segundo_tempo_conceded_away,
-                currentInfoFixture.media_goals_fulltime_away,
-                currentInfoFixture.media_goals_fulltime_conceded_away
-            ]
-
-            for itmAway in arrAway:
-                array.append(itmAway)'''
-        return array
-
-    @staticmethod
-    def getArrayDatasetEntradaB(currentInfoFixture: InfoTeamFixture, lastInfoFixture: InfoTeamFixture = None):
-        array = [
-            currentInfoFixture.id_team, currentInfoFixture.date_fixture.timestamp() * 1000,
-            currentInfoFixture.is_home, currentInfoFixture.is_terminou_fulltime, currentInfoFixture.id_fixture,
-            currentInfoFixture.pontos_season, currentInfoFixture.pontos_team,
-            currentInfoFixture.saldo_goals_season, currentInfoFixture.saldo_goals_team, currentInfoFixture.id_season,
-            0 if lastInfoFixture is None else lastInfoFixture.is_vitoria,
-            currentInfoFixture.media_vitorias,
-            0 if lastInfoFixture is None else lastInfoFixture.is_empate,
-            currentInfoFixture.media_empates,
-            0 if lastInfoFixture is None else lastInfoFixture.is_derrota,
-            currentInfoFixture.media_derrotas,
-            0 if lastInfoFixture is None else lastInfoFixture.gols_primeiro_tempo,
-            currentInfoFixture.media_gols_primeiro_tempo,
-            0 if lastInfoFixture is None else lastInfoFixture.gols_primeiro_tempo_conceded,
-            currentInfoFixture.media_gols_primeiro_tempo_conceded,
-            0 if lastInfoFixture is None else lastInfoFixture.gols_segundo_tempo,
-            currentInfoFixture.media_gols_segundo_tempo,
-            0 if lastInfoFixture is None else lastInfoFixture.gols_segundo_tempo_conceded,
-            currentInfoFixture.media_gols_segundo_tempo_conceded,
-            0 if lastInfoFixture is None else lastInfoFixture.goals_fulltime,
-            currentInfoFixture.media_goals_fulltime,
-            0 if lastInfoFixture is None else lastInfoFixture.goals_fulltime_conceded,
-            currentInfoFixture.media_goals_fulltime_conceded
-        ]
-
-        if currentInfoFixture.is_home:
-            arrHome = [
-                currentInfoFixture.media_vitorias_home,
-                currentInfoFixture.media_empates_home,
-                currentInfoFixture.media_derrotas_home,
-                currentInfoFixture.media_gols_primeiro_tempo_home,
-                currentInfoFixture.media_gols_primeiro_tempo_conceded_home,
-                currentInfoFixture.media_gols_segundo_tempo_home,
-                currentInfoFixture.media_gols_segundo_tempo_conceded_home,
-                currentInfoFixture.media_goals_fulltime_home,
-                currentInfoFixture.media_goals_fulltime_conceded_home
-            ]
-
-            for itmHome in arrHome:
-                array.append(itmHome)
-
-        if not currentInfoFixture.is_home:
-            arrAway = [
-                currentInfoFixture.media_vitorias_away,
-                currentInfoFixture.media_empates_away,
-                currentInfoFixture.media_derrotas_away,
-                currentInfoFixture.media_gols_primeiro_tempo_away,
-                currentInfoFixture.media_gols_primeiro_tempo_conceded_away,
-                currentInfoFixture.media_gols_segundo_tempo_away,
-                currentInfoFixture.media_gols_segundo_tempo_conceded_away,
-                currentInfoFixture.media_goals_fulltime_away,
-                currentInfoFixture.media_goals_fulltime_conceded_away
-            ]
-
-            for itmAway in arrAway:
-                array.append(itmAway)
-
-        return array
-
-    @staticmethod
     def getArrayDatasetRotuloA(currentInfoFixture: InfoTeamFixture):
         isWinner = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded >= 1)
-        isEmpate = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded == 0)
-        isLoss = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded <= -1)
-        array = [isLoss, isEmpate, isWinner]
+        array = [isWinner]
 
         return array
 
     @staticmethod
     def getArrayDatasetRotuloB(currentInfoFixture: InfoTeamFixture):
-        isWinner = int((currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) >= 2)
         isEmpate = int(abs(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= 1)
-        isLoss = int((currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= -2)
-        array = [isLoss, isEmpate, isWinner]
+        array = [isEmpate]
 
         return array
 
     @staticmethod
-    def getArrayDatasetEntradaD(currentInfoFixture: InfoTeamFixture, lastInfoFixture: InfoTeamFixture = None):
-        array = [
-            currentInfoFixture.id_team, currentInfoFixture.date_fixture.timestamp() * 1000,
-            currentInfoFixture.is_home, currentInfoFixture.is_terminou_fulltime, currentInfoFixture.id_fixture,
-            currentInfoFixture.pontos_team, currentInfoFixture. saldo_goals_team,
-            currentInfoFixture.media_vitorias, currentInfoFixture.media_empates, currentInfoFixture.media_derrotas,
-            currentInfoFixture.media_gols_primeiro_tempo, currentInfoFixture.media_gols_primeiro_tempo_conceded,
-            currentInfoFixture.media_gols_segundo_tempo, currentInfoFixture.media_gols_segundo_tempo_conceded,
-            currentInfoFixture.media_goals_fulltime, currentInfoFixture.media_goals_fulltime_conceded,
-            (currentInfoFixture.media_shots_on_goal if currentInfoFixture.media_shots_on_goal is not None else
-             lastInfoFixture.media_shots_on_goal if lastInfoFixture.media_shots_on_goal is not None else 0),
-            (currentInfoFixture.media_shots_off_goal if currentInfoFixture.media_shots_off_goal is not None else
-             lastInfoFixture.media_shots_off_goal if lastInfoFixture.media_shots_off_goal is not None else 0),
-            (currentInfoFixture.media_passes_accurate if currentInfoFixture.media_passes_accurate is not None else
-             lastInfoFixture.media_passes_accurate if lastInfoFixture.media_passes_accurate is not None else 0),
-            (currentInfoFixture.media_ball_possession if currentInfoFixture.media_ball_possession is not None else
-             lastInfoFixture.media_ball_possession if lastInfoFixture.media_ball_possession is not None else 0),
-            (currentInfoFixture.media_goalkeeper_saves if currentInfoFixture.media_goalkeeper_saves is not None else
-             lastInfoFixture.media_goalkeeper_saves if lastInfoFixture.media_goalkeeper_saves is not None else 0),
-            (currentInfoFixture.media_shots_bloqued if currentInfoFixture.media_shots_bloqued is not None else
-             lastInfoFixture.media_shots_bloqued if lastInfoFixture.media_shots_bloqued is not None else 0),
-            (currentInfoFixture.media_cards_yellow if currentInfoFixture.media_cards_yellow is not None else
-             lastInfoFixture.media_cards_yellow if lastInfoFixture.media_cards_yellow is not None else 0),
-            (currentInfoFixture.media_cards_red if currentInfoFixture.media_cards_red is not None else
-             lastInfoFixture.media_cards_red if lastInfoFixture.media_cards_red is not None else 0),
-            (currentInfoFixture.media_corner_kicks if currentInfoFixture.media_corner_kicks is not None else
-             lastInfoFixture.media_corner_kicks if lastInfoFixture.media_corner_kicks is not None else 0),
-            (currentInfoFixture.media_fouls if currentInfoFixture.media_fouls is not None else
-             lastInfoFixture.media_fouls if lastInfoFixture.media_fouls is not None else 0)
-        ]
+    def getArrayDatasetRotuloC(currentInfoFixture: InfoTeamFixture):
+        isLoss = int((currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= -1)
+        array = [isLoss]
+
+        return array
+
+    @staticmethod
+    def getArrayDatasetRotuloF(currentInfoFixture: InfoTeamFixture):
+        isWinnerA = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded >= 2)
+        isWinnerB = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded <= -2)
+        isEmpate = int(abs(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= 1)
+
+        array = [isEmpate]
 
         return array
 
@@ -644,57 +892,15 @@ class Dataset:
             currentInfoFixture.media_goals_fulltime, currentInfoFixture.media_goals_fulltime_conceded,
             0 if lastInfoFixture is None else lastInfoFixture.goals_fulltime,
             0 if lastInfoFixture is None else lastInfoFixture.goals_fulltime_conceded,
-            (currentInfoFixture.media_shots_on_goal if currentInfoFixture.media_shots_on_goal is not None else
-             lastInfoFixture.media_shots_on_goal if lastInfoFixture.media_shots_on_goal is not None else 0),
-            (currentInfoFixture.media_shots_off_goal if currentInfoFixture.media_shots_off_goal is not None else
-             lastInfoFixture.media_shots_off_goal if lastInfoFixture.media_shots_off_goal is not None else 0),
             (currentInfoFixture.media_passes_accurate if currentInfoFixture.media_passes_accurate is not None else
              lastInfoFixture.media_passes_accurate if lastInfoFixture.media_passes_accurate is not None else 0),
             (currentInfoFixture.media_ball_possession if currentInfoFixture.media_ball_possession is not None else
              lastInfoFixture.media_ball_possession if lastInfoFixture.media_ball_possession is not None else 0),
             (currentInfoFixture.media_goalkeeper_saves if currentInfoFixture.media_goalkeeper_saves is not None else
              lastInfoFixture.media_goalkeeper_saves if lastInfoFixture.media_goalkeeper_saves is not None else 0),
-            (currentInfoFixture.media_shots_bloqued if currentInfoFixture.media_shots_bloqued is not None else
-             lastInfoFixture.media_shots_bloqued if lastInfoFixture.media_shots_bloqued is not None else 0),
-            (currentInfoFixture.media_cards_yellow if currentInfoFixture.media_cards_yellow is not None else
-             lastInfoFixture.media_cards_yellow if lastInfoFixture.media_cards_yellow is not None else 0),
-            (currentInfoFixture.media_cards_red if currentInfoFixture.media_cards_red is not None else
-             lastInfoFixture.media_cards_red if lastInfoFixture.media_cards_red is not None else 0),
             (currentInfoFixture.media_corner_kicks if currentInfoFixture.media_corner_kicks is not None else
              lastInfoFixture.media_corner_kicks if lastInfoFixture.media_corner_kicks is not None else 0),
-            (currentInfoFixture.media_fouls if currentInfoFixture.media_fouls is not None else
-             lastInfoFixture.media_fouls if lastInfoFixture.media_fouls is not None else 0)
         ]
-
-        return array
-
-    @staticmethod
-    def getArrayDatasetRotuloD(currentInfoFixture: InfoTeamFixture):
-        isWinnerA = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded >= 2)
-        isWinnerB = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded <= -2)
-        isEmpate = int(abs(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= 1)
-
-        array = [1 if isWinnerA or isWinnerB else 0]
-
-        return array
-
-    @staticmethod
-    def getArrayDatasetRotuloE(currentInfoFixture: InfoTeamFixture):
-        isWinnerA = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded >= 1)
-        isWinnerB = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded <= -2)
-        isEmpate = int(abs(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= 1)
-
-        array = [isWinnerA]
-
-        return array
-
-    @staticmethod
-    def getArrayDatasetRotuloF(currentInfoFixture: InfoTeamFixture):
-        isWinnerA = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded >= 2)
-        isWinnerB = int(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded <= -2)
-        isEmpate = int(abs(currentInfoFixture.goals_fulltime - currentInfoFixture.goals_fulltime_conceded) <= 1)
-
-        array = [isEmpate]
 
         return array
 
@@ -713,7 +919,7 @@ class DatasetRegras:
 
     def obterDataset(self, arrIdsTeam: List[int], qtdeDadosForTeam: int = 15, limitHistorico: int = 5,
                      isObterAdversarios: bool = True,  arrIdsExpecficos: List[int] = [], idTypeReturn: int = 1,
-                     isDadosUmLadoSo: bool =True):
+                     isDadosUmLadoSo: bool = True, idTypeRotulo: int = 1, idTypeEntrada: int = 1):
         self.ignoreIntelisence = False
         arrIdsPrever = list(arrIdsTeam)
         arrAllInfoTeamFixture: List[List[InfoTeamFixture]] = []
@@ -736,10 +942,23 @@ class DatasetRegras:
 
             arrAllInfoTeamFixture.append(ultimosJogosTeam)
 
-        datasetEntrada, datasetRotulo, datasetPrever = (
-            Dataset(arrAllInfosTeamFixture=arrAllInfoTeamFixture, arrIdsTeam=arrIdsExpecficos,
-                    idTypeReturn=idTypeReturn).getDatasetD(
-                qtdeDados=qtdeDadosForTeam, isDadosUmLadoSo=isDadosUmLadoSo))
+        if idTypeEntrada == 1:
+            datasetEntrada, datasetRotulo, datasetPrever = (
+                Dataset(arrAllInfosTeamFixture=arrAllInfoTeamFixture, arrIdsTeam=arrIdsExpecficos,
+                        idTypeReturn=idTypeReturn).getDatasetD(
+                    qtdeDados=qtdeDadosForTeam, isDadosUmLadoSo=isDadosUmLadoSo, idTypeRotulo=idTypeRotulo))
+        elif idTypeEntrada == 2:
+            datasetEntrada, datasetRotulo, datasetPrever = (
+                Dataset(arrAllInfosTeamFixture=arrAllInfoTeamFixture, arrIdsTeam=arrIdsExpecficos,
+                        idTypeReturn=idTypeReturn).getDatasetB(
+                    qtdeDados=qtdeDadosForTeam, isDadosUmLadoSo=isDadosUmLadoSo))
+        elif idTypeEntrada == 4:
+            datasetEntrada, datasetRotulo, datasetPrever = (
+                Dataset(arrAllInfosTeamFixture=arrAllInfoTeamFixture, arrIdsTeam=arrIdsExpecficos,
+                        idTypeReturn=idTypeReturn).getDatasetA(
+                    qtdeDados=qtdeDadosForTeam, isDadosUmLadoSo=isDadosUmLadoSo))
+        else:
+            datasetEntrada, datasetRotulo, datasetPrever = [], [], []
 
         return datasetEntrada, datasetRotulo, datasetPrever
 

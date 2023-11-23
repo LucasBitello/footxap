@@ -284,7 +284,7 @@ class FixturesModel(Model):
         query = f"SELECT fix.* from {self.name_table} as fix" \
                 f" JOIN fixture_teams as fte on fte.id_fixture = fix.id" \
                 f" WHERE (fix.status <> 'FT' AND fix.status <> 'AET' AND fix.status <> 'PEN' AND fix.status <> 'CANC' " \
-                f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD' AND fix.status <> 'ABD')" \
+                f" AND fix.status <> 'PST' AND  fix.status <> 'WO' AND fix.status <> 'TBD' AND fix.status <> 'ABD' AND fix.status <> 'AWD')" \
                 f" {sqlIdSeason} AND fte.id_team = {id_team}" \
                 f" {sqlIdsIgnorar}" \
                 f" ORDER BY fix.date ASC LIMIT 1"
