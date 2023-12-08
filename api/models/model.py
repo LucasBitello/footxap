@@ -22,6 +22,8 @@ class Database:
 
                 newCursonMaxTime = cls._instance.conexao.cursor()
                 newCursonMaxTime.execute("SET max_execution_time = 30")
+                newCursonMaxTime.execute("SET global max_execution_time = 600000000")
+                newCursonMaxTime.execute("SET session max_execution_time = 300000000")
             return cls._instance
         except connection.Error as cExc:
             print(cExc)

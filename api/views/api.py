@@ -10,19 +10,15 @@ from django.http import HttpResponse, JsonResponse
 from operator import itemgetter
 
 from api.models.seasonsModel import Season
-from api.regras.KerasNeurais import KerasNeurais
+from api.regras.DatasetRegras import DatasetRegras
 from api.regras.countriesRegras import CountriesRegras
 from api.regras.leaguesSeasonsRegras import LeaguesRegras, SeasonsRegras
 from api.regras.teamsRegras import TeamsRegras
 from api.regras.uteisRegras import UteisRegras
-from api.regras.statisticsRegras import StatisticsRegras
-from api.regras.iaUteisRegras import IAUteisRegras
 from api.regras.tabelaJogosRegras import TabelaJogosRegras
 from api.regras.tabelaPontuacaoRegras import TabelaPontuacaoRegras
 from api.regras.fixturesRegras import FixturesRegras
-from api.regras.datasetFixturesRegras import DatasetFixtureRegras
-from api.regras.iaAprendizado import RedeLTSM, ModelPrevisao
-
+from api.datasets.datasetPartida import DatasetPartida
 # Create your views here.
 
 from api.models.countriesModel import Country
@@ -31,11 +27,10 @@ from api.models.teamsModel import Team
 from api.models.nextGamesModel import NextGamesModel, NextGames
 
 from api.models.model import Database
-
-from api.regras.KerasSequencialWithDQN import ViviFoot
-from api.regras.KerasSequencialNormal import KerasSequencialNormal
+from api.ia.vivx import Vivx
 
 database = Database()
+
 
 def obterCountries(request):
     uteisRegras = UteisRegras()
@@ -108,85 +103,6 @@ def obterPrevisaoPartida(request):
     fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeamHome, idTeamAway])
 
     try:
-        teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamHome])[0]
-        teamAway: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[idTeamAway])[0]
-
-        season: Season = fixturesRegras.fixturesModel.teamsModel.seasonsModel.obterByColumnsID(
-            arrDados=[idSeason])[0]
-        league: League = fixturesRegras.fixturesModel.teamsModel.leaguesModel.obterByColumnsID(
-            arrDados=[season.id_league])[0]
-        country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
-            arrDados=[league.id_country])[0]
-
-        strInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
-        strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
-            season.year) + "\n"
-        strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-        allResults = strInfos + "\n\n"
-
-        footGolsHome = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=False,
-                                isAgruparTeams=False, idTypeReturn=1, isFiltrarTeams=True, isRecurrent=False,
-                                funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Superior Home: \n"
-        for k in range(len(footGolsHome.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHome.predit[k]]) + "\n"
-
-        # -------
-        footGolsHomeB = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamAway, isAmbas=False,
-                                 isAgruparTeams=False, idTypeReturn=1, isFiltrarTeams=True, isRecurrent=False,
-                                 funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Superior Away: \n"
-        for k in range(len(footGolsHomeB.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeB.predit[k]]) + "\n"
-
-        # -------
-        footGolsHomeA = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamHome, isAmbas=False,
-                                 isAgruparTeams=False, idTypeReturn=2, isFiltrarTeams=True, isRecurrent=False,
-                                 funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Winner Home: \n"
-        for k in range(len(footGolsHomeA.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeA.predit[k]]) + "\n"
-        # -------
-        footGolsHomeAB = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamHome, isAmbas=False,
-                                  isAgruparTeams=False, idTypeReturn=2, isFiltrarTeams=True, isRecurrent=False,
-                                  funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Winner Away: \n"
-        for k in range(len(footGolsHomeAB.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeAB.predit[k]]) + "\n"
-        # -------
-
-        '''footGols = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=True,
-                            isAgruparTeams=True, idTypeReturn=2, isFiltrarTeams=False, isRecurrent=False,
-                            funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Alls: \n"
-        for k in range(len(footGols.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGols.predit[k]]) + "\n"'''
-
-        '''# -------
-        footGolsA = ViviFoot(id_team_home=idTeamAway, id_team_away=idTeamHome, isAmbas=True,
-                             isAgruparTeams=False, idTypeReturn=4, isFiltrarTeams=True, isRecurrent=False,
-                             funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Fora: \n"
-        for k in range(len(footGolsA.predit)):
-            allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsA.predit[k]]) + "\n"
-        # -------'''
-        '''footGolsHomeAmbas = ViviFoot(id_team_home=idTeamHome, id_team_away=idTeamAway, isAmbas=True,
-                                     isAgruparTeams=True, idTypeReturn=1, isFiltrarTeams=False, isRecurrent=False,
-                                     funcAtiv='softmax', isPassadaTempoDupla=False)
-        allResults += "Ambas: " + str([str(round(k * 100, 1)) + "%" for k in footGolsHomeAmbas.predit[0]]) + "\n"
-        arrays.append(footGolsHomeAmbas.predit[0])'''
-
-        allResults += "\n"
-
-        allResults += "--------------------------------------------------------------------------- \n\n"
-        print(allResults)
-        with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados-dqn.txt",
-                  "a", encoding="utf-8") as results:
-            results.write(allResults)
-            results.close()
-
-        print(allResults)
         return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
                                      " não se preocupe até o dia do jogo terei as informações."}, safe=False)
     except Exception as exc:
@@ -198,91 +114,32 @@ def obterPrevisaoPartida(request):
 def obterPrevisaoListaPartida(request):
     fixturesRegras = FixturesRegras()
     nextGamesModel = NextGamesModel()
-    kerasSequencialNormal = KerasSequencialNormal()
+    vivx = Vivx()
 
     try:
-        arrListGames = nextGamesModel.obterByColumns(arrNameColuns=["is_previu"], arrDados=[0])
-        msg = "##################################### new List ########################################\n"
-        with open("C:/Users/lucas/OneDrive/Documentos/Projetos/footxap/web/static/js/resultados-dqn.txt",
-                  "a", encoding="utf-8") as results:
-            results.write(msg)
-            results.close()
-
+        arrListGames = nextGamesModel.obterByColumns(arrNameColuns=["is_previu"], arrDados=[0],
+                                                     clausulaOrder=" ORDER BY data_jogo ASC")
+        msgPrev = "#############################################################\n"
         for indexJogo in range(len(arrListGames)):
             jogo: NextGames = arrListGames[indexJogo]
-
-            print("######### Treinando Partida ##########")
-            fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[jogo.id_team_home, jogo.id_team_away])
-
-            teamHome: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_home])[0]
-            teamAway: Team = fixturesRegras.fixturesModel.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_away])[0]
-
-            season: Season = fixturesRegras.fixturesModel.teamsModel.seasonsModel.obterByColumnsID(
-                arrDados=[jogo.id_season])[0]
-            league: League = fixturesRegras.fixturesModel.teamsModel.leaguesModel.obterByColumnsID(
-                arrDados=[season.id_league])[0]
-            country: Country = fixturesRegras.fixturesModel.teamsModel.countriesModel.obterByColumnsID(
+            arr_ids_team = [jogo.id_team_home, jogo.id_team_away]
+            season = fixturesRegras.fixturesModel.seasonsModel.obterByColumnsID(arrDados=[jogo.id_season])[0]
+            league = fixturesRegras.fixturesModel.leaguesModel.obterByColumnsID(arrDados=[season.id_league])[0]
+            country = fixturesRegras.fixturesModel.leaguesModel.countriesModel.obterByColumnsID(
                 arrDados=[league.id_country])[0]
-
-            strInfos = "Prevendo Jogo: " + teamHome.name + " VS " + teamAway.name + "\n"
-            strInfos += "Pais: " + country.name + " - Liga: " + league.name + " - Season: " + str(
-                season.year) + "\n"
-            strInfos += "Data da analise: " + datetime.now().strftime("%Y-%m-%d %H:%M:%S") + "\n"
-
-            kerasSequencialNormal.gravarLogs(strInfos)
-
-            resultadoA = "\n#### Team " + teamHome.name + " - " + str(teamHome.id) + ": ####\n"
-            kerasSequencialNormal.gravarLogs(resultadoA)
-            prdict, arrAcertos = kerasSequencialNormal.getBestRedeNeuralByDataset(
-                arrIdsTeam=[jogo.id_team_home], isAgruparTeams=False, idTypeReturn=4,
-                isFiltrarTeams=True, isRecurrent=True, funcAtiv='softmax', isPassadaTempoDupla=False,
-                nRedes=4, qtdeTentativas=5)
-            print("blablablabalb")
-            print(prdict)
-            print(arrAcertos)
-            resultadoA = "\nWinner Home: \n"
-            resultadoA += str(prdict) + "\n" + str(arrAcertos) + "\n"
-            kerasSequencialNormal.gravarLogs(resultadoA)
-
-            # -------
-
-            resultadoB = "\n#### Team " + teamAway.name + " - " + str(teamAway.id) + ": ####\n"
-            kerasSequencialNormal.gravarLogs(resultadoB)
-            prdict, arrAcertos = kerasSequencialNormal.getBestRedeNeuralByDataset(
-                arrIdsTeam=[jogo.id_team_away], isAgruparTeams=False, idTypeReturn=4, isFiltrarTeams=True,
-                isRecurrent=True, funcAtiv='softmax', isPassadaTempoDupla=False, nRedes=4, qtdeTentativas=5)
-
-            print("blablablabalb")
-            print(prdict)
-            print(arrAcertos)
-            resultadoB = "\nWinner Away: \n"
-            resultadoB += str(prdict) + "\n" + str(arrAcertos) + "\n"
-            kerasSequencialNormal.gravarLogs(resultadoB)
-
-            '''footGolsHomeB = ViviFoot(id_team_home=jogo.id_team_home, id_team_away=None, isAmbas=False,
-                                     isAgruparTeams=False, idTypeReturn=5, isFiltrarTeams=True, isRecurrent=True,
-                                     funcAtiv='softmax', isPassadaTempoDupla=True, qtdeDados=60)
-            allResults += "Winner Home: \n"
-            for k in range(len(footGolsHomeB.predit)):
-                allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeB.predit[k]]) + "\n"
-            allResults += str(footGolsHomeB.qtdeAcertos) + "\n"
-
-            # -------
-            footGolsHomeBA = ViviFoot(id_team_home=jogo.id_team_away, id_team_away=None, isAmbas=False,
-                                      isAgruparTeams=False, idTypeReturn=5, isFiltrarTeams=True, isRecurrent=True,
-                                      funcAtiv='softmax', isPassadaTempoDupla=True, qtdeDados=60)
-            allResults += "Winner Away: \n"
-            for k in range(len(footGolsHomeBA.predit)):
-                allResults += str([str(round(j * 100, 1)) + "%" for j in footGolsHomeBA.predit[k]]) + "\n"
-            allResults += str(footGolsHomeBA.qtdeAcertos) + "\n"
-
-            # -------'''
-
-            allResults = "\n---------------------------------------------------------------------------\n\n"
-            kerasSequencialNormal.gravarLogs(allResults)
+            teamHome = fixturesRegras.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_home])[0]
+            teamAway = fixturesRegras.teamsModel.obterByColumnsID(arrDados=[jogo.id_team_away])[0]
+            if indexJogo > 0:
+                msgPrev = "------------------------------------------------------------\n"
+            msgPrev += "País: {} -> Campeonato: {} - {}\n".format(country.name, league.name, str(season.year))
+            msgPrev += "Prevendo para os times: {} x {}\n\n".format(teamHome.name, teamAway.name)
+            msgPrev += vivx.treinarVivxByTeamOnBatch(arrIdTeam=arr_ids_team)
+            msgPrev += "\n\n"
+            vivx.gravarLogs(msgPrev)
 
             jogo.is_previu = 1
             nextGamesModel.salvar(data=[jogo.__dict__])
+
         return JsonResponse({"erro": "SUCESSS Lista de times prevista"}, safe=False)
     except Exception as exc:
         print(exc)
@@ -354,51 +211,8 @@ def addTeamsToList(request):
 
 
 def obterPrevisaoTeam(request):
-    pass
-    iaRegras = IAUteisRegras()
-    iaLTSM = RedeLTSM()
-    uteisRegras = UteisRegras()
-    statisticsRegras = StatisticsRegras()
-    fixturesRegras = FixturesRegras()
-    idSeason = request.GET.get("id_season")
-    idTeam = request.GET.get("id_team")
+    return JsonResponse({"response": "ksdnfklsdnf"}, safe=False)
 
-    if idSeason is None and idTeam is None:
-        raise "É necessário passar o prametro id_season ou id_team"
-
-    print("############## new Request #######################")
-    idSeason = int(idSeason)
-    idTeam = int(idTeam)
-
-    fixturesRegras.fixturesModel.atualizarDados(arr_ids_team=[idTeam])
-
-    print("######### Treinando Team ##########")
-    try:
-        previsao: ModelPrevisao = iaLTSM.preverComRNN(id_team_home=idTeam, id_season=idSeason, qtdeDados=35)
-    except Exception as exc:
-        print(exc)
-        return JsonResponse({"erro": "Não consegui obter a relação entre esses dois times,"
-                                     " não se preocupe até o dia do jogo terei as informações."}, safe=False)
-
-    dictPrevPartida = {
-        "v_ia": "0.35.1",
-        "erro": previsao.msg_erro,
-        "qtde_dados": previsao.qtde_dados_entrada,
-        "data_jogo_previsto": previsao.data_previsao
-    }
-
-    dictPrevPartida["previsao"] = {
-        "vitoria": f"{previsao.previsao[0][0][2] * 100:.2f}%" if previsao.previsao[0][0][2] > 0  else 0,
-        "empate": f"{previsao.previsao[0][0][1] * 100:.2f}%" if previsao.previsao[0][0][1] > 0  else 0,
-        "derrota": f"{previsao.previsao[0][0][0] * 100:.2f}%" if previsao.previsao[0][0][0] > 0  else 0
-    }
-
-    print("######### Previsões ##########")
-    name_team_home = statisticsRegras.teamsRegras.teamsModel.obterByColumnsID(arrDados=[idTeam])[0].name
-    #print("Team home: ", name_team_home)
-    print(dictPrevPartida["previsao"])
-    database.closeConnection()
-    return JsonResponse({"response": dictPrevPartida}, safe=False)
 
 def obterTabelaPontuacao(request):
     fixturesRegras = FixturesRegras()
@@ -417,6 +231,7 @@ def obterTabelaPontuacao(request):
     tabelaPontuacaoNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelaPontuacao])[0]
     return JsonResponse({"response": tabelaPontuacaoNormalizada}, safe=True)
 
+
 def obterTabelaJogos(request):
     fixturesRegras = FixturesRegras()
     tabelaJogosRegras = TabelaJogosRegras()
@@ -434,22 +249,10 @@ def obterTabelaJogos(request):
     tabelaJogosNormalizada = uteisRegras.normalizarDadosForView(arrDados=[tabelajogos])[0]
     return JsonResponse({"response": tabelaJogosNormalizada}, safe=True)
 
+
 def obterEstatisticas(request):
-    datasetFixtureRegras = DatasetFixtureRegras()
-    uteisRegras = UteisRegras()
-    id_team = request.GET.get("id_team")
-
-    if id_team is None:
-        raise "Sem id_season como parametro para obter tabela pontuacao"
-
-    arrRetorno = datasetFixtureRegras.criarDatasetFixture(arr_ids_team=[int(id_team)], isFiltrarApenasTeams=True)
-    arrRetornoNormalizado = uteisRegras.normalizarDadosForView(arrDados=arrRetorno)
-    return JsonResponse({"response": arrRetornoNormalizado}, safe=False)
+    return JsonResponse({"response": "arrRetornoNormalizado"}, safe=False)
 
 
 def urlTesteMetodos(request):
-    iaAprendizadoLTSM = RedeLTSM()
-
-    previstos = RedeLTSM.prever()
-
     return JsonResponse({"sfdsf": "sdfds"}, safe=False)

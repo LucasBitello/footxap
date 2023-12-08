@@ -25,6 +25,8 @@ import tensorflow
 tensorflow.compat.v1.disable_eager_execution()
 tensorflow.compat.v1.enable_eager_execution()
 
+print(tensorflow.config.list_physical_devices())
+# tensorflow.device(tensorflow.DeviceSpec(device_type="XLA_GPU", device_index=2))
 nivelAPIatual = "api/v1"
 
 urlpatterns = [

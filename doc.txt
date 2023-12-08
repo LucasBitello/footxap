@@ -10,10 +10,11 @@
 --pip install mysqlclient
 pip install mysql-python
 apt-get install python-mysqldb
-pip3 install mysql-connector-python-rf
-pip3 install mysql-connector-python
+pip install mysql-connector-python-rf
+pip install mysql-connector-python
 --sudo apt install --reinstall python3-django
 --python manage.py migrate
+-- pip install polls
 
 python3.9 -m venv env
 source env/bin/activate
