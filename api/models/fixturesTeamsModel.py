@@ -29,6 +29,7 @@ class FixturesTeamsModel(Model):
         id_team_away = self.teamsModel.obterIdByReferenceIdApi(data_fixture_api["teams"]["away"]["id"])
 
         if id_team_away is None or id_team_home is None:
+            return
             print(id_team_away, id_team_home)
             print("Um desses está nulo, rever : id: ", id_fixture, " dados: ", data_fixture_api)
             print("vai atualizar...")
