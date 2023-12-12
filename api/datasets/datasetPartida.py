@@ -155,7 +155,7 @@ class DatasetPartida:
         pandas.options.display.max_rows = None
         pandas.options.display.width = 2000
         warnings.simplefilter(action="ignore", category=FutureWarning)
-        self.limit_dados: int = 20
+        self.limit_dados: int = 10
 
     def obterDatasets(self, arrIdsTeams: list[int], historicoMedias: int):
         arrDatasetTeam: list[DatasetTeam] = []
@@ -245,7 +245,8 @@ class DatasetPartida:
 
                         if len(arrStatistics) == 0:
                             raise Exception(
-                                "Diz que tem statistics mas nao tem, verifique id fixture" + str(fixture.id))
+                                "Diz que tem statistics mas nao tem, verifique id fixture " + str(fixture.id) +
+                            " id_team: " + str(team.id))
 
                         for statistic in arrStatistics:
                             if statistic.id_type_statistic == EnumTypeStatistics.shots_on_goal.value:
@@ -302,7 +303,7 @@ class DatasetPartida:
     def obterDictMediasDatasetTeamsA(self, arrDatasetTeams: list[DatasetTeam]):
         for idxDatasetTeam in range(len(arrDatasetTeams)):
             datasetTeam = arrDatasetTeams[idxDatasetTeam]
-            datasetTeam.arrDictsMediaEntrada, datasetTeam.arrDictsMediaRotulo = self.getDictMediasDatasetsB(
+            datasetTeam.arrDictsMediaEntrada, datasetTeam.arrDictsMediaRotulo = self.getDictMediasDatasetsA(
                 datasetTeam=datasetTeam)
 
         return arrDatasetTeams
@@ -945,7 +946,7 @@ class DatasetPartida:
             datasetRotulo = []
             datasetPrever = [arrPreverValuesTeam]
             for idxRotulosValuesTeam, rotulosValuesTeam in enumerate(arrRotulosValuesTeam):
-                arrTimestepsRotulo = [[]]
+                arrTimestepsRotulo = [[], [], []]
                 saldogols = 0
                 sumGoals = 0
                 sumGoalsMarcados = 0
@@ -995,9 +996,9 @@ class DatasetPartida:
                 elif saldogols >= 0:
                     rotuloB[1] = 1'''
 
-                arrTimestepsRotulo[0].append(rotuloB)
-                # arrTimestepsRotulo[1].append(rotuloC)
-                # arrTimestepsRotulo[2].append(rotuloC)
+                arrTimestepsRotulo[0].append(rotuloA)
+                arrTimestepsRotulo[1].append(rotuloB)
+                arrTimestepsRotulo[2].append(rotuloC)
                 # arrTimestepsRotulo[1].append(rotuloB)
                 datasetRotulo.append(arrTimestepsRotulo)
 

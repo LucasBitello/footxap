@@ -28,6 +28,7 @@ from api.models.nextGamesModel import NextGamesModel, NextGames
 
 from api.models.model import Database
 from api.ia.vivx import Vivx
+from api.ia.graficos import Graficos
 
 database = Database()
 
@@ -114,6 +115,7 @@ def obterPrevisaoPartida(request):
 def obterPrevisaoListaPartida(request):
     fixturesRegras = FixturesRegras()
     nextGamesModel = NextGamesModel()
+    graficos = Graficos()
     vivx = Vivx()
 
     try:
@@ -133,7 +135,8 @@ def obterPrevisaoListaPartida(request):
                 msgPrev = "------------------------------------------------------------\n"
             msgPrev += "País: {} -> Campeonato: {} - {}\n".format(country.name, league.name, str(season.year))
             msgPrev += "Prevendo para os times: {} x {}\n\n".format(teamHome.name, teamAway.name)
-            msgPrev += vivx.treinarVivxByTeamOnBatch(arrIdTeam=arr_ids_team)
+            graficos.mostrarGrafcos(arrIdTeam=arr_ids_team, qtdeDadosMedia=3)
+            # msgPrev += vivx.treinarVivxByTeamOnBatch(arrIdTeam=arr_ids_team)
             msgPrev += "\n\n"
             vivx.gravarLogs(msgPrev)
 
